@@ -14,13 +14,6 @@ const StatBox = ({ title, subtitle, icon, progress, increase, isSelected }) => {
       <Box display="flex" justifyContent="space-between">
         <Box>
           {icon}
-          <Typography
-            variant="h4"
-            fontWeight="bold"
-            sx={{ color: colors.grey[100] }}
-          >
-            {title}
-          </Typography>
         </Box>
         <Box>
           {/* <ProgressCircle progress={progress} /> */}
@@ -28,19 +21,17 @@ const StatBox = ({ title, subtitle, icon, progress, increase, isSelected }) => {
           {!isSelected && <PanoramaFishEyeIcon fontSize="large" color="info" />}
           {/* <RadioButtonCheckedIcon fontSize="large" /> */}
         </Box>
+
       </Box>
-      {/* <Box display="flex" justifyContent="space-between" mt="2px">
-        <Typography variant="h5" sx={{ color: colors.greenAccent[500] }}>
-          {subtitle}
-        </Typography>
+      <Box>
         <Typography
-          variant="h5"
-          fontStyle="italic"
-          sx={{ color: colors.greenAccent[600] }}
+          variant="h4"
+          fontWeight="bold"
+          sx={{ color: colors.grey[100] }}
         >
-          {increase}
+          {title}
         </Typography>
-      </Box> */}
+      </Box>
     </Box>
   );
 };
