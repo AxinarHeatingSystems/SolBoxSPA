@@ -1,0 +1,31 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+   - name: Tailscale
+      uses: tailscale/github-action@v2
+      with:
+        oauth-client-id: kCFC9dYdcQ11CNTRL
+        oauth-secret: tskey-client-kCFC9dYdcQ11CNTRL-7xnnR6T126ajDv5thuiq5a8j7M52pG2pZ
+        tags: tag:ci
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
