@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { styled, Box, Button, IconButton, Typography, useTheme, Switch, FormControlLabel, CardMedia, Grid } from "@mui/material";
-import Card from '@mui/material/Card';
-import { tokens } from "../../theme";
+import { useTheme, styled, Box, Typography, Switch, FormControlLabel, Grid } from "@mui/material";
 import GaugeComponent from 'react-gauge-component'
+import GaugeChart from 'react-gauge-chart'
+import { tokens } from "../../theme";
 
-import solarEnergy from '../../assets/solarEnergy.svg';
-import heatEnery from '../../assets/heatEnergy.svg';
 
 import { HeatDev } from '../DeviceComponents/heatDev';
 import { SolarPanel } from '../DeviceComponents/solarPanel';
@@ -258,6 +256,7 @@ export const StatusBoards = () => {
                 minValue={0}
                 maxValue={100}
               />
+              <GaugeChart id="gauge-chart1" />
             </Box>
           </Grid>
           <Grid item md="4" xs="12">

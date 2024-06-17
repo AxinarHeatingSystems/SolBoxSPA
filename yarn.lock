@@ -9643,6 +9643,13 @@ react-fullcalendar@^1.0.0:
     react "^15.4.2"
     react-dom "^15.4.2"
 
+react-gauge-chart@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.npmjs.org/react-gauge-chart/-/react-gauge-chart-0.5.1.tgz"
+  integrity sha512-Kd0pLIfHWOVEWJCz+xAxFfrKzCdOkLHNKR13V+O3h06ocyGT7fWjz2oevMXsPt3bVn1Du2od7gPrjUhqXKdASg==
+  dependencies:
+    d3 "^7.6.1"
+
 react-gauge-component@^1.2.21:
   version "1.2.21"
   resolved "https://registry.npmjs.org/react-gauge-component/-/react-gauge-component-1.2.21.tgz"

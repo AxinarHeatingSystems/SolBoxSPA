@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { styled, Box, Button, IconButton, Grid, Typography, useTheme, Switch, FormControlLabel, CardMedia } from "@mui/material";
+import React, { useState, useContext } from 'react';
+import { Box, IconButton, Grid, useTheme } from "@mui/material";
 
 import { ColorModeContext, tokens } from "../../theme";
 import './dashboard.css'
