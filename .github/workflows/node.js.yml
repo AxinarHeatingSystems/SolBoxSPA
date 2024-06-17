@@ -5,9 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -21,8 +21,8 @@ jobs:
    - name: Tailscale
       uses: tailscale/github-action@v2
       with:
-        oauth-client-id: kCFC9dYdcQ11CNTRL
-        oauth-secret: tskey-client-kCFC9dYdcQ11CNTRL-7xnnR6T126ajDv5thuiq5a8j7M52pG2pZ
+        oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+        oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
         tags: tag:ci
     - run: npm ci
     - run: npm run build --if-present
