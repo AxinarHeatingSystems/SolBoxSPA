@@ -1,0 +1,42 @@
+.dev-connector {
+    position: absolute;
+    top: 50%;
+    z-index: -5;
+}
+
+
+@keyframes huerotate {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+
+    100% {
+        filter: hue-rotate(360deg);
+    }
+}
+.dev-connect-border {
+    border-bottom: 1px solid white;
+        border-left: 1px solid white;
+        border-right: 1px solid white;
+        width: 100%;
+        height: 150px;
+        display: flex;
+    }
+    
+    .heat-connect-border {
+        border-bottom: 10px dotted white;
+            border-left: 10px dotted rgb(137, 16, 16);
+        border-image: url('../../assets/dotHeatAnimatio.svg');
+            border-image-slice: 32;
+            border-image-repeat: round;
+            width: 100%;
+        }
+        
+        .solar-connect-border {
+            border-bottom: 10px dotted white;
+            border-right: 10px dotted white;
+        border-image: url('../../assets/dotSolarAnimation.svg');
+            border-image-slice: 34;
+            border-image-repeat: round;
+            width: 100%;
+}

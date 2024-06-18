@@ -1,0 +1,25 @@
+
+
+<svg version="1.1" height="96" width="96" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" background="black">
+ <style>
+ @keyframes down {to {transform: translate(0, -32px)}}
+  @keyframes right {to {transform: translate(-32px, 0)}}
+  @keyframes up {to {transform: translate(0, 32px)}}
+  @keyframes left {to {transform: translate(32px, 0)}}
+  
+ </style>
+ <defs>
+  <path id="skull" d="M27.25,4.655C20.996-1.571,10.88-1.546,4.656,4.706C-1.571,10.96-1.548,21.076,4.705,27.3
+		c6.256,6.226,16.374,6.203,22.597-0.051C33.526,20.995,33.505,10.878,27.25,4.655z" fill="#07f523"/>
+ </defs>
+ <g transform="translate(0,0)">
+ <use href="#skull" x="0" y="0"  style="animation: left 0.4s infinite linear"/>
+<use href="#skull" x="32" y="0" style="animation: left 0.4s infinite linear"/> 
+ <use href="#skull" x="64" y="0" style="animation: up 0.4s infinite linear"/>
+ <use href="#skull" x="64" y="32" style="animation: up 0.4s infinite linear"/>
+ <use href="#skull" x="64" y="64" style="animation: right 0.4s infinite linear"/>
+ <use href="#skull" x="32" y="64" style="animation: right 0.4s infinite linear"/>
+ <use href="#skull" x="0" y="64" style="animation: down 0.4s infinite linear"/>
+ <use href="#skull" x="0" y="32" style="animation: down 0.4s infinite linear"/>
+ </g>
+</svg>

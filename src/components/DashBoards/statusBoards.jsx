@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useTheme, styled, Box, Typography, Switch, FormControlLabel, Grid } from "@mui/material";
 import GaugeComponent from 'react-gauge-component'
 import GaugeChart from 'react-gauge-chart'
+import Chart from "react-apexcharts";
 import { tokens } from "../../theme";
-
+import './statusBoard.css';
 
 import { HeatDev } from '../DeviceComponents/heatDev';
 import { SolarPanel } from '../DeviceComponents/solarPanel';
@@ -104,103 +105,195 @@ const DevOnOffSwitch = styled(Switch)(({ theme }) => ({
 }))
 
 
-export const StatusBoards = () => {
+export const StatusBoards = ({ isMobile }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   const [heatOn, setHeatOn] = useState(true);
   const [devOn, setDevOn] = useState(true);
 
+  const piramidData = {
+
+    series: [
+      {
+        name: "",
+        data: [200, 330, 548, 1380, 740, 880, 990],
+      },
+    ],
+    options: {
+      chart: {
+        type: 'bar',
+        height: 350,
+      },
+      plotOptions: {
+        bar: {
+          borderRadius: 0,
+          horizontal: true,
+          distributed: true,
+          barHeight: '80%',
+          isFunnel: true,
+        },
+      },
+      colors: [
+        '#F44F5E',
+        '#E55A89',
+        '#D863B1',
+        '#CA6CD8',
+        '#B57BED',
+        '#8D95EB',
+        '#62ACEA',
+      ],
+      dataLabels: {
+        enabled: true,
+        formatter: function (val, opt) {
+          // return opt.w.globals.labels[opt.dataPointIndex]
+          return val + ' kwh'
+        },
+        dropShadow: {
+          // enabled: true,
+        },
+      },
+      title: {
+        text: 'Last week Data',
+        align: 'middle',
+      },
+      // xaxis: {
+      //   categories: ['Sweets', 'Processed Foods', 'Healthy Fats', 'Meat', 'Beans & Legumes', 'Dairy', 'Fruits & Vegetables', 'Grains'],
+      // },
+      legend: {
+        show: false,
+      },
+    },
+
+
+  };
+
+
   return (
     <>
-      <Box flexWrap={'wrap'} gap="20px" marginY={2}>
+      <Box gap="20px" marginY={2}>
         <Box
           width={'100%'}
+          position={'relative'}
           backgroundColor={colors.primary[400]}
-          padding={5}
-          display={'flex'}
-          justifyContent={'space-between'}
-          alignItems={'center'}
-          height={{ height: 'fit-content' }}>
-          <Box textAlign={'center'}>
-            <FormControlLabel
-              control={<MaterialUISwitch sx={{ m: 1 }} checked={heatOn} onChange={(e) => { setHeatOn(!heatOn) }} />}
-              label=""
-            />
-            <HeatDev isOn={heatOn} />
-          </Box>
-          <div className='heat-connect'>
-            <hr />
-            {heatOn &&
-              <>
-                <span className='heat-cirl'></span>
-                <span className='heat-cirl cirl1'></span>
-                <span className='heat-cirl cirl2'></span>
-                <span className='heat-cirl cirl3'></span>
-                <span className='heat-cirl cirl4'></span>
-                <span className='heat-cirl cirl5'></span>
-                <span className='heat-cirl cirl6'></span>
-                <span className='heat-cirl cirl7'></span>
-                <span className='heat-cirl cirl8'></span>
-                <span className='heat-cirl cirl9'></span>
-                <span className='heat-cirl cirl10'></span>
-                <span className='heat-cirl cirl11'></span>
-                <span className='heat-cirl cirl12'></span>
-              </>
+          zIndex={0}
+        >
+          <Grid container padding={5} justifyContent={'space-between'} alignItems={'center'}>
+            <Grid order={{ xs: 1, md: 1 }} backgroundColor={colors.primary[400]} zIndex={1} item>
+              <Box textAlign={'center'}>
+                <FormControlLabel
+                  sx={{ margin: 'auto' }}
+                  control={<MaterialUISwitch sx={{ m: 1 }} checked={heatOn} onChange={(e) => { setHeatOn(!heatOn) }} />}
+                  label=""
+                />
+                <HeatDev isMobile={isMobile} isOn={heatOn} />
+              </Box>
+            </Grid>
 
-            }
-
-          </div>
-
-          <Box>
-            <div className="bowl mx-auto">
-              <div className="inner">
-                <div className="fill">
-                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300" enable-background="new 0 0 300 300" xmlSpace="preserve">
-                    <path className="waveShape" d="M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4
+            <Grid order={{ xs: 3, md: 2 }} margin={'auto'} zIndex={1} item>
+              <Box>
+                <div className="bowl mx-auto" style={{ background: colors.primary[400] }}>
+                  <div className="inner">
+                    <div className="fill">
+                      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300" enable-background="new 0 0 300 300" xmlSpace="preserve">
+                        <path className="waveShape" d="M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4
 	c-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9
 	c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z" />
-                  </svg>
+                      </svg>
+                    </div>
+                    <h1 className='inner-text'>40ºC</h1>
+                  </div>
                 </div>
-                <h1 className='inner-text'>40ºC</h1>
-              </div>
-            </div>
-          </Box>
-          <div className='solor-connect'>
-            <hr />
-            {devOn &&
-              <>
-                <span className='solor-cirl'></span>
-                <span className='solor-cirl cirl1'></span>
-                <span className='solor-cirl cirl2'></span>
-                <span className='solor-cirl cirl3'></span>
-                <span className='solor-cirl cirl4'></span>
-                <span className='solor-cirl cirl5'></span>
-                <span className='solor-cirl cirl6'></span>
-                <span className='solor-cirl cirl7'></span>
-                <span className='solor-cirl cirl8'></span>
-                <span className='solor-cirl cirl9'></span>
-                <span className='solor-cirl cirl10'></span>
-                <span className='solor-cirl cirl11'></span>
-                <span className='solor-cirl cirl12'></span>
-              </>
+              </Box>
+            </Grid>
+            <Grid order={{ xs: 2, md: 3 }} backgroundColor={colors.primary[400]} zIndex={1} item>
+              <Box textAlign={'center'}>
+                <FormControlLabel
+                  sx={{ margin: 'auto' }}
+                  control={<DevOnOffSwitch sx={{ m: 1 }} checked={devOn} onChange={(e) => { setDevOn(!devOn) }} />}
+                  label=""
+                />
+                <SolarPanel isMobile={isMobile} isOn={devOn} />
+              </Box>
+            </Grid>
+          </Grid>
+          <Grid className='dev-connector' container paddingX={10} justifyContent={'center'} alignItems={'center'}>
+            {!isMobile && <>
+              <Grid item xs={6} paddingX={4}>
+                <div className='heat-connect'>
+                  <hr />
+                  {heatOn &&
+                    <>
+                      <span className='heat-cirl'></span>
+                      <span className='heat-cirl cirl1'></span>
+                      <span className='heat-cirl cirl2'></span>
+                      <span className='heat-cirl cirl3'></span>
+                      <span className='heat-cirl cirl4'></span>
+                      <span className='heat-cirl cirl5'></span>
+                      <span className='heat-cirl cirl6'></span>
+                      <span className='heat-cirl cirl7'></span>
+                      <span className='heat-cirl cirl8'></span>
+                      <span className='heat-cirl cirl9'></span>
+                      <span className='heat-cirl cirl10'></span>
+                      <span className='heat-cirl cirl11'></span>
+                      <span className='heat-cirl cirl12'></span>
+                    </>
 
-            }
+                  }
 
-          </div>
+                </div>
+              </Grid>
+              <Grid item xs={6} paddingX={4}>
+                <div className='solor-connect'>
+                  <hr />
+                  {devOn &&
+                    <>
+                      <span className='solor-cirl'></span>
+                      <span className='solor-cirl cirl1'></span>
+                      <span className='solor-cirl cirl2'></span>
+                      <span className='solor-cirl cirl3'></span>
+                      <span className='solor-cirl cirl4'></span>
+                      <span className='solor-cirl cirl5'></span>
+                      <span className='solor-cirl cirl6'></span>
+                      <span className='solor-cirl cirl7'></span>
+                      <span className='solor-cirl cirl8'></span>
+                      <span className='solor-cirl cirl9'></span>
+                      <span className='solor-cirl cirl10'></span>
+                      <span className='solor-cirl cirl11'></span>
+                      <span className='solor-cirl cirl12'></span>
+                    </>
 
-          <Box textAlign={'center'}>
-            <FormControlLabel
-              control={<DevOnOffSwitch sx={{ m: 1 }} checked={devOn} onChange={(e) => { setDevOn(!devOn) }} />}
-              label=""
-            />
-            <SolarPanel isOn={devOn} />
-          </Box>
+                  }
+
+                </div>
+              </Grid>
+            </>}
+            {isMobile && <>
+              <Grid item xs={12} marginX={'auto'} marginTop={'-25%'}>
+                <Box className="dev-connect-border" sx={{}}>
+                  <Box className="heat-connect-border"></Box>
+                  <Box className="solar-connect-border"></Box>
+                </Box>
+
+              </Grid>
+            </>}
+          </Grid>
         </Box>
-      </Box >
+
+      </Box>
       {/* GRID & CHARTS */}
       <Box>
         <Grid container spacing={3}>
+          {/* <Grid item md={2} xs={12}>
+            <Box
+              backgroundColor={colors.primary[400]}
+              height={{ height: '100%' }}
+              textAlign={'center'}
+              padding={2}
+            >
+              <Chart options={piramidData.options} series={piramidData.series} type="bar" height={350} />
+            </Box>
+          </Grid> */}
           <Grid item md="7" xs="12">
             <Box
               backgroundColor={colors.primary[400]}

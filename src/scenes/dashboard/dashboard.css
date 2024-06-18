@@ -142,7 +142,7 @@
 .heat-cirl {
     position: absolute;
     opacity: 0;
-    top: 0px;
+    top: -5px;
     width: 15px;
     height: 15px;
     background-color: rgb(7, 245, 35);
@@ -173,7 +173,7 @@
 .solor-cirl {
     position: absolute;
     opacity: 0;
-    top: 0px;
+    top: -5px;
     left: 100%;
     width: 15px;
     height: 15px;

@@ -2,11 +2,11 @@ import React from 'react';
 import { Typography, Box, useTheme } from "@mui/material";
 import { tokens } from "../theme";
 
-const Header = ({ title, subtitle }) => {
+const Header = ({ isMobile, title, subtitle }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   return (
-    <Box mb="30px">
+    <Box mb={isMobile ? '0' : "30px"}>
       <Typography
         variant="h2"
         color={colors.grey[100]}

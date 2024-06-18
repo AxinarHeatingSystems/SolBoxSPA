@@ -2,11 +2,11 @@ import React from "react";
 import Card from '@mui/material/Card';
 import './dev.css'
 
-export const HeatDev = ({ isOn }) => {
+export const HeatDev = ({ isMobile, isOn }) => {
   return (
-    <Card sx={{ height: 'fit-content', width: 'fit-content', paddingY: 5, paddingX: 4, backgroundColor: 'transparent' }}>
+	  <Card sx={{ height: 'fit-content', width: 'fit-content', paddingY: isMobile ? 2 : 5, paddingX: isMobile ? 2 : 4, backgroundColor: 'transparent' }}>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"
-        viewBox="0 0 512 512" width="150" height='150' xmlSpace="preserve">
+			  viewBox="0 0 512 512" width={isMobile ? "50" : "150"} height={isMobile ? "50" : "150"} xmlSpace="preserve">
 
         <g>
           <rect x="164.571" y="140.016" style={{ fill: '#3D9AE2' }} width="52.245" height="31.347" />
