@@ -25,11 +25,11 @@
     
     .heat-connect-border {
         border-bottom: 10px dotted white;
-            border-left: 10px dotted rgb(137, 16, 16);
+            border-left: 10px dotted white;
         border-image: url('../../assets/dotHeatAnimatio.svg');
             border-image-slice: 32;
             border-image-repeat: round;
-            width: 100%;
+            width: 50%;
         }
         
         .solar-connect-border {
@@ -38,5 +38,5 @@
         border-image: url('../../assets/dotSolarAnimation.svg');
             border-image-slice: 34;
             border-image-repeat: round;
-            width: 100%;
+            width: 50%;
 }

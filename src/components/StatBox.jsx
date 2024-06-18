@@ -26,7 +26,7 @@ const StatBox = ({ isMobile, title, subtitle, icon, progress, increase, isSelect
         <Typography
           variant={isMobile ? "body1" : "h4"}
           fontWeight="bold"
-          sx={{ color: isSelected ? colors.grey[900] : colors.grey[100], textWrap: 'nowrap' }}
+          sx={{ color: isSelected && isMobile ? colors.grey[900] : colors.grey[100], textWrap: 'nowrap' }}
         >
           {title}
         </Typography>
