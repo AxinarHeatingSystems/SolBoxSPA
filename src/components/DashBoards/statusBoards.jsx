@@ -201,10 +201,11 @@ export const StatusBoards = () => {
       {/* GRID & CHARTS */}
       <Box>
         <Grid container spacing={3}>
-          <Grid item md="8" xs="12">
+          <Grid item md="7" xs="12">
             <Box
               backgroundColor={colors.primary[400]}
               height={{ height: 'fit-content' }}
+              textAlign={'center'}
             >
               <GaugeComponent
                 type="semicircle"
@@ -255,7 +256,7 @@ export const StatusBoards = () => {
               {/* <GaugeChart id="gauge-chart1" /> */}
             </Box>
           </Grid>
-          <Grid item md="4" xs="12">
+          <Grid item md="5" xs="12">
             <Box
               backgroundColor={colors.primary[400]}
               padding={5}

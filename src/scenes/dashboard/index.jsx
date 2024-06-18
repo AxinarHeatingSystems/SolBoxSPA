@@ -45,13 +45,126 @@ const Dashboard = () => {
       <Box flexGrow={1}>
         <Box m="20px">
           {/* HEADER */}
-          <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Box className="header-bar">
+            <Grid container spacing={2} marginBottom={2} alignItems={'baseline'}>
+              <Grid item md={4} xs={12}>
+                <Header title="Device 1" subtitle="Welcome to this device dashboard" />
+              </Grid>
+              <Grid item md={8} xs={12}>
+                <Box>
+                  <Grid container spacing={2} marginBottom={2}>
+                    <Grid item md={3} sm={6} xs={12}>
+                      <Box
+                        onClick={() => { subMenuClicked(1) }}
+                        gridColumn="span 3"
+                        backgroundColor={colors.primary[400]}
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        paddingY={2}
+                        sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
+                      >
+                        <StatBox
+                          isSelected={submenuId === 1}
+                          title="Status"
+                          subtitle=""
+                          progress="0.75"
+                          increase=""
+                          icon={
+                            <InsightsIcon
+                              sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+                            />
+                          }
+                        />
+                      </Box>
+                    </Grid>
+                    <Grid item md={3} sm={6} xs={12}>
+                      <Box
+                        onClick={() => { subMenuClicked(2) }}
+                        gridColumn="span 3"
+                        backgroundColor={colors.primary[400]}
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        paddingY={2}
+                        sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
+                      >
+                        <StatBox
+                          isSelected={submenuId === 2}
+                          title="Setting"
+                          subtitle=""
+                          progress="0.50"
+                          increase=""
+                          icon={
+                            <SettingsSuggestIcon
+                              sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+                            />
+                          }
+                        />
+                      </Box>
+                    </Grid>
+                    <Grid item md={3} sm={6} xs={12}>
+                      <Box
+                        onClick={() => { subMenuClicked(3) }}
+                        gridColumn="span 3"
+                        backgroundColor={colors.primary[400]}
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        paddingY={2}
+                        sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
+                      >
+                        <StatBox
+                          isSelected={submenuId === 3}
+                          title="Schedule"
+                          subtitle=""
+                          progress="0.30"
+                          increase=""
+                          icon={
+                            <CalendarMonthIcon
+                              sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+                            />
+                          }
+                        />
+                      </Box>
+                    </Grid>
+                    <Grid item md={3} sm={6} xs={12}>
+                      <Box
+                        onClick={() => { subMenuClicked(4) }}
+                        gridColumn="span 3"
+                        backgroundColor={colors.primary[400]}
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        paddingY={2}
+                        sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
+                      >
+                        <StatBox
+                          isSelected={submenuId === 4}
+                          title="Share Device"
+                          subtitle=""
+                          progress="0.80"
+                          increase=""
+                          icon={
+                            <LanIcon
+                              sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+                            />
+                          }
+                        />
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+          {/* <Box display="flex" justifyContent="space-between" alignItems="center">
             <Box display={'flex'} alignItems={'center'}>
               {mobileScreenDetect &&
                 < DarkModeOutlinedIcon className='mx-2' />
               }
 
-            <Header title="Device 1" subtitle="Welcome to this device dashboard" />
+
             </Box>
 
             <IconButton onClick={colorMode.toggleColorMode}>
@@ -61,110 +174,10 @@ const Dashboard = () => {
                 <LightModeOutlinedIcon />
               )}
             </IconButton>
-          </Box>
+          </Box> */}
           {/* Grid & SubMenus */}
-          <Grid container spacing={2} marginBottom={2}>
-            <Grid item md={3} sm={6} xs={12}>
-              <Box
-                onClick={() => { subMenuClicked(1) }}
-                gridColumn="span 3"
-                backgroundColor={colors.primary[400]}
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                paddingY={2}
-                sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
-              >
-                <StatBox
-                  isSelected={submenuId === 1}
-                  title="Status"
-                  subtitle=""
-                  progress="0.75"
-                  increase=""
-                  icon={
-                    <InsightsIcon
-                      sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-                    />
-                  }
-                />
-              </Box>
-            </Grid>
-            <Grid item md={3} sm={6} xs={12}>
-              <Box
-                onClick={() => { subMenuClicked(2) }}
-                gridColumn="span 3"
-                backgroundColor={colors.primary[400]}
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                paddingY={2}
-                sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
-              >
-                <StatBox
-                  isSelected={submenuId === 2}
-                  title="Setting"
-                  subtitle=""
-                  progress="0.50"
-                  increase=""
-                  icon={
-                    <SettingsSuggestIcon
-                      sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-                    />
-                  }
-                />
-              </Box>
-            </Grid>
-            <Grid item md={3} sm={6} xs={12}>
-              <Box
-                onClick={() => { subMenuClicked(3) }}
-                gridColumn="span 3"
-                backgroundColor={colors.primary[400]}
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                paddingY={2}
-                sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
-              >
-                <StatBox
-                  isSelected={submenuId === 3}
-                  title="Schedule"
-                  subtitle=""
-                  progress="0.30"
-                  increase=""
-                  icon={
-                    <CalendarMonthIcon
-                      sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-                    />
-                  }
-                />
-              </Box>
-            </Grid>
-            <Grid item md={3} sm={6} xs={12}>
-              <Box
-                onClick={() => { subMenuClicked(4) }}
-                gridColumn="span 3"
-                backgroundColor={colors.primary[400]}
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                paddingY={2}
-                sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
-              >
-                <StatBox
-                  isSelected={submenuId === 4}
-                  title="Share Device"
-                  subtitle=""
-                  progress="0.80"
-                  increase=""
-                  icon={
-                    <LanIcon
-                      sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-                    />
-                  }
-                />
-              </Box>
-            </Grid>
-          </Grid>
+
+
           {submenuId === 1 && <StatusBoards />}
           {submenuId === 2 && <SettingBoards />}
           {submenuId === 3 && <ScheduleBoards />}
