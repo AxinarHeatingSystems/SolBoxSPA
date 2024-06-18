@@ -45,10 +45,10 @@ const Dashboard = () => {
         <Box m="20px">
           {/* HEADER */}
           <Box className="header-bar">
-            <Grid container spacing={2} marginBottom={2} alignItems={'baseline'}>
-              <Grid item md={4} xs={12}>
+            <Grid container spacing={2} marginBottom={mobileScreenDetect ? 0 : 2} alignItems={'baseline'}>
+              {!mobileScreenDetect && <Grid item md={4} xs={12}>
                 <Header isMobile={mobileScreenDetect} title="Device 1" subtitle="Welcome to this device dashboard" />
-              </Grid>
+              </Grid>}
               <Grid item md={8} xs={12}>
                 <Box>
                   <Grid container spacing={mobileScreenDetect ? 0 : 2} marginBottom={2}>

@@ -69,12 +69,14 @@ const Sidebar = ({ isMobile }) => {
     '& .pro-menu .mobileMenu-list': {
       position: 'absolute',
       width: '100%',
-      boxShadow: 'inset 0px -2px 2px 0px'
+      boxShadow: 'inset 0px -2px 2px 0px',
+      zIndex: 10,
     },
     '& .pro-menu .mobileMenu-list .pro-inner-item': {
       display: 'flex',
       padding: "5px 35px 5px 20px !important",
       alignItems: 'center',
+
     },
     "& .pro-inner-item:hover": {
       color: "#868dfb !important",
@@ -104,8 +106,8 @@ const Sidebar = ({ isMobile }) => {
               alignItems="center"
               mx="15px"
             >
-              <Typography variant="h3" color={colors.grey[100]}>
-                iOT Dashboard
+              <Typography variant="h3" display={'flex'} alignItems={'baseline'} color={colors.grey[100]}>
+                iOT Dashboard {isMobile && <Typography variant='body1' marginX={1}>( Device 1 )</Typography>}
               </Typography>
               <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                 {isCollapsed && <ClearIcon />}

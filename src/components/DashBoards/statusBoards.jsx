@@ -347,9 +347,49 @@ export const StatusBoards = ({ isMobile }) => {
                 maxValue={100}
               />
               {/* <GaugeChart id="gauge-chart1" /> */}
+              {isMobile && <Grid container spacing={1} padding={1}>
+                <Grid item xs={6} paddingX={1}>
+                  <Box display={'flex'} justifyContent={'space-between'} alignItems={'end'}
+                    sx={{ borderBottom: '3px solid', paddingBottom: '2px' }}>
+                    <Typography
+                      variant="body1"
+                      fontWeight="500"
+                      sx={{ color: colors.grey[100] }}
+                    >
+                      Today
+                    </Typography>
+                    <Typography
+                      variant='body1'
+                      fontWeight='bold'
+                      sx={{ color: colors.grey[100] }}
+                    >
+                      35 kwh
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={6} paddingX={1}>
+                  <Box display={'flex'} justifyContent={'space-between'} alignItems={'end'}
+                    sx={{ borderBottom: '3px solid', paddingBottom: '2px' }}>
+                    <Typography
+                      variant="body1"
+                      fontWeight="500"
+                      sx={{ color: colors.grey[100] }}
+                    >
+                      Saved
+                    </Typography>
+                    <Typography
+                      variant='body1'
+                      fontWeight='bold'
+                      sx={{ color: colors.grey[100] }}
+                    >
+                      35 €
+                    </Typography>
+                  </Box>
+                </Grid>
+              </Grid>}
             </Box>
           </Grid>
-          <Grid item md="5" xs="12">
+          {!isMobile && <Grid item md="5" xs="12">
             <Box
               backgroundColor={colors.primary[400]}
               padding={5}
@@ -392,7 +432,7 @@ export const StatusBoards = ({ isMobile }) => {
                 </Typography>
               </Box>
             </Box>
-          </Grid>
+          </Grid>}
         </Grid>
       </Box>
 
