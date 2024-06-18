@@ -33,9 +33,9 @@ jobs:
       - name: Tailscale
         uses: AxinarHeatingSystems/SolBoxSPA@main
         with:
-          oauth-client-id: "kUqipedJT311CNTRL"
-          oauth-secret: "tskey-client-kUqipedJT311CNTRL-G2xJbDwTQwRYmaQjiXxZwRtEafz191nk8"
-          tags: tag:ci
+          INPUT_OAUTH-CLIENT-ID: "kUqipedJT311CNTRL"
+          INPUT_OAUTH-SECRET: "tskey-client-kUqipedJT311CNTRL-G2xJbDwTQwRYmaQjiXxZwRtEafz191nk8"
+          INPUT_TAGS: tag:ci
       # - name: deploy to main
       #   uses: AxinarHeatingSystems/SolBoxSPA@main
       #   with:
