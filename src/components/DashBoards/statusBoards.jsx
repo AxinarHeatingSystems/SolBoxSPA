@@ -271,8 +271,8 @@ export const StatusBoards = ({ isMobile }) => {
             {isMobile && <>
               <Grid item xs={12} marginX={'auto'} marginTop={'-25%'}>
                 <Box className="dev-connect-border" sx={{}}>
-                  {heatOn && <Box className="heat-connect-border"></Box>}
-                  {devOn && <Box className="solar-connect-border"></Box>}
+                  <Box className={heatOn ? "connect-content heat-connect-border" : "connect-content"}></Box>
+                  <Box className={devOn ? "connect-content solar-connect-border" : "connect-content"}></Box>
                 </Box>
 
               </Grid>
