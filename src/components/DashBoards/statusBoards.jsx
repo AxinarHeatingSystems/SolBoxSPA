@@ -252,7 +252,7 @@ export const StatusBoards = () => {
                 minValue={0}
                 maxValue={100}
               />
-              <GaugeChart id="gauge-chart1" />
+              {/* <GaugeChart id="gauge-chart1" /> */}
             </Box>
           </Grid>
           <Grid item md="4" xs="12">
