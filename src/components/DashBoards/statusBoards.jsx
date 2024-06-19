@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTheme, styled, Box, Typography, Switch, FormControlLabel, Grid } from "@mui/material";
 import GaugeComponent from 'react-gauge-component'
 import GaugeChart from 'react-gauge-chart'
 import Chart from "react-apexcharts";
 import { tokens } from "../../theme";
 import './statusBoard.css';
+import { MqttConnect } from '../mqtt-connect/mqttServe'; 
+
 
 import { HeatDev } from '../DeviceComponents/heatDev';
 import { SolarPanel } from '../DeviceComponents/solarPanel';
@@ -111,7 +113,16 @@ export const StatusBoards = ({ isMobile }) => {
 
   const [heatOn, setHeatOn] = useState(true);
   const [devOn, setDevOn] = useState(true);
+  const [mqttClient, setMqttClient] = useState();
 
+  useEffect(() => {
+    const mqttCon = MqttConnect();
+    mqttCon.on('connect', () => {
+      console.log('Connected to MQTT broker');
+      setMqttClient(mqttCon);
+    });
+
+  }, [])
   const piramidData = {
 
     series: [
@@ -195,7 +206,7 @@ export const StatusBoards = ({ isMobile }) => {
                 <div className="bowl mx-auto" style={{ background: colors.primary[400], transform: isMobile ? 'scale(0.8)' : 'scale(1)' }}>
                   <div className="inner">
                     <div className="fill">
-                      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300" enable-background="new 0 0 300 300" xmlSpace="preserve">
+                      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300" enableBackground="new 0 0 300 300" xmlSpace="preserve">
                         <path className="waveShape" d="M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4
 	c-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9
 	c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z" />
@@ -282,16 +293,6 @@ export const StatusBoards = ({ isMobile }) => {
       {/* GRID & CHARTS */}
       <Box>
         <Grid container spacing={3} >
-          {/* <Grid item md={2} xs={12}>
-            <Box
-              backgroundColor={colors.primary[400]}
-              height={{ height: '100%' }}
-              textAlign={'center'}
-              padding={2}
-            >
-              <Chart options={piramidData.options} series={piramidData.series} type="bar" height={350} />
-            </Box>
-          </Grid> */}
           <Grid item md="7" xs="12">
             <Box
               backgroundColor={colors.primary[400]}
@@ -308,7 +309,7 @@ export const StatusBoards = ({ isMobile }) => {
                   subArcs: [
                     {
                       limit: 20,
-                      color: '#EA4228',
+                      color: '#0000ff',
                       showTick: true,
                       tooltip: {
                         text: 'Too low temperature!'
@@ -319,14 +320,14 @@ export const StatusBoards = ({ isMobile }) => {
                     },
                     {
                       limit: 60,
-                      color: '#F5CD19',
+                      color: '#1af519',
                       showTick: true,
                       tooltip: {
                         text: 'Low temperature!'
                       }
                     },
                     {
-                      color: '#EA4228',
+                      color: '#ef290b',
                       tooltip: {
                         text: 'Too high temperature!'
                       }
