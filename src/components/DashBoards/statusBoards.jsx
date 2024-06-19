@@ -178,7 +178,7 @@ export const StatusBoards = ({ isMobile }) => {
           backgroundColor={colors.primary[400]}
           zIndex={0}
         >
-          <Grid container padding={5} justifyContent={'space-between'} alignItems={'center'}>
+          <Grid container paddingX={5} paddingTop={5} paddingBottom={isMobile ? 0 : 5} justifyContent={'space-between'} alignItems={'center'}>
             <Grid order={{ xs: 1, md: 1 }} backgroundColor={colors.primary[400]} zIndex={1} item>
               <Box textAlign={'center'}>
                 <FormControlLabel
@@ -192,7 +192,7 @@ export const StatusBoards = ({ isMobile }) => {
 
             <Grid order={{ xs: 3, md: 2 }} margin={'auto'} zIndex={1} item>
               <Box>
-                <div className="bowl mx-auto" style={{ background: colors.primary[400] }}>
+                <div className="bowl mx-auto" style={{ background: colors.primary[400], transform: isMobile ? 'scale(0.8)' : 'scale(1)' }}>
                   <div className="inner">
                     <div className="fill">
                       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300" enable-background="new 0 0 300 300" xmlSpace="preserve">
@@ -237,8 +237,7 @@ export const StatusBoards = ({ isMobile }) => {
                       <span className='heat-cirl cirl10'></span>
                       <span className='heat-cirl cirl11'></span>
                       <span className='heat-cirl cirl12'></span>
-                    </>
-
+                  </>
                   }
 
                 </div>
@@ -264,7 +263,6 @@ export const StatusBoards = ({ isMobile }) => {
                     </>
 
                   }
-
                 </div>
               </Grid>
             </>}
@@ -283,7 +281,7 @@ export const StatusBoards = ({ isMobile }) => {
       </Box>
       {/* GRID & CHARTS */}
       <Box>
-        <Grid container spacing={3}>
+        <Grid container spacing={3} >
           {/* <Grid item md={2} xs={12}>
             <Box
               backgroundColor={colors.primary[400]}
@@ -347,7 +345,7 @@ export const StatusBoards = ({ isMobile }) => {
                 maxValue={100}
               />
               {/* <GaugeChart id="gauge-chart1" /> */}
-              {isMobile && <Grid container spacing={1} padding={1}>
+              {isMobile && <Grid container spacing={1} paddingX={1} paddingY={2} >
                 <Grid item xs={6} paddingX={1}>
                   <Box display={'flex'} justifyContent={'space-between'} alignItems={'end'}
                     sx={{ borderBottom: '3px solid', paddingBottom: '2px' }}>
