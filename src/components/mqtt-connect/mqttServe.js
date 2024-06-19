@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react";
-import mqtt from "mqtt";
+import mqtt, { connect } from "mqtt";
 
 export const MqttConnect = () => {
-  const brokerUrl = 'mqtt://100.90.169.20/';
+  const brokerUrl = 'ws://100.90.169.20/mqtt';
   const options = {
     port: '18083',
     user: 'admin',
     password: '$axinaR%6623&',
     clientId: 'mqttx_6885a045',
     name: 'emqx@172.22.0.2',
+    protocal: 'mqtt'
   }
   
-  const mqttConnector = mqtt.connect(brokerUrl);
+  const mqttConnector = mqtt.connect(brokerUrl, options);
   return mqttConnector
 
 }
