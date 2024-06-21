@@ -31,6 +31,11 @@ client.on('message', (topic, payload) => {
 })
   
 async function mqttconnect(input) {
-    
+    client.subscribe("axinar/solbox/08F9E0E18A6C/jsonTelemetry", (err) => {
+        if (!err) {
+        //   client.publish("presence", "Hello mqtt");
+            console.log('subscribed');
+        }
+      });
     return 'mqTTConnect';
 }
