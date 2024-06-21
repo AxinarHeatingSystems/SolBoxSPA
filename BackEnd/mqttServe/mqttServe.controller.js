@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const mqTTService = require('./mqttServe.service');
+const mqttServeService = require('./mqttServe.service');
 
-router.post('/devConnect', mqttConnection)
+router.get('/devConnect', mqttConnection)
 module.exports = router;
 
 function mqttConnection(req, res, next) {
-  mqTTService.mqttConnect().then(
+  console.log(mqttServeService)
+  mqttServeService.mqttconnect(req.body).then(
     resData => resData? res.json(resData) : res.status(400).json({ message: 'Username or password is incorrect' })
   ).catch(err => next(err));
 }

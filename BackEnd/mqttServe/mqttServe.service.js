@@ -2,7 +2,7 @@ const config = require('config.json');
 const mqtt = require('mqtt');
 
 module.exports = {
-    mqttConnect
+    mqttconnect
 }
 const clientId = 'emqx_nodejs_' + Math.random().toString(16).substring(2, 8)
 
@@ -18,12 +18,19 @@ const options = {
   }
 
 const mqttPath = `${config.protocol}://${config.host}:${config.port}`
+const client = mqtt.connect(mqttPath, options);
+client.on('connect', () => {
+    console.log(`${config.protocol}: Connected`)
+})
+client.on('reconnect', (error) => {
+  console.log(`Reconnecting(${config.protocol}):`, error)
+})
 
-
-function mqttConnect() {
-    const client = mqtt.connect(connectUrl, options);
-    client.on('connect', () => {
-        console.log(`${config.protocol}: Connected`)
-    })    
+client.on('message', (topic, payload) => {
+    console.log('Received Message:', topic, payload.toString())
+})
+  
+async function mqttconnect(input) {
+    
     return 'mqTTConnect';
 }
