@@ -1,15 +1,12 @@
+
 FROM node:20
 
-RUN npm install pm2@latest --global --quiet
-
 WORKDIR /usr/src/app
+
 COPY package*.json ./
-
-# Bundle app source
+RUN npm install
 COPY . .
+CMD ["npm", "run", "start"]
 
-RUN npm ci --only=production
+# EXPOSE 4000
 
-EXPOSE 8080
-
-CMD ["pm2-runtime", "./config/pm2.json"]

@@ -1,0 +1,28 @@
+services:
+  
+  nginx:
+    depends_on:
+      - backend
+      - frontend
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    ports:
+      - "3050:80"
+      
+  backend:
+    build:
+      dockerfile: Dockerfile
+      context: "./BackEnd"
+    volumes:
+      - /app/node_modules
+      - ./BackEnd:/app
+    
+  frontend:
+    build:
+      dockerfile: Dockerfile
+      context: ./FrontEnd
+    volumes:
+      - /app/node_modules
+      - ./FrontEnd:/app
