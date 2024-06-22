@@ -2,7 +2,9 @@ const config = require('config.json');
 const mqtt = require('mqtt');
 
 module.exports = {
-    mqttconnect
+    mqttconnect,
+    mqttmessage,
+    mqttpublish
 }
 const clientId = 'emqx_nodejs_' + Math.random().toString(16).substring(2, 8)
 
@@ -19,6 +21,9 @@ const options = {
 
 const mqttPath = `${config.protocol}://${config.host}:${config.port}`
 const client = mqtt.connect(mqttPath, options);
+
+let lastMessage
+
 client.on('connect', () => {
     console.log(`${config.protocol}: Connected`)
 })
@@ -28,14 +33,30 @@ client.on('reconnect', (error) => {
 
 client.on('message', (topic, payload) => {
     console.log('Received Message:', topic, payload.toString())
+    lastMessage = payload.toString();
 })
   
 async function mqttconnect(input) {
-    client.subscribe("axinar/solbox/08F9E0E18A6C/jsonTelemetry", (err) => {
+    const devId = '08F9E0E18A6C';
+    const devTopic = `axinar/solbox/${devId}/jsonTelemetry`
+    const clientsTopic = `$SYS/broker/chen_list`;
+    client.subscribe(clientsTopic, (err) => {
         if (!err) {
         //   client.publish("presence", "Hello mqtt");
             console.log('subscribed');
         }
       });
     return 'mqTTConnect';
+}
+
+async function mqttmessage(res) {
+    if(lastMessage)
+       return lastMessage
+    else
+        return null;
+}
+
+async function mqttpublish(res) {
+    console.log(res)
+    return res;
 }
