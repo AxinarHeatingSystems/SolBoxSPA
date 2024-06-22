@@ -39,7 +39,7 @@ client.on('message', (topic, payload) => {
 async function mqttconnect(input) {
     const devId = '08F9E0E18A6C';
     const devTopic = `axinar/solbox/${devId}/jsonTelemetry`
-    const clientsTopic = `$SYS/broker/chen_state/#`;
+    const clientsTopic = `$SYS/brokers`;
     client.subscribe(clientsTopic, (err) => {
         if (!err) {
         //   client.publish("presence", "Hello mqtt");
