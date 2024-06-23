@@ -5,9 +5,8 @@ import GaugeChart from 'react-gauge-chart'
 import Chart from "react-apexcharts";
 import { tokens } from "../../theme";
 import './statusBoard.css';
-import { MqttConnect } from '../mqtt-connect/mqttServe'; 
-
-
+import suntest from '../../assets/sumimg/suntest.svg'
+import iotLogo from '../../assets/iotLogo.svg'
 import { HeatDev } from '../DeviceComponents/heatDev';
 import { SolarPanel } from '../DeviceComponents/solarPanel';
 
@@ -113,16 +112,7 @@ export const StatusBoards = ({ isMobile }) => {
 
   const [heatOn, setHeatOn] = useState(true);
   const [devOn, setDevOn] = useState(true);
-  const [mqttClient, setMqttClient] = useState();
 
-  useEffect(() => {
-    const mqttCon = MqttConnect();
-    mqttCon.on('connect', () => {
-      console.log('Connected to MQTT broker');
-      setMqttClient(mqttCon);
-    });
-
-  }, [])
   const piramidData = {
 
     series: [
@@ -283,7 +273,6 @@ export const StatusBoards = ({ isMobile }) => {
                   <Box className={heatOn ? "connect-content heat-connect-border" : "connect-content"}></Box>
                   <Box className={devOn ? "connect-content solar-connect-border" : "connect-content"}></Box>
                 </Box>
-
               </Grid>
             </>}
           </Grid>
@@ -298,6 +287,7 @@ export const StatusBoards = ({ isMobile }) => {
               backgroundColor={colors.primary[400]}
               height={{ height: 'fit-content' }}
               textAlign={'center'}
+              position={'relative'}
             >
               <GaugeComponent
                 type="semicircle"
@@ -308,6 +298,7 @@ export const StatusBoards = ({ isMobile }) => {
                   // gradient: true,
                   subArcs: [
                     {
+                      className: 'arc1',
                       limit: 20,
                       color: '#0000ff',
                       showTick: true,
@@ -338,18 +329,33 @@ export const StatusBoards = ({ isMobile }) => {
                   color: '#345243',
                   length: 0.80,
                   width: 15,
-                  // elastic: true,
+                  elastic: true,
                 }}
 
                 value={50}
                 minValue={0}
                 maxValue={100}
-              />
+              >
+              </GaugeComponent>
+              {/* <Grid position={'absolute'} container spacing={1} paddingX={6} justifyContent={'space-between'}
+                sx={{ top: 0, width: '100%', height: '100%' }}
+              >
+                <Grid item sx={{ height: '100%' }}>
+                  <img src={suntest} width={30} style={{ position: 'relative', top: 'calc(100% - 60px)', }} />
+                </Grid>
+                <Grid item sx={{ height: '100%' }} alignItems={'center'}>
+                  <img src={suntest} width={30} style={{ position: 'relative', top: '60px' }} />
+                </Grid>
+                <Grid item sx={{ height: '100%' }}>
+                  <img src={suntest} width={30} style={{ position: 'relative', top: 'calc(100% - 60px)' }} />
+                </Grid>
+
+              </Grid> */}
               {/* <GaugeChart id="gauge-chart1" /> */}
               {isMobile && <Grid container spacing={1} paddingX={1} paddingY={2} >
                 <Grid item xs={6} paddingX={1}>
                   <Box display={'flex'} justifyContent={'space-between'} alignItems={'end'}
-                    sx={{ borderBottom: '3px solid', paddingBottom: '2px' }}>
+                    style={{ borderBottom: '3px solid', paddingBottom: '2px', flexWrap: 'wrap' }}>
                     <Typography
                       variant="body1"
                       fontWeight="500"
@@ -367,7 +373,7 @@ export const StatusBoards = ({ isMobile }) => {
                   </Box>
                 </Grid>
                 <Grid item xs={6} paddingX={1}>
-                  <Box display={'flex'} justifyContent={'space-between'} alignItems={'end'}
+                  <Box display={'flex'} flexWrap={'wrap'} justifyContent={'space-between'} alignItems={'end'}
                     sx={{ borderBottom: '3px solid', paddingBottom: '2px' }}>
                     <Typography
                       variant="body1"

@@ -6,7 +6,7 @@ const Home = () => {
     return (
         <Box className="container">
             <Typography variant="h1">
-                Here is MQTT testing Page
+                Here is IOT testing Page
             </Typography>
         </Box>
     )
