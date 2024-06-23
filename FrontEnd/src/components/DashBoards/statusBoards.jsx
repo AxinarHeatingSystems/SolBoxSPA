@@ -5,7 +5,9 @@ import GaugeChart from 'react-gauge-chart'
 import Chart from "react-apexcharts";
 import { tokens } from "../../theme";
 import './statusBoard.css';
-import suntest from '../../assets/sumimg/suntest.svg'
+import sunglus from '../../assets/sumimg/sunglus.svg'
+import sunface from '../../assets/sumimg/sunface.svg'
+import sunSad from '../../assets/sumimg/sunsleep.svg'
 import iotLogo from '../../assets/iotLogo.svg'
 import { HeatDev } from '../DeviceComponents/heatDev';
 import { SolarPanel } from '../DeviceComponents/solarPanel';
@@ -285,10 +287,11 @@ export const StatusBoards = ({ isMobile }) => {
           <Grid item md="7" xs="12">
             <Box
               backgroundColor={colors.primary[400]}
-              height={{ height: 'fit-content' }}
+              sx={{ height: 'fit-content' }}
               textAlign={'center'}
               position={'relative'}
             >
+              <Box position={'relative'} paddingBottom={2}>
               <GaugeComponent
                 type="semicircle"
                 arc={{
@@ -337,20 +340,23 @@ export const StatusBoards = ({ isMobile }) => {
                 maxValue={100}
               >
               </GaugeComponent>
-              {/* <Grid position={'absolute'} container spacing={1} paddingX={6} justifyContent={'space-between'}
+                <Grid position={'absolute'} container spacing={1} paddingX={7} justifyContent={'space-between'}
                 sx={{ top: 0, width: '100%', height: '100%' }}
               >
                 <Grid item sx={{ height: '100%' }}>
-                  <img src={suntest} width={30} style={{ position: 'relative', top: 'calc(100% - 60px)', }} />
+                    <img src={sunSad} width={30} style={{ position: 'relative', top: 'calc(100% - 25px)', }} />
                 </Grid>
                 <Grid item sx={{ height: '100%' }} alignItems={'center'}>
-                  <img src={suntest} width={30} style={{ position: 'relative', top: '60px' }} />
+                    <img src={sunface} width={30} style={{ position: 'relative', top: '60px' }} />
                 </Grid>
                 <Grid item sx={{ height: '100%' }}>
-                  <img src={suntest} width={30} style={{ position: 'relative', top: 'calc(100% - 60px)' }} />
+                    <img src={sunglus} width={30} style={{ position: 'relative', top: 'calc(100% - 25px)' }} />
                 </Grid>
 
-              </Grid> */}
+                </Grid>
+              </Box>
+
+
               {/* <GaugeChart id="gauge-chart1" /> */}
               {isMobile && <Grid container spacing={1} paddingX={1} paddingY={2} >
                 <Grid item xs={6} paddingX={1}>
