@@ -3,7 +3,7 @@ FROM node:alpine as build
 WORKDIR /app
 COPY . .
 RUN npm cache clean --force  
-RUN npm install
+RUN npm install --force
 RUN npm run build
 
 # production environment
