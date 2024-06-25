@@ -2,12 +2,13 @@ const express = require('express');
 const router = express.Router();
 const mqttServeService = require('./mqttServe.service');
 
-router.get('/devConnect', mqttConnection)
+router.post('/devConnect', mqttConnection)
 router.get('/devMessage', mqttMessage)
 router.post('/devControl', mqttPublish);
 module.exports = router;
 
 function mqttConnection(req, res, next) {
+  console.log(req.body);
   mqttServeService.mqttconnect(req.body).then(
     resData => resData? res.json(resData) : res.status(400).json({ message: 'connection is failed' })
   ).catch(err => next(err));

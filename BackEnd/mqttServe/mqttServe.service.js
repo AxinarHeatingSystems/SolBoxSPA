@@ -38,7 +38,9 @@ client.on('message', (topic, payload) => {
 })
   
 async function mqttconnect(input) {
-    const devId = '08B61F971EAC';
+    console.log(input);
+    const devId = input.devId;
+    // const devId = '08B61F971EAC';
     const devTopic = `axinar/solbox/${devId}/jsonTelemetry`
     const clientsTopic = `$SYS/brokers`;
     client.subscribe(devTopic, (err) => {

@@ -3,6 +3,26 @@ import axios from 'axios';
 
 export const BASE_BACKEND_URL = process.env.REACT_APP_BASE_BACKEND_URL
 
+export const devConnection = async (devId) => {
+  let resultState = {state: '', data: {}};
+
+  const apiUrl = `${BASE_BACKEND_URL}mqtt/devConnect`;
+  
+  const data = {devId: devId};
+    await axios({
+      method: 'post',
+      url: apiUrl,
+      data: data
+    }).then(function(response) {
+      resultState.state = 'success';
+      resultState.data = response.data;
+    }).catch(function (err){
+      resultState.state = 'error';
+      resultState.data = err.message;
+    })
+    return resultState;
+}
+
 export const getDeviceMessage = async (devId) => {
     let resultState = {state: '', data: {}};
    
@@ -10,7 +30,7 @@ export const getDeviceMessage = async (devId) => {
     await axios({
       method: 'get',
       url: apiUrl,
-    }).then(function(response) {
+     }).then(function(response) {
       resultState.state = 'success';
       resultState.data = response.data;
     }).catch(function (err){
