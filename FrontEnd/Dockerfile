@@ -1,10 +1,10 @@
 # build environment
-FROM node:alpine as build
+FROM node:20
 WORKDIR /app
 COPY . .
-# RUN npm cache clean --force  
-# RUN npm install --force
-# RUN npm run build
+RUN npm cache clean --force  
+RUN npm install --force
+RUN npm run build
 
 # production environment
 FROM nginx:stable-alpine
