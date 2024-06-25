@@ -190,7 +190,7 @@ export const StatusBoards = ({ isMobile, devData }) => {
     devInfo.DeviceEnabled = devOn;
     devInfo.RelayEnabled = heatOn;
     console.log('devInfo Changed', devInfo);
-    devControlFunc(devInfo);
+    // devControlFunc(devInfo);
   }, [heatOn, devOn])
 
   const devControlFunc = (devInfo) => {

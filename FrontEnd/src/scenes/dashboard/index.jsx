@@ -40,14 +40,14 @@ const Dashboard = () => {
 
   const loadDevData = async () => {
     const devId = '08F9E0E18FF4'
-    devConnection(devId);
+    await devConnection(devId);
+    setTimeout(async () => {
+      const devRes = await getDeviceMessage(devId);
+      console.log(devRes);
+      if (devRes.state != 'success') return;
 
-    const devRes = await getDeviceMessage(devId);
-    console.log(devRes);
-    if (devRes.state != 'success') return;
-
-    setDevInfo(devRes.data);
-
+      setDevInfo(devRes.data);
+    }, 1000)
   }
 
   const subMenuClicked = (menuId) => {
