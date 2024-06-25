@@ -1,5 +1,5 @@
 # build environment
-FROM node:20 as build
+FROM node:latest as build
 WORKDIR /app
 COPY . .
 RUN npm cache clean --force  
