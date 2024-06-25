@@ -23,6 +23,7 @@ const options = {
 const mqttPath = `${config.protocol}://${config.host}:${config.port}`
 const client = mqtt.connect(mqttPath, options);
 
+// let lastMessage = tmpDev;
 let lastMessage = tmpDev;
 
 client.on('connect', () => {
@@ -42,6 +43,7 @@ async function mqttconnect(input) {
     const devId = input.devId;
     // const devId = '08B61F971EAC';
     const devTopic = `axinar/solbox/${devId}/jsonTelemetry`
+    console.log('devTopic', devTopic);
     const clientsTopic = `$SYS/brokers`;
     client.subscribe(devTopic, (err) => {
         if (!err) {
