@@ -80,5 +80,5 @@ const options = {
     cert: fs.readFileSync('./certificate/cert1.pem')
   };
 
-// http.createServer(app).listen(4000);
+http.createServer(app).listen(4000);
 https.createServer(options, app).listen(4000);
