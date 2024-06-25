@@ -1,5 +1,7 @@
 ﻿require('rootpath')();
 const express = require('express');
+var http = require('http');
+var https = require('https');
 const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -10,6 +12,7 @@ const { WebSocketServer } = require('ws');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
 // const corsOpts = {
 //     methods: [
 //         'POST',
@@ -65,8 +68,13 @@ app.use('/mqtt', require('./mqttServe/mqttServe.controller'));
 app.use(errorHandler);
 
 // start server
-const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 4000;
-const server = app.listen(port, function () {
-    // mqtt.server();
-    console.log('Server listening on port ' + port);
-});
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(app);
+
+httpServer.listen(4000);
+httpsServer.listen(4001);
+// const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 4000;
+// const server = app.listen(port, function () {
+//     // mqtt.server();
+//     console.log('Server listening on port ' + port);
+// });
