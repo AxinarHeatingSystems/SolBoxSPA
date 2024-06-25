@@ -2,6 +2,7 @@
 FROM node:alpine as build
 WORKDIR /app
 COPY . .
+RUN yarn cache clean
 RUN yarn
 RUN yarn build
 
