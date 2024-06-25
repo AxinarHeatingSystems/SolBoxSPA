@@ -1,8 +1,8 @@
 import Card from '@mui/material/Card';
 
-export const SolarPanel = ({ isMobile, isOn }) => {
+export const SolarPanel = ({ isMobile, isOn, cycleVal }) => {
   return (
-    <Card sx={{ height: 'fit-content', width: 'fit-content', padding: isMobile ? 2 : 4, backgroundColor: 'transparent' }}>
+    <Card sx={{ position: 'relative', height: 'fit-content', width: 'fit-content', padding: isMobile ? 2 : 4, backgroundColor: 'transparent' }}>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width={isMobile ? 50 : 150} height={isMobile ? 50 : 150} viewBox="0 0 111.34 122.88"
         style={{ enableBackground: 'new 0 0 111.34 122.88' }} xmlSpace="preserve">
@@ -31,6 +31,7 @@ export const SolarPanel = ({ isMobile, isOn }) => {
           <polygon className="st0" points="65.71,48.87 66.51,56.95 81.58,56.95 80.1,48.87 65.71,48.87 65.71,48.87" />
         </g>
       </svg>
+      <span className='devOn-Cycle'>{cycleVal} %</span>
     </Card>
   )
 }
