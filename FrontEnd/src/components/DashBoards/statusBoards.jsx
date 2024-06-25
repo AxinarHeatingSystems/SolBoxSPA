@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useTheme, styled, Box, Typography, Switch, FormControlLabel, Grid } from "@mui/material";
 import GaugeComponent from 'react-gauge-component'
-import GaugeChart from 'react-gauge-chart'
-import Chart from "react-apexcharts";
+// import GaugeChart from 'react-gauge-chart'
+// import Chart from "react-apexcharts";
 import { tokens } from "../../theme";
 import './statusBoard.css';
 import sunglus from '../../assets/sumimg/sunglus.svg'
@@ -117,6 +117,8 @@ export const StatusBoards = ({ isMobile, devData }) => {
   const [devOn, setDevOn] = useState(true);
   const [maxPower, setMaxPower] = useState(10);
   const [minPower, setMinPower] = useState(0);
+  const [nowPower, setNowPower] = useState(0);
+  const [todayKWH, setTodayKWH] = useState(0);
 
   const piramidData = {
 
@@ -179,6 +181,8 @@ export const StatusBoards = ({ isMobile, devData }) => {
     setHeatOn(devData.RelayEnabled);
     setMaxPower(devData.maxPowerPer);
     setMinPower(devData.minPowerPer);
+    setNowPower(devData.powerNeedlePer)
+    setTodayKWH(parseFloat(devData.WattHours / 1000).toFixed(2));
   }, [])
 
   useEffect(() => {
@@ -238,7 +242,8 @@ export const StatusBoards = ({ isMobile, devData }) => {
                   control={<DevOnOffSwitch sx={{ m: 1 }} checked={devOn} onChange={(e) => { setDevOn(!devOn) }} />}
                   label=""
                 />
-                <SolarPanel isMobile={isMobile} isOn={devOn} />
+                <SolarPanel isMobile={isMobile} isOn={devOn} cycleVal={devData.DutyCycle} />
+
               </Box>
             </Grid>
           </Grid>
@@ -285,8 +290,7 @@ export const StatusBoards = ({ isMobile, devData }) => {
                       <span className='solor-cirl cirl10'></span>
                       <span className='solor-cirl cirl11'></span>
                       <span className='solor-cirl cirl12'></span>
-                    </>
-
+                  </>
                   }
                 </div>
               </Grid>
@@ -357,7 +361,7 @@ export const StatusBoards = ({ isMobile, devData }) => {
                     elastic: true,
                   }}
 
-                  value={50}
+                  value={nowPower}
                   minValue={0}
                   maxValue={100}
                 />
@@ -396,7 +400,7 @@ export const StatusBoards = ({ isMobile, devData }) => {
                       fontWeight='bold'
                       sx={{ color: colors.grey[100] }}
                     >
-                      35 kwh
+                      {todayKWH} kwh
                     </Typography>
                   </Box>
                 </Grid>
@@ -443,7 +447,7 @@ export const StatusBoards = ({ isMobile, devData }) => {
                   fontWeight='bold'
                   sx={{ color: colors.grey[100] }}
                 >
-                  35 kwh
+                  {todayKWH} kwh
                 </Typography>
               </Box>
               <Box margin={2} display={'flex'} justifyContent={'space-between'} alignItems={'end'}
