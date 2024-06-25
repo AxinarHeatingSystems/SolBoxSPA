@@ -47,7 +47,7 @@ const Dashboard = () => {
       console.log(devRes);
       if (devRes.state != 'success') return;
 
-      setDevInfo(devRes.data);
+      setDevInfo(JSON.parse(devRes.data));
     }, 1000)
   }
 
