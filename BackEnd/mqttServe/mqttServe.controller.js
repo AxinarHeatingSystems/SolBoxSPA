@@ -4,17 +4,23 @@ const mqttServeService = require('./mqttServe.service');
 
 router.get('/devConnect', mqttConnection)
 router.get('/devMessage', mqttMessage)
+router.post('/devControl', mqttPublish);
 module.exports = router;
 
 function mqttConnection(req, res, next) {
   mqttServeService.mqttconnect(req.body).then(
-    resData => resData? res.json(resData) : res.status(400).json({ message: 'Username or password is incorrect' })
+    resData => resData? res.json(resData) : res.status(400).json({ message: 'connection is failed' })
   ).catch(err => next(err));
 }
 
 function mqttMessage(req, res, next) {
   mqttServeService.mqttmessage(req.body).then(
-    resData => resData? res.json(resData) : res.status(400).json({ message: 'Username or password is incorrect' })
+    resData => resData? res.json(resData) : res.status(400).json({ message: 'Device Info is wrong' })
   ).catch(err => next(err));
 }
 
+function mqttPublish(req, res, next) {
+  mqttServeService.mqttpublish(req.body).then(
+    resData => resData? res.json(resData) : res.status(400).json({ message: 'Device Info is wrong' })
+  )
+}

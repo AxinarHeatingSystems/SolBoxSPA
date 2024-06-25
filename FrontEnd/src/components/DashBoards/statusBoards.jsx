@@ -11,6 +11,7 @@ import sunSad from '../../assets/sumimg/sunsleep.svg'
 import iotLogo from '../../assets/iotLogo.svg'
 import { HeatDev } from '../DeviceComponents/heatDev';
 import { SolarPanel } from '../DeviceComponents/solarPanel';
+import { controlDevice } from '../../axios/ApiProvider'
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 64,
@@ -108,12 +109,14 @@ const DevOnOffSwitch = styled(Switch)(({ theme }) => ({
 }))
 
 
-export const StatusBoards = ({ isMobile }) => {
+export const StatusBoards = ({ isMobile, devData }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   const [heatOn, setHeatOn] = useState(true);
   const [devOn, setDevOn] = useState(true);
+  const [maxPower, setMaxPower] = useState(10);
+  const [minPower, setMinPower] = useState(0);
 
   const piramidData = {
 
@@ -171,6 +174,25 @@ export const StatusBoards = ({ isMobile }) => {
 
   };
 
+  useEffect(() => {
+    setDevOn(devData.DeviceEnabled);
+    setHeatOn(devData.RelayEnabled);
+    setMaxPower(devData.maxPowerPer);
+    setMinPower(devData.minPowerPer);
+  }, [])
+
+  useEffect(() => {
+    const devInfo = devData;
+    devInfo.DeviceEnabled = devOn;
+    devInfo.RelayEnabled = heatOn;
+    console.log('devInfo Changed', devInfo);
+    devControlFunc(devInfo);
+  }, [heatOn, devOn])
+
+  const devControlFunc = (devInfo) => {
+    controlDevice(devInfo);
+  }
+
 
   return (
     <>
@@ -204,7 +226,7 @@ export const StatusBoards = ({ isMobile }) => {
 	c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z" />
                       </svg>
                     </div>
-                    <h1 className='inner-text'>40ºC</h1>
+                    <h1 className='inner-text'>{parseFloat(devData.WaterTemp).toFixed(2)} ºC</h1>
                   </div>
                 </div>
               </Box>
@@ -292,66 +314,66 @@ export const StatusBoards = ({ isMobile }) => {
               position={'relative'}
             >
               <Box position={'relative'} paddingBottom={2}>
-              <GaugeComponent
-                type="semicircle"
-                arc={{
-                  width: 0.1,
-                  padding: 0.01,
-                  cornerRadius: 10,
-                  // gradient: true,
-                  subArcs: [
-                    {
-                      className: 'arc1',
-                      limit: 20,
-                      color: '#0000ff',
-                      showTick: true,
-                      tooltip: {
-                        text: 'Too low temperature!'
+                <GaugeComponent
+                  type="semicircle"
+                  arc={{
+                    width: 0.1,
+                    padding: 0.01,
+                    cornerRadius: 10,
+                    // gradient: true,
+                    subArcs: [
+                      {
+                        className: 'arc1',
+                        limit: minPower,
+                        color: '#0000ff',
+                        showTick: true,
+                        tooltip: {
+                          text: 'Too low temperature!'
+                        },
+                        onClick: () => console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"),
+                        onMouseMove: () => console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"),
+                        onMouseLeave: () => console.log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"),
                       },
-                      onClick: () => console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"),
-                      onMouseMove: () => console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"),
-                      onMouseLeave: () => console.log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"),
-                    },
-                    {
-                      limit: 60,
-                      color: '#1af519',
-                      showTick: true,
-                      tooltip: {
-                        text: 'Low temperature!'
+                      {
+                        limit: maxPower,
+                        color: '#1af519',
+                        showTick: true,
+                        tooltip: {
+                          text: 'Low temperature!'
+                        }
+                      },
+                      {
+                        color: '#ef290b',
+                        tooltip: {
+                          text: 'Too high temperature!'
+                        }
                       }
-                    },
-                    {
-                      color: '#ef290b',
-                      tooltip: {
-                        text: 'Too high temperature!'
-                      }
-                    }
-                  ]
-                }}
-                pointer={{
-                  color: '#345243',
-                  length: 0.80,
-                  width: 15,
-                  elastic: true,
-                }}
+                    ]
+                  }}
+                  pointer={{
+                    color: '#345243',
+                    length: 0.80,
+                    width: 15,
+                    elastic: true,
+                  }}
 
-                value={50}
-                minValue={0}
-                maxValue={100}
-              >
-              </GaugeComponent>
+                  value={50}
+                  minValue={0}
+                  maxValue={100}
+                />
+
                 <Grid position={'absolute'} container spacing={1} paddingX={7} justifyContent={'space-between'}
                 sx={{ top: 0, width: '100%', height: '100%' }}
-              >
-                <Grid item sx={{ height: '100%' }}>
+                >
+                  <Grid item sx={{ height: '100%' }}>
                     <img src={sunSad} width={30} style={{ position: 'relative', top: 'calc(100% - 25px)', }} />
-                </Grid>
-                <Grid item sx={{ height: '100%' }} alignItems={'center'}>
+                  </Grid>
+                  <Grid item sx={{ height: '100%' }} alignItems={'center'}>
                     <img src={sunface} width={30} style={{ position: 'relative', top: '60px' }} />
-                </Grid>
-                <Grid item sx={{ height: '100%' }}>
+                  </Grid>
+                  <Grid item sx={{ height: '100%' }}>
                     <img src={sunglus} width={30} style={{ position: 'relative', top: 'calc(100% - 25px)' }} />
-                </Grid>
+                  </Grid>
 
                 </Grid>
               </Box>

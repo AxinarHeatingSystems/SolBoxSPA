@@ -10,6 +10,30 @@ const { WebSocketServer } = require('ws');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+// const corsOpts = {
+//     methods: [
+//         'POST',
+//         'GET',
+//         'DELETE',
+//         'PUT',
+//         'PATCH',
+//         'HEAD',
+//         'OPTIONS'
+//     ],
+//     origin: [
+//         'http://localhost:3000',
+//         'http://localhost:3001',
+//         'http://localhost:8081',
+//         'http://18.218.170.205',
+//         'http://127.0.0.1:5173',
+//         'http://localhost:5173',
+//     ],
+//     preflightContinue: false,
+//     optionsSuccessStatus: 204,
+//     credentials: true 
+//   };
+  
+// app.use(cors(corsOpts));
 app.use(cors());
 // use JWT auth to secure the api
 app.use(jwt());

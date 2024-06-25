@@ -10,6 +10,8 @@ function jwt() {
         path: [
             // public routes that don't require authentication
             '/mqtt/devConnect',
+            '/mqtt/devMessage',
+            '/mqtt/devControl'
         ]
     });
 }

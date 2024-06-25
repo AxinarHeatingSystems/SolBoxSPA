@@ -1,5 +1,6 @@
 const config = require('config.json');
 const mqtt = require('mqtt');
+const tmpDev = require('tmpDev.json');
 
 module.exports = {
     mqttconnect,
@@ -22,7 +23,7 @@ const options = {
 const mqttPath = `${config.protocol}://${config.host}:${config.port}`
 const client = mqtt.connect(mqttPath, options);
 
-let lastMessage
+let lastMessage = tmpDev;
 
 client.on('connect', () => {
     console.log(`${config.protocol}: Connected`)
@@ -37,10 +38,10 @@ client.on('message', (topic, payload) => {
 })
   
 async function mqttconnect(input) {
-    const devId = '08F9E0E18A6C';
+    const devId = '08B61F971EAC';
     const devTopic = `axinar/solbox/${devId}/jsonTelemetry`
     const clientsTopic = `$SYS/brokers`;
-    client.subscribe(clientsTopic, (err) => {
+    client.subscribe(devTopic, (err) => {
         if (!err) {
         //   client.publish("presence", "Hello mqtt");
             console.log('subscribed');
@@ -50,6 +51,7 @@ async function mqttconnect(input) {
 }
 
 async function mqttmessage(res) {
+    console.log(lastMessage);
     if(lastMessage)
        return lastMessage
     else
@@ -57,6 +59,13 @@ async function mqttmessage(res) {
 }
 
 async function mqttpublish(res) {
-    console.log(res)
+    console.log(res);
+    const devTopic = `axinar/solbox/${res.DeviceID}/jsonTelemetry`
+    console.log(devTopic);
+    client.publish(devTopic, res, (error) => {
+        if (error) {
+          console.error('publish failed', error)
+        }
+      });
     return res;
 }
