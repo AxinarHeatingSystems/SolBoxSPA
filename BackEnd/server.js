@@ -12,7 +12,7 @@ const { default: mqtt } = require('mqtt');
 const socketio = require('socket.io');
 const config = require('config.json');
 
-const httServer = http.createServer(app);
+const httServer = http.createServer(app, {cors: {origin: "*"}});
 
 const io = socketio(httServer);
 
