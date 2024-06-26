@@ -3,6 +3,7 @@ import { Box, IconButton, Grid, useTheme } from "@mui/material";
 
 import { ColorModeContext, tokens } from "../../theme";
 import './dashboard.css'
+import './loading.css'
 
 import InsightsIcon from '@mui/icons-material/Insights';
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
@@ -188,6 +189,25 @@ const Dashboard = () => {
           {/* ------------------------------------------------------ */}
 
         </Box>}
+        {!devInfo &&
+          <Box className="loading-pannel">
+            <div className="pl">
+              <div className="pl__dot"></div>
+              <div className="pl__dot"></div>
+              <div className="pl__dot"></div>
+              <div className="pl__dot"></div>
+              <div className="pl__dot"></div>
+              <div className="pl__dot"></div>
+              <div className="pl__dot"></div>
+              <div className="pl__dot"></div>
+              <div className="pl__dot"></div>
+              <div className="pl__dot"></div>
+              <div className="pl__dot"></div>
+              <div className="pl__dot"></div>
+              <div className="pl__text">Loading…</div>
+            </div>
+          </Box>
+        }
       </Box>
     </main>
 

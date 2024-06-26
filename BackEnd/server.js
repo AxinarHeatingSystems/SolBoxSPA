@@ -70,15 +70,15 @@ app.use(errorHandler);
 
 // start server
 
-// const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 4000;
-// const server = app.listen(port, function () {
-//     // mqtt.server();
-//     console.log('Server listening on port ' + port);
-// });
-const options = {
-    key: fs.readFileSync('./certificate/privkey1.pem'),
-    cert: fs.readFileSync('./certificate/cert1.pem')
-  };
+const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 4000;
+const server = app.listen(port, function () {
+    // mqtt.server();
+    console.log('Server listening on port ' + port);
+});
+// const options = {
+//     key: fs.readFileSync('./certificate/privkey1.pem'),
+//     cert: fs.readFileSync('./certificate/cert1.pem')
+//   };
 
-http.createServer(app).listen(4001);
-https.createServer(options, app).listen(4000);
+// http.createServer(app).listen(4001);
+// https.createServer(options, app).listen(4000);

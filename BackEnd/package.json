@@ -21,6 +21,7 @@
         "mongodb": "^3.5.9",
         "mongoose": "^5.9.21",
         "mqtt": "^5.7.2",
+        "pm2": "^5.4.1",
         "rootpath": "^0.1.2"
     },
     "devDependencies": {
