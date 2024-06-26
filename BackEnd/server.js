@@ -12,19 +12,6 @@ const { default: mqtt } = require('mqtt');
 const socketio = require('socket.io');
 const config = require('config.json');
 
-const httServer = http.createServer(app);
-
-const io = socketio(httServer, { 
-  origins: ['*'],
-  handlePreflightRequest: (req, res) => {
-    res.writeHead(200, {
-    "Access-Control-Allow-Origin":"*",
-    "Access-Control-Allow-Methods":"GET,POST",
-    "Access-Control-Allow-Credentials":true,
-    });
-    res.end()
-    }
-});
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -32,6 +19,9 @@ app.use(bodyParser.json());
 app.use(cors());
 // use JWT auth to secure the api
 app.use(jwt());
+const httServer = http.createServer(app);
+
+const io = socketio(httServer);
 
 // api routes
 app.use('/mqtt', require('./mqttServe/mqttServe.controller'));
