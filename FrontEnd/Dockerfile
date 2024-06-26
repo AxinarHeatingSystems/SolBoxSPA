@@ -2,9 +2,9 @@
 FROM node:alpine as build
 WORKDIR /app
 COPY . .
-RUN yarn cache clean --force
-RUN yarn install --force
-RUN yarn build
+# RUN yarn cache clean --force
+# RUN yarn install --force
+# RUN yarn build
 
 # production environment
 FROM nginx:latest
