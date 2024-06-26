@@ -4,8 +4,9 @@ WORKDIR /app
 
 RUN yarn cache clean
 RUN yarn
-RUN yarn build
 COPY . .
+RUN yarn build
+
 # production environment
 FROM nginx:latest
 COPY --from=build /app/build /usr/share/nginx/html
