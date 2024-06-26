@@ -53,25 +53,11 @@ const Dashboard = () => {
     });
 
     socket.on('message', message => {
-      console.log('message', message);
       setDevInfo(JSON.parse(message))
     });
 
     // loadDevData();
   }, [])
-
-  const loadDevData = async () => { 
-    const devId = '08B61F971EAC'
-    await devConnection(devId);
-
-    setTimeout(async () => {
-      const devRes = await getDeviceMessage(devId);
-      console.log(devRes);
-      if (devRes.state != 'success') return;
-
-      setDevInfo(JSON.parse(devRes.data));
-    }, 1000)
-  }
 
   const subMenuClicked = (menuId) => {
     setSubmenuId(menuId);
@@ -200,7 +186,7 @@ const Dashboard = () => {
               </Grid>
             </Grid>
           </Box>
-          {submenuId === 1 && <StatusBoards isMobile={mobileScreenDetect} devData={devInfo} />}
+          {submenuId === 1 && <StatusBoards isMobile={mobileScreenDetect} devData={devInfo} socketIo={socket} />}
           {submenuId === 2 && <SettingBoards />}
           {submenuId === 3 && <ScheduleBoards />}
           {submenuId === 4 && <ShareBoards />}

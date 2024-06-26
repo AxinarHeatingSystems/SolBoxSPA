@@ -109,7 +109,7 @@ const DevOnOffSwitch = styled(Switch)(({ theme }) => ({
 }))
 
 
-export const StatusBoards = ({ isMobile, devData }) => {
+export const StatusBoards = ({ isMobile, devData, socketIo }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -130,18 +130,30 @@ export const StatusBoards = ({ isMobile, devData }) => {
     setTodayKWH(parseFloat(devData.WattHours / 1000).toFixed(2));
   }, [])
 
-  useEffect(() => {
-    const devInfo = devData;
-    devInfo.DeviceEnabled = devOn;
-    devInfo.RelayEnabled = heatOn;
-    console.log('devInfo Changed', devInfo);
-    // devControlFunc(devInfo);
-  }, [heatOn, devOn])
+  // useEffect(() => {
+  //   const devInfo = devData;
+  //   devInfo.DeviceEnabled = devOn;
+  //   devInfo.RelayEnabled = heatOn;
+  //   console.log('devInfo Changed', devInfo);
+  //   // devControlFunc(devInfo);
+  // }, [heatOn, devOn])
 
-  const devControlFunc = (devInfo) => {
-    controlDevice(devInfo);
+  // const devControlFunc = (devInfo) => {
+  //   controlDevice(devInfo);
+  // }
+  const onHeatCtr = () => {
+    const devInfo = devData;
+    devInfo.RelayEnabled = !heatOn;
+    const payloadStr = JSON.stringify(devInfo);
+    socketIo.emit('devUpdate', payloadStr)
   }
 
+  const onDevCtr = () => {
+    const devInfo = devData;
+    devInfo.DeviceEnabled = !devOn;
+    const payloadStr = JSON.stringify(devInfo);
+    socketIo.emit('devUpdate', payloadStr)
+  }
 
   return (
     <>
@@ -157,7 +169,8 @@ export const StatusBoards = ({ isMobile, devData }) => {
               <Box textAlign={'center'}>
                 <FormControlLabel
                   sx={{ margin: 'auto' }}
-                  control={<MaterialUISwitch sx={{ m: 1 }} checked={heatOn} onChange={(e) => { setHeatOn(!heatOn) }} />}
+                  onClick={() => onHeatCtr()}
+                  control={<MaterialUISwitch sx={{ m: 1 }} checked={heatOn} />}
                   label=""
                 />
                 <HeatDev isMobile={isMobile} isOn={heatOn} />
@@ -184,7 +197,8 @@ export const StatusBoards = ({ isMobile, devData }) => {
               <Box textAlign={'center'}>
                 <FormControlLabel
                   sx={{ margin: 'auto' }}
-                  control={<DevOnOffSwitch sx={{ m: 1 }} checked={devOn} onChange={(e) => { setDevOn(!devOn) }} />}
+                  onClick={() => onDevCtr()}
+                  control={<DevOnOffSwitch sx={{ m: 1 }} checked={devOn} />}
                   label=""
                 />
                 <SolarPanel isMobile={isMobile} isOn={devOn} cycleVal={devData.DutyCycle} />

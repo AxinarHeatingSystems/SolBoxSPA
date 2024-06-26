@@ -72,12 +72,15 @@ io.on('connect', (socket) => {
       const lastMessage = payload.toString();
       socket.emit('message', lastMessage);
     })
-    
-    socket.on('sendMessage', (message, callback) => {
-      // const user = getUser(socket.id);
-  
-      // io.to(user.room).emit('message', { user: user.name, text: message });
-  
+
+    socket.on('devUpdate', (message, callback) => {
+      const payload = JSON.parse(message);
+      const devTopic = `axinar/solbox/${payload.DeviceID}/jsonTelemetry`
+      client.publish(devTopic, payload, (error) => {
+        if (error) {
+          console.error('publish failed', error)
+        }
+      });
       callback();
     });
   
