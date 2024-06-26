@@ -30,7 +30,7 @@ client.on('connect', () => {
     console.log(`${config.protocol}: Connected`)
 })
 client.on('reconnect', (error) => {
-  console.log(`Reconnecting(${config.protocol}):`, error)
+  // console.log(`Reconnecting(${config.protocol}):`, error)
 })
 
 client.on('message', (topic, payload) => {

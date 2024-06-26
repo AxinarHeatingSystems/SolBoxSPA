@@ -115,73 +115,18 @@ export const StatusBoards = ({ isMobile, devData }) => {
 
   const [heatOn, setHeatOn] = useState(true);
   const [devOn, setDevOn] = useState(true);
+  const [maxVal, setMaxVal] = useState(100);
   const [maxPower, setMaxPower] = useState(10);
   const [minPower, setMinPower] = useState(0);
   const [nowPower, setNowPower] = useState(0);
   const [todayKWH, setTodayKWH] = useState(0);
 
-  const piramidData = {
-
-    series: [
-      {
-        name: "",
-        data: [200, 330, 548, 1380, 740, 880, 990],
-      },
-    ],
-    options: {
-      chart: {
-        type: 'bar',
-        height: 350,
-      },
-      plotOptions: {
-        bar: {
-          borderRadius: 0,
-          horizontal: true,
-          distributed: true,
-          barHeight: '80%',
-          isFunnel: true,
-        },
-      },
-      colors: [
-        '#F44F5E',
-        '#E55A89',
-        '#D863B1',
-        '#CA6CD8',
-        '#B57BED',
-        '#8D95EB',
-        '#62ACEA',
-      ],
-      dataLabels: {
-        enabled: true,
-        formatter: function (val, opt) {
-          // return opt.w.globals.labels[opt.dataPointIndex]
-          return val + ' kwh'
-        },
-        dropShadow: {
-          // enabled: true,
-        },
-      },
-      title: {
-        text: 'Last week Data',
-        align: 'middle',
-      },
-      // xaxis: {
-      //   categories: ['Sweets', 'Processed Foods', 'Healthy Fats', 'Meat', 'Beans & Legumes', 'Dairy', 'Fruits & Vegetables', 'Grains'],
-      // },
-      legend: {
-        show: false,
-      },
-    },
-
-
-  };
-
   useEffect(() => {
     setDevOn(devData.DeviceEnabled);
     setHeatOn(devData.RelayEnabled);
-    setMaxPower(devData.maxPowerPer);
-    setMinPower(devData.minPowerPer);
-    setNowPower(devData.powerNeedlePer)
+    setMaxPower(parseInt((devData.maxPowerPer / devData.leastPowerThirty) * 100));
+    setMinPower(parseInt((devData.minPowerPer / devData.leastPowerThirty) * 100));
+    setNowPower(parseInt((devData.powerNeedlePer / devData.leastPowerThirty) * 100))
     setTodayKWH(parseFloat(devData.WattHours / 1000).toFixed(2));
   }, [])
 
@@ -363,7 +308,7 @@ export const StatusBoards = ({ isMobile, devData }) => {
 
                   value={nowPower}
                   minValue={0}
-                  maxValue={100}
+                  maxValue={maxVal}
                 />
 
                 <Grid position={'absolute'} container spacing={1} paddingX={7} justifyContent={'space-between'}
