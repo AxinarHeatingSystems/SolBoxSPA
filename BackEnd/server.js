@@ -15,7 +15,7 @@ const config = require('config.json');
 const httServer = http.createServer(app);
 
 const io = socketio(httServer);
-io.origins('*:*');
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
