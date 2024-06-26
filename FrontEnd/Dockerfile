@@ -3,7 +3,7 @@ FROM node:alpine as build
 WORKDIR /app
 COPY . .
 RUN yarn cache clean --force
-RUN yarn
+RUN yarn install --force
 RUN yarn build
 
 # production environment
