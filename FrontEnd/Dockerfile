@@ -1,10 +1,9 @@
 # build environment
 FROM node:alpine as build
 WORKDIR /app
-
+COPY . .
 RUN yarn cache clean
 RUN yarn
-COPY . .
 RUN yarn build
 
 # production environment
