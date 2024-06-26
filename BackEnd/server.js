@@ -14,6 +14,8 @@ const config = require('config.json');
 
 const httServer = http.createServer(app);
 
+const io = socketio(httServer);
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -50,7 +52,6 @@ client.on('reconnect', (error) => {
 // start server
 const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 4000;
 
-const io = socketio(httServer);
 io.on('connect', (socket) => {
     socket.on('join', ({ devId }, callback) => {
       
