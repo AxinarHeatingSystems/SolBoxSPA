@@ -12,6 +12,8 @@ const { default: mqtt } = require('mqtt');
 const socketio = require('socket.io');
 const config = require('config.json');
 
+const httServer = http.createServer(app);
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -46,7 +48,6 @@ client.on('reconnect', (error) => {
   console.log(`Reconnecting(${config.protocol}):`, error)
 })
 // start server
-const httServer = http.createServer(app);
 const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 4000;
 
 const io = socketio(httServer);
