@@ -21,7 +21,10 @@ app.use(cors());
 app.use(jwt());
 const httServer = http.createServer(app);
 
-const io = socketio(httServer);
+const io = socketio(httServer, {cors: {
+  origin: "*",
+  methods: ["GET", "POST"]
+}});
 
 // api routes
 app.use('/mqtt', require('./mqttServe/mqttServe.controller'));
