@@ -1,11 +1,11 @@
 # build environment
 FROM node:alpine as build
 WORKDIR /app
-COPY . .
+
 RUN yarn cache clean
 RUN yarn
 RUN yarn build
-
+COPY . .
 # production environment
 FROM nginx:latest
 COPY --from=build /app/build /usr/share/nginx/html
