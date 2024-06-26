@@ -9,60 +9,16 @@ const bodyParser = require('body-parser');
 const jwt = require('_helpers/jwt');
 const errorHandler = require('_helpers/error-handler');
 const { default: mqtt } = require('mqtt');
-const { WebSocketServer } = require('ws');
+const socketio = require('socket.io');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// const corsOpts = {
-//     methods: [
-//         'POST',
-//         'GET',
-//         'DELETE',
-//         'PUT',
-//         'PATCH',
-//         'HEAD',
-//         'OPTIONS'
-//     ],
-//     origin: [
-//         'http://localhost:3000',
-//         'http://localhost:3001',
-//         'http://localhost:8081',
-//         'http://18.218.170.205',
-//         'http://127.0.0.1:5173',
-//         'http://localhost:5173',
-//     ],
-//     preflightContinue: false,
-//     optionsSuccessStatus: 204,
-//     credentials: true 
-//   };
-  
-// app.use(cors(corsOpts));
 app.use(cors());
 // use JWT auth to secure the api
 app.use(jwt());
 
-// app.use(function (req, res, next) {
-//     // Publish messages
-//     req.mqttPublish = function (topic, message) {
-//       mqttClient.publish(topic, message)
-//     }
-  
-//     // Subscribe to topic
-//     req.mqttSubscribe = function (topic, callback) {
-//       mqttClient.subscribe(topic)
-//       mqttClient.on('message', function (t, m) {
-//         if (t === topic) {
-//           callback(m.toString())
-//         }
-//       })
-//     }
-//     next()
-//   })
 // api routes
-// app.use('/users', require('./users/users.controller'));
-// app.use('/taskval', require('./Taskvals/taskVal.controller'));
-// app.use('/tasknote', require('./TaskNotes/taskNote.controller'));
 app.use('/mqtt', require('./mqttServe/mqttServe.controller'));
 
 // global error handler
@@ -75,10 +31,31 @@ const server = app.listen(port, function () {
     // mqtt.server();
     console.log('Server listening on port ' + port);
 });
-// const options = {
-//     key: fs.readFileSync('./certificate/privkey1.pem'),
-//     cert: fs.readFileSync('./certificate/cert1.pem')
-//   };
 
-// http.createServer(app).listen(4001);
-// https.createServer(options, app).listen(4000);
+const io = socketio(server);
+io.on('connect', (socket) => {
+    socket.on('join', ({ devId }, callback) => {
+      
+      console.log('devID', devId);
+      socket.emit('message', { user: 'admin', text: `${user.name}, welcome to room ${user.room}.`});
+  
+      callback();
+    });
+  
+    socket.on('sendMessage', (message, callback) => {
+      // const user = getUser(socket.id);
+  
+      // io.to(user.room).emit('message', { user: user.name, text: message });
+  
+      callback();
+    });
+  
+    socket.on('disconnect', () => {
+      // const user = removeUser(socket.id);
+  
+      // if(user) {
+      //   io.to(user.room).emit('message', { user: 'Admin', text: `${user.name} has left.` });
+      //   io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
+      // }
+    })
+  });

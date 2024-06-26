@@ -34,10 +34,10 @@ client.on('reconnect', (error) => {
 })
 
 client.on('message', (topic, payload) => {
-    console.log('Received Message:', topic, payload.toString())
-    lastMessage = payload.toString();
+  console.log('Received Message:', topic, payload.toString())
+  lastMessage = payload.toString();
 })
-  
+
 async function mqttconnect(input) {
     console.log(input);
     const devId = input.devId;
