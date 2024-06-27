@@ -80,8 +80,8 @@ io.on('connect', (socket) => {
 
     socket.on('devUpdate', ({devInfo}, callback) => {
       console.log(devInfo)
-      const payload = devInfo;
-      const devTopic = `axinar/solbox/${payload.DeviceID}/jsonTelemetry`
+      const payload = JSON.stringify(devInfo);
+      const devTopic = `axinar/solbox/${devInfo.DeviceID}/jsonTelemetry`
       client.publish(devTopic, payload, (error) => {
         if (error) {
           console.error('publish failed', error)
