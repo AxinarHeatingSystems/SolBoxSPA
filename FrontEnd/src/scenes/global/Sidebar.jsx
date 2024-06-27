@@ -145,7 +145,7 @@ const Sidebar = ({ isMobile }) => {
           </Box>
         </Menu>
       </>}
-      {!isMobile && <ProSidebar collapsed={isCollapsed}>
+      {!isMobile && <ProSidebar collapsed={isCollapsed} style={{ minHeight: '100vh' }}>
         <Menu iconShape="square">
           {/* LOGO AND MENU ICON */}
           <MenuItem

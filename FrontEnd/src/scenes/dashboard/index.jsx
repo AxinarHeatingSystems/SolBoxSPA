@@ -69,6 +69,10 @@ const Dashboard = () => {
       setDevInfo(JSON.parse(message))
     });
 
+    socket.on('devControl', error => {
+      console.log('Dev Controlled', error);
+    })
+
     // loadDevData();
   }, [])
 
@@ -79,7 +83,7 @@ const Dashboard = () => {
   return (
     <main className='content' style={{ display: mobileScreenDetect ? 'block' : 'flex' }}>
       {isSidebar && <Sidebar isMobile={mobileScreenDetect} isSidebar={isSidebar} />}
-      <Box flexGrow={1} height={'100vh'}>
+      <Box flexGrow={1}>
         {devInfo && <Box m="20px">
           {/* HEADER */}
           <Box className="header-bar">
