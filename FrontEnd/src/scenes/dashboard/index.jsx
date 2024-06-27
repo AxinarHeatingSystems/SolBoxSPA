@@ -54,8 +54,8 @@ const Dashboard = () => {
   useEffect(() => {
     socket = io(EndPoint);
     setIsSidebar(true);
-    // const devId = '08B61F971EAC'
-    const devId = '08F9E0E18FF4'
+    const devId = '08B61F971EAC'
+    // const devId = '08F9E0E18FF4'
     socket.emit('join', { devId }, (error) => {
       if (error) {
         alert(error);
