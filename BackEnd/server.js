@@ -80,7 +80,7 @@ io.on('connect', (socket) => {
 
     socket.on('devUpdate', ({devInfo}, callback) => {
       console.log(devInfo)
-      const payload = JSON.stringify(devInfo);
+      const payload = devInfo.toString();
       const devTopic = `axinar/solbox/${devInfo.DeviceID}/jsonTelemetry`
       client.publish(devTopic, payload, (error) => {
         if (error) {
