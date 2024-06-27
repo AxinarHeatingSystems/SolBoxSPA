@@ -73,7 +73,7 @@ io.on('connect', (socket) => {
     });
 
     client.on('message', (topic, payload) => {
-      // console.log('Received Message:', topic, payload.toString())
+      console.log('Received Message:', topic, payload)
       const lastMessage = payload.toString();
       socket.emit('message', lastMessage);
     })
