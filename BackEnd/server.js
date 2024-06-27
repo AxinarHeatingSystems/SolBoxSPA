@@ -73,13 +73,14 @@ io.on('connect', (socket) => {
     });
 
     client.on('message', (topic, payload) => {
-      console.log('Received Message:', topic, payload.toString())
+      // console.log('Received Message:', topic, payload.toString())
       const lastMessage = payload.toString();
       socket.emit('message', lastMessage);
     })
 
-    socket.on('devUpdate', ({message}, callback) => {
-      const payload = JSON.parse(message);
+    socket.on('devUpdate', ({devInfo}, callback) => {
+      console.log(devInfo)
+      const payload = devInfo;
       const devTopic = `axinar/solbox/${payload.DeviceID}/jsonTelemetry`
       client.publish(devTopic, payload, (error) => {
         if (error) {
