@@ -144,15 +144,15 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const onHeatCtr = () => {
     const devInfo = devData;
     devInfo.RelayEnabled = !heatOn;
-    const payloadStr = JSON.stringify(devInfo);
-    socketIo.emit('devUpdate', payloadStr)
+    // const payloadStr = JSON.stringify(devInfo);
+    socketIo.emit('devUpdate', devInfo)
   }
 
   const onDevCtr = () => {
     const devInfo = devData;
     devInfo.DeviceEnabled = !devOn;
-    const payloadStr = JSON.stringify(devInfo);
-    socketIo.emit('devUpdate', payloadStr)
+    // const payloadStr = JSON.stringify(devInfo);
+    socketIo.emit('devUpdate', devInfo)
   }
 
   return (
