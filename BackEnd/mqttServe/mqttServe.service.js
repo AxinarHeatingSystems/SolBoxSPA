@@ -21,36 +21,36 @@ const options = {
   }
 
   const mqttPath = `${config.protocol}://${config.host}:${config.port}`
-  const client = mqtt.connect(mqttPath, options);
+  // const client = mqtt.connect(mqttPath, options);
 
 // let lastMessage = tmpDev;
 let lastMessage = tmpDev;
 
-client.on('connect', () => {
-    console.log(`${config.protocol}: Connected`)
-})
-client.on('reconnect', (error) => {
-  // console.log(`Reconnecting(${config.protocol}):`, error)
-})
+// client.on('connect', () => {
+//     console.log(`${config.protocol}: Connected`)
+// })
+// client.on('reconnect', (error) => {
+//   // console.log(`Reconnecting(${config.protocol}):`, error)
+// })
 
-client.on('message', (topic, payload) => {
-  console.log('Received Message:', topic, payload.toString())
-  lastMessage = payload.toString();
-})
+// client.on('message', (topic, payload) => {
+//   console.log('Received Message:', topic, payload.toString())
+//   lastMessage = payload.toString();
+// })
 
 async function mqttconnect(input) {
     console.log(input);
-    const devId = input.devId;
-    // const devId = '08B61F971EAC';
-    const devTopic = `axinar/solbox/${devId}/jsonTelemetry`
-    console.log('devTopic', devTopic);
-    const clientsTopic = `$SYS/brokers`;
-    client.subscribe(devTopic, (err) => {
-        if (!err) {
-        //   client.publish("presence", "Hello mqtt");
-            console.log('subscribed');
-        }
-      });
+    // const devId = input.devId;
+    // // const devId = '08B61F971EAC';
+    // const devTopic = `axinar/solbox/${devId}/jsonTelemetry`
+    // console.log('devTopic', devTopic);
+    // const clientsTopic = `$SYS/brokers`;
+    // client.subscribe(devTopic, (err) => {
+    //     if (!err) {
+    //     //   client.publish("presence", "Hello mqtt");
+    //         console.log('subscribed');
+    //     }
+    //   });
     return 'mqTTConnect';
 }
 
@@ -64,12 +64,12 @@ async function mqttmessage(res) {
 
 async function mqttpublish(res) {
     console.log(res);
-    const devTopic = `axinar/solbox/${res.DeviceID}/jsonTelemetry`
-    console.log(devTopic);
-    client.publish(devTopic, res, (error) => {
-        if (error) {
-          console.error('publish failed', error)
-        }
-      });
+    // const devTopic = `axinar/solbox/${res.DeviceID}/jsonTelemetry`
+    // console.log(devTopic);
+    // client.publish(devTopic, res, (error) => {
+    //     if (error) {
+    //       console.error('publish failed', error)
+    //     }
+    //   });
     return res;
 }
