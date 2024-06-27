@@ -142,8 +142,13 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   //   controlDevice(devInfo);
   // }
   const onHeatCtr = () => {
-    const devInfo = devData;
-    devInfo.RelayEnabled = !heatOn;
+    // const devInfo = devData;
+    // devInfo.RelayEnabled = !heatOn;
+    const devInfo = {
+      DeviceID: devData.DeviceID,
+      RelayEnabled: !heatOn ? 1 : 0,
+      DeviceEnabled: devData.DeviceEnabled ? 1 : 0,
+    }
     // const payloadStr = JSON.stringify(devInfo);
     console.log('HeatCTR', devInfo);
     socketIo.emit('devUpdate', { devInfo }, (error) => {
@@ -154,8 +159,13 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   }
 
   const onDevCtr = () => {
-    const devInfo = devData;
-    devInfo.DeviceEnabled = !devOn;
+    // const devInfo = devData;
+    // devInfo.DeviceEnabled = !devOn;
+    const devInfo = {
+      DeviceID: devData.DeviceID,
+      RelayEnabled: devData.RelayEnabled ? 1 : 0,
+      DeviceEnabled: !devOn ? 1 : 0,
+    }
     // const payloadStr = JSON.stringify(devInfo);
     console.log('DevCTR', devInfo);
     socketIo.emit('devUpdate', { devInfo }, (error) => {
