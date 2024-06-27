@@ -80,7 +80,7 @@ io.on('connect', (socket) => {
 
     socket.on('devUpdate', ({devInfo}, callback) => {
       console.log(devInfo)
-      const payload = {'manualRelayEnable': devInfo.RelayEnabled, 'pauseCharging': devInfo.DeviceEnabled};
+      const payload = {'manualRelayEnable': devInfo.RelayEnabled};
 
       const devTopic = `axinar/solbox/${devInfo.DeviceID}/mainControlJson`
       client.publish(devTopic, JSON.stringify(payload), (error) => {

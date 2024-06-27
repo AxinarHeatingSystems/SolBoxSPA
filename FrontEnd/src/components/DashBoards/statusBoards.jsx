@@ -147,7 +147,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
     const devInfo = {
       DeviceID: devData.DeviceID,
       RelayEnabled: !heatOn ? 1 : 0,
-      DeviceEnabled: devData.DeviceEnabled ? 1 : 0,
+      DeviceEnabled: devOn ? 1 : 0,
     }
     // const payloadStr = JSON.stringify(devInfo);
     console.log('HeatCTR', devInfo);
@@ -163,7 +163,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
     // devInfo.DeviceEnabled = !devOn;
     const devInfo = {
       DeviceID: devData.DeviceID,
-      RelayEnabled: devData.RelayEnabled ? 1 : 0,
+      RelayEnabled: heatOn ? 1 : 0,
       DeviceEnabled: !devOn ? 1 : 0,
     }
     // const payloadStr = JSON.stringify(devInfo);
