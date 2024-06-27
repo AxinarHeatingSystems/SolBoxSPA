@@ -66,6 +66,7 @@ const Dashboard = () => {
     });
 
     socket.on('message', message => {
+      console.log(message);
       setDevInfo(JSON.parse(message))
     });
 
