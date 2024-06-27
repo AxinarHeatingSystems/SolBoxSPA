@@ -40,7 +40,8 @@ const Dashboard = () => {
   const [submenuId, setSubmenuId] = useState(1);
 
   const [devInfo, setDevInfo] = useState(null);
-
+  // const devId = '08B61F971EAC'
+  const devId = '08F9E0E18FF4'
   window.matchMedia("(orientation: portrait)").addEventListener("change", function (e) {
     if (e.matches) {
       // Portrait mode
@@ -54,8 +55,7 @@ const Dashboard = () => {
   useEffect(() => {
     socket = io(EndPoint);
     setIsSidebar(true);
-    const devId = '08B61F971EAC'
-    // const devId = '08F9E0E18FF4'
+
     socket.emit('join', { devId }, (error) => {
       if (error) {
         alert(error);
@@ -63,12 +63,16 @@ const Dashboard = () => {
     });
 
     socket.on('DevSubscribed', message => {
+
       console.log('DevSubscribed', message);
     });
 
     socket.on('message', message => {
       console.log(message);
-      setDevInfo(JSON.parse(message))
+      const devInfoData = JSON.parse(message);
+      if (devId == devInfoData.DeviceID) {
+        setDevInfo(devInfoData)
+      }
     });
 
     socket.on('devControl', error => {

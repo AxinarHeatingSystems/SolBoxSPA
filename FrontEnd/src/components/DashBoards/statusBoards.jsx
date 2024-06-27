@@ -120,6 +120,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const [minPower, setMinPower] = useState(0);
   const [nowPower, setNowPower] = useState(0);
   const [todayKWH, setTodayKWH] = useState(0);
+  const [savePrice, setSavePrice] = useState(0);
 
   useEffect(() => {
     setDevOn(devData.DeviceEnabled);
@@ -128,6 +129,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
     setMinPower(parseInt((devData.minPowerPer / devData.leastPowerThirty) * 100));
     setNowPower(parseInt((devData.powerNeedlePer / devData.leastPowerThirty) * 100))
     setTodayKWH(parseFloat(devData.WattHours / 1000).toFixed(2));
+    setSavePrice(parseFloat((devData.WattHours / 1000) * 0.1).toFixed(2));
   }, [])
 
   // useEffect(() => {
@@ -434,18 +436,21 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                   <Box display={'flex'} flexWrap={'wrap'} justifyContent={'space-between'} alignItems={'end'}
                     sx={{ borderBottom: '3px solid', paddingBottom: '2px' }}>
                     <Typography
-                      variant="body1"
-                      fontWeight="500"
-                      sx={{ color: colors.grey[100] }}
+                      variant="h4"
+                      fontWeight="bold"
+                      sx={{ color: colors.grey[100], display: 'flex', justifyContent: 'start', alignItems: 'baseline' }}
                     >
-                      Saved
+                      Saved 
+                      <Typography variant='body1' fontWeight={'bold'} sx={{ marginX: '0.3rem', color: colors.grey[100] }}>
+                        (0.10 € / kwh)
+                      </Typography>
                     </Typography>
                     <Typography
                       variant='body1'
                       fontWeight='bold'
-                      sx={{ color: colors.grey[100] }}
+                      sx={{ color: colors.grey[100], textWrap: 'nowrap' }}
                     >
-                      35 €
+                      {savePrice} €
                     </Typography>
                   </Box>
                 </Grid>
@@ -482,16 +487,19 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                 <Typography
                   variant="h4"
                   fontWeight="bold"
-                  sx={{ color: colors.grey[100] }}
+                  sx={{ color: colors.grey[100], display: 'flex', justifyContent: 'start', alignItems: 'baseline' }}
                 >
-                  Saved
+                  Saved 
+                  <Typography variant='body1' fontWeight={'bold'} sx={{ marginX: '0.3rem', color: colors.grey[100] }}>
+                    (0.10 € / kwh)
+                  </Typography>
                 </Typography>
                 <Typography
                   variant='h1'
                   fontWeight='bold'
                   sx={{ color: colors.grey[100] }}
                 >
-                  35 €
+                  {savePrice} €
                 </Typography>
               </Box>
             </Box>
