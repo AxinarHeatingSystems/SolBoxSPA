@@ -109,7 +109,7 @@ const DevOnOffSwitch = styled(Switch)(({ theme }) => ({
 }))
 
 
-export const StatusBoards = ({ isMobile, devData, socketIo }) => {
+export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -177,7 +177,7 @@ export const StatusBoards = ({ isMobile, devData, socketIo }) => {
               </Box>
             </Grid>
 
-            <Grid order={{ xs: 3, md: 2 }} margin={'auto'} zIndex={1} item>
+            <Grid order={isPortrait ? { xs: 3, md: 2 } : { xs: 2, md: 2 }} margin={'auto'} zIndex={1} item>
               <Box>
                 <div className="bowl mx-auto" style={{ background: colors.primary[400], transform: isMobile ? 'scale(0.8)' : 'scale(1)' }}>
                   <div className="inner">
@@ -193,7 +193,7 @@ export const StatusBoards = ({ isMobile, devData, socketIo }) => {
                 </div>
               </Box>
             </Grid>
-            <Grid order={{ xs: 2, md: 3 }} backgroundColor={colors.primary[400]} zIndex={1} item>
+            <Grid order={isPortrait ? { xs: 2, md: 3 } : { xs: 3, md: 3 }} backgroundColor={colors.primary[400]} zIndex={1} item>
               <Box textAlign={'center'}>
                 <FormControlLabel
                   sx={{ margin: 'auto' }}
@@ -254,12 +254,59 @@ export const StatusBoards = ({ isMobile, devData, socketIo }) => {
                 </div>
               </Grid>
             </>}
-            {isMobile && <>
+            {isMobile && isPortrait && <>
               <Grid item xs={12} marginX={'auto'} marginTop={'-25%'}>
                 <Box className="dev-connect-border" sx={{}}>
                   <Box className={heatOn ? "connect-content heat-connect-border" : "connect-content"}></Box>
                   <Box className={devOn ? "connect-content solar-connect-border" : "connect-content"}></Box>
                 </Box>
+              </Grid>
+            </>}
+            {isMobile && !isPortrait && <>
+              <Grid marginTop={'25px'} item xs={6} paddingX={4}>
+                <div className='heat-connect'>
+                  <hr />
+                  {heatOn &&
+                    <>
+                      <span className='heat-cirl'></span>
+                      <span className='heat-cirl cirl1'></span>
+                      <span className='heat-cirl cirl2'></span>
+                      <span className='heat-cirl cirl3'></span>
+                      <span className='heat-cirl cirl4'></span>
+                      <span className='heat-cirl cirl5'></span>
+                      <span className='heat-cirl cirl6'></span>
+                      <span className='heat-cirl cirl7'></span>
+                      <span className='heat-cirl cirl8'></span>
+                      <span className='heat-cirl cirl9'></span>
+                      <span className='heat-cirl cirl10'></span>
+                      <span className='heat-cirl cirl11'></span>
+                      <span className='heat-cirl cirl12'></span>
+                    </>
+                  }
+
+                </div>
+              </Grid>
+              <Grid marginTop={'25px'} item xs={6} paddingX={4}>
+                <div className='solor-connect'>
+                  <hr />
+                  {devOn &&
+                    <>
+                      <span className='solor-cirl'></span>
+                      <span className='solor-cirl cirl1'></span>
+                      <span className='solor-cirl cirl2'></span>
+                      <span className='solor-cirl cirl3'></span>
+                      <span className='solor-cirl cirl4'></span>
+                      <span className='solor-cirl cirl5'></span>
+                      <span className='solor-cirl cirl6'></span>
+                      <span className='solor-cirl cirl7'></span>
+                      <span className='solor-cirl cirl8'></span>
+                      <span className='solor-cirl cirl9'></span>
+                      <span className='solor-cirl cirl10'></span>
+                      <span className='solor-cirl cirl11'></span>
+                      <span className='solor-cirl cirl12'></span>
+                    </>
+                  }
+                </div>
               </Grid>
             </>}
           </Grid>

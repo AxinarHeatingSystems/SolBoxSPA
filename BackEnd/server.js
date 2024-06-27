@@ -84,6 +84,7 @@ io.on('connect', (socket) => {
       client.publish(devTopic, payload, (error) => {
         if (error) {
           console.error('publish failed', error)
+          socket.emit('devControl', error);
         }
       });
       callback();
