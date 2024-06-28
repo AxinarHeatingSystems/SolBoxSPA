@@ -3,9 +3,11 @@ import { ProSidebar } from "react-pro-sidebar";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-import { Box, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, useTheme } from "@mui/material";
+import { Box, Button, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, useTheme } from "@mui/material";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
@@ -203,6 +205,33 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
                 {isCollapsed && <MenuOutlinedIcon />}
                 {!isCollapsed && <MenuOutlinedIcon />}
               </IconButton>
+            </Box>
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <Box width={'100%'} marginY={1}>
+              <Box display="flex" justifyContent="center" alignItems="center"
+                style={{ cursor: "pointer", width: '100%' }}
+              >
+                <img
+                  alt="profile-user"
+                  width={!isCollapsed ? "100px" : "50px"}
+                  height={!isCollapsed ? "100px" : "50px"}
+                  src={iotLogo}
+                  style={{ cursor: "pointer", border: '1px solid', borderRadius: '50%' }}
+                />
+              </Box>
+              {!isCollapsed && <Box marginY={1}>
+                <Typography variant='h5' fontWeight={700} textAlign={'center'}>Join User</Typography>
+              </Box>}
+              <Box display={'flex'} justifyContent={isCollapsed ? 'center' : 'space-between'} alignItems={'center'} flexWrap={'wrap'}>
+                <Button variant="outlined" color='success' sx={{ marginY: '10px' }} size={!isCollapsed ? "medium" : "small"}>
+                  {!isCollapsed ? 'Setting' : <ManageAccountsIcon />}
+                </Button>
+                <Button variant="outlined" color='secondary' sx={{ marginY: '10px' }} size={!isCollapsed ? "medium" : "small"}>
+                  {!isCollapsed ? 'Log Out' : <LogoutIcon />}
+                </Button>
+              </Box>
             </Box>
           </ListItem>
           <Divider />
