@@ -138,7 +138,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
     setTodayKWH(parseFloat(devData.WattHours / 1000).toFixed(2));
     setSavePrice(parseFloat((devData.WattHours / 1000) * 0.1).toFixed(2));
 
-  }, [])
+  }, [devData])
 
   // useEffect(() => {
   //   const devInfo = devData;
