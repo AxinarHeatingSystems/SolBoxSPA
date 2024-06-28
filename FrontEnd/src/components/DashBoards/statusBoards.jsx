@@ -381,7 +381,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
 
 
               {/* <GaugeChart id="gauge-chart1" /> */}
-              {isMobile && <Grid container spacing={1} paddingX={1} paddingTop={0} paddingBottom={1} marginTop={-3}>
+              {isMobile && <Grid container spacing={1} paddingX={1} paddingTop={0} paddingBottom={1} marginTop={-1}>
                 <Grid item xs={12} paddingX={1}>
                   <Box display={'flex'} justifyContent={'space-between'} alignItems={'end'}
                     style={{ borderBottom: '3px solid', paddingBottom: '2px', flexWrap: 'wrap' }}>

@@ -1,9 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
+import { ProSidebar } from "react-pro-sidebar";
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, useTheme } from "@mui/material";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+
 import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 
@@ -40,6 +43,17 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("dashboard");
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    setIsCollapsed(!isCollapsed);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+    setIsCollapsed(!isCollapsed);
+  };
+
   useEffect(() => {
     const handleResize = (e) => {
       if (e.target.innerWidth < 1024) {
@@ -48,9 +62,15 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
       // Perform actions on window resize
       console.log('screen Resizing', e);
     };
+    const handlePointer = (e) => {
+      console.log('eventClick', e);
+      // setIsCollapsed(false)
+    }
     window.addEventListener('resize', handleResize);
+    window.addEventListener('click', handlePointer);
     return () => {
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('click', handlePointer);
     };
   }, []);
 
@@ -108,241 +128,115 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
       sx={isMobile ? mobileStyle : desktopStyle}
     >
       {isMobile && <>
-        <Menu iconShape="square">
-          {/* LOGO AND MENU ICON */}
-          <MenuItem
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            style={{
-              margin: "10px 0 20px 0",
-              color: colors.grey[100],
-            }}
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mx="15px"
+          mt={'10px'}
+        >
+          <Typography variant="h3" display={'flex'} alignItems={'baseline'} color={colors.grey[100]}>
+            SolBox Control Panel {isMobile && !isPortrait && <Typography variant='body1' marginX={1}>( <b>{deviceName}</b> - {deviceId})</Typography>}
+          </Typography>
+          <IconButton onClick={handleClick}>
+            {isCollapsed && <ClearIcon />}
+            {!isCollapsed && <MenuOutlinedIcon />}
+          </IconButton>
+        </Box>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          sx={{ width: '100%', color: colors.grey[100] }}
+          MenuListProps={{
+            'aria-labelledby': 'basic-button',
+            'style': { backgroundColor: theme.palette.background.default }
+          }}
+        >
+          <Typography
+            variant="h6"
+            color={colors.grey[300]}
+            sx={{ m: "15px 0 5px 20px" }}
           >
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              mx="15px"
-            >
-              <Typography variant="h3" display={'flex'} alignItems={'baseline'} color={colors.grey[100]}>
-                iOT Dashboard {isMobile && !isPortrait && <Typography variant='body1' marginX={1}>( <b>{deviceName}</b> - {deviceId})</Typography>}
-              </Typography>
-              <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
-                {isCollapsed && <ClearIcon />}
-                {!isCollapsed && <MenuOutlinedIcon />}
-              </IconButton>
-            </Box>
+            Theme
+          </Typography>
+          <MenuItem onClick={() => { colorMode.toggleColorMode(); handleClose(); }} sx={{ width: '100vw' }}>
+            <ListItemIcon>
+              {theme.palette.mode === "dark" ? <DarkModeOutlinedIcon fontSize="small" /> : <LightModeOutlinedIcon fontSize="small" />}
+            </ListItemIcon>
+            <ListItemText>
+              {theme.palette.mode === "dark" ? 'Dark Mode' : 'Light Mode'}
+            </ListItemText>
           </MenuItem>
-          <Box className="mobileMenu-list" backgroundColor={theme.palette.background.default} display={isCollapsed ? 'block' : 'none'}>
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              Theme
-            </Typography>
-            <Item
-              title={theme.palette.mode === "dark" ? 'Dark Mode' : 'Light Mode'}
-              icon={theme.palette.mode === "dark" ? <DarkModeOutlinedIcon /> : <LightModeOutlinedIcon />}
-              setSelected={colorMode.toggleColorMode}
-            />
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              Devices
-            </Typography>
-            <Item
-              title="Device 1"
-              to="/"
-              icon={<HomeOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-          </Box>
+          <Divider />
+          <Typography
+            variant="h6"
+            color={colors.grey[300]}
+            sx={{ m: "15px 0 5px 20px" }}
+          >
+            Devices
+          </Typography>
+          <MenuItem selected={selected === 'dashboard'} onClick={() => { setSelected('dashboard'); handleClose() }}
+            sx={{ width: '100vw' }}>
+            <ListItemIcon>
+              <HomeOutlinedIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Device 1</ListItemText>
+          </MenuItem>
         </Menu>
       </>}
       {!isMobile && <ProSidebar collapsed={isCollapsed} style={{ minHeight: '100vh' }}>
-        <Menu iconShape="square">
-          {/* LOGO AND MENU ICON */}
-          <MenuItem
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
-            style={{
-              margin: "10px 0 20px 0",
-              color: colors.grey[100],
-            }}
-          >
-            {!isCollapsed && (
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                ml="15px"
-              >
-                <Typography variant="h3" color={colors.grey[100]}>
-                  iOT Dashboard
-                </Typography>
-                <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
-                  <MenuOutlinedIcon />
-                </IconButton>
-              </Box>
-            )}
-          </MenuItem>
-
-          {!isCollapsed && (
-            <Box mb="25px">
-              <Box display="flex" justifyContent="center" alignItems="center"
-                style={{ cursor: "pointer" }}
-              >
-                <img
-                  alt="profile-user"
-                  width="100px"
-                  height="100px"
-                  src={iotLogo}
-                  style={{ cursor: "pointer", }}
-                />
-              </Box>
-              {/* <Box textAlign="center">
-                <Typography
-                  variant="h2"
-                  color={colors.grey[100]}
-                  fontWeight="bold"
-                  sx={{ m: "10px 0 0 0" }}
-                >
-                  john doe
-                </Typography>
-                <Typography variant="h2" color={colors.greenAccent[500]}>
-                  Test protoype
-                </Typography>
-              </Box> */}
+        <List component="nav" aria-label="main mailbox folders">
+          <ListItem>
+            <Box
+              display="flex"
+              justifyContent={isCollapsed ? "center" : "space-between"}
+              alignItems="center"
+              mt={'10px'}
+              width={'100%'}
+            >
+              {!isCollapsed && <Typography variant="h4" display={'flex'} alignItems={'baseline'} color={colors.grey[100]}>
+                SolBox Control Panel {isMobile && !isPortrait && <Typography variant='body1' marginX={1}>( <b>{deviceName}</b> - {deviceId})</Typography>}
+              </Typography>}
+              <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
+                {isCollapsed && <MenuOutlinedIcon />}
+                {!isCollapsed && <MenuOutlinedIcon />}
+              </IconButton>
             </Box>
-          )}
-          <Box paddingLeft={isCollapsed ? undefined : '10%'}>
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              Theme
-            </Typography>
-            <Item
-              title={theme.palette.mode === "dark" ? 'Dark Mode' : 'Light Mode'}
-              icon={theme.palette.mode === "dark" ? <DarkModeOutlinedIcon /> : <LightModeOutlinedIcon />}
-              setSelected={colorMode.toggleColorMode}
-            />
-          </Box>
-          <Box paddingLeft={isCollapsed ? undefined : "10%"}>
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              Devices
-            </Typography>
-            <Item
-              title="Device 1"
-              to="/"
-              icon={<HomeOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            {/* <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              Data
-            </Typography>
-            <Item
-              title="Team Portfolio"
-              to="/team"
-              icon={<PeopleOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Contacts Info"
-              to="/contacts"
-              icon={<ContactsOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Finances"
-              to="/invoices"
-              icon={<ReceiptOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              Pages
-            </Typography>
-            <Item
-              title="Profile Form"
-              to="/form"
-              icon={<PersonOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Calendar"
-              to="/calendar"
-              icon={<CalendarTodayOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="FAQ Page"
-              to="/faq"
-              icon={<HelpOutlineOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              Charts
-            </Typography>
-            <Item
-              title="Bar Chart"
-              to="/bar"
-              icon={<BarChartOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Pie Chart"
-              to="/pie"
-              icon={<PieChartOutlineOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Line Chart"
-              to="/line"
-              icon={<TimelineOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Geography Chart"
-              to="/geography"
-              icon={<MapOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            /> */}
-          </Box>
-        </Menu>
+          </ListItem>
+          <Divider />
+          <Typography
+            variant="h6"
+            color={colors.grey[300]}
+            sx={{ m: "15px 0 5px 20px" }}
+          >
+            Theme
+          </Typography>
+          <ListItemButton onClick={() => { colorMode.toggleColorMode() }}>
+            <ListItemIcon sx={{ justifyContent: 'center' }}>
+              {theme.palette.mode === "dark" ? <DarkModeOutlinedIcon /> : <LightModeOutlinedIcon />}
+            </ListItemIcon>
+            {!isCollapsed && <ListItemText primary={theme.palette.mode === "dark" ? 'Dark Mode' : 'Light Mode'} />}
+          </ListItemButton>
+          <Divider />
+          <Typography
+            variant="h6"
+            color={colors.grey[300]}
+            sx={{ m: "15px 0 5px 20px" }}
+          >
+            Devices
+          </Typography>
+          <ListItemButton
+            selected={selected === 'dashboard'}
+            onClick={() => { setSelected('dashboard') }}
+          >
+            <ListItemIcon sx={{ justifyContent: 'center' }}>
+              <HomeOutlinedIcon />
+            </ListItemIcon>
+            {!isCollapsed && <ListItemText primary="Device 1" />}
+          </ListItemButton>
+        </List>
       </ProSidebar>}
     </Box>
   );
