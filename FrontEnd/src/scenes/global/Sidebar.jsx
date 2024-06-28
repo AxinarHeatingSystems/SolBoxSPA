@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
@@ -33,12 +33,27 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
   );
 };
 
-const Sidebar = ({ isMobile }) => {
+const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("dashboard");
+
+  useEffect(() => {
+    const handleResize = (e) => {
+      if (e.target.innerWidth < 1024) {
+        setIsCollapsed(true);
+      }
+      // Perform actions on window resize
+      console.log('screen Resizing', e);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   const desktopStyle = {
     "& .pro-sidebar": {
       position: 'relative'
@@ -62,6 +77,7 @@ const Sidebar = ({ isMobile }) => {
 
   const mobileStyle = {
     width: '100%',
+    boxShadow: 'inset 0px -7px 4px -8px',
     '& .pro-menu ul': {
       paddingInlineStart: '0px',
       listStyleType: 'none',
@@ -70,6 +86,7 @@ const Sidebar = ({ isMobile }) => {
       position: 'absolute',
       width: '100%',
       boxShadow: 'inset 0px -2px 2px 0px',
+      top: '49px',
       zIndex: 10,
     },
     '& .pro-menu .mobileMenu-list .pro-inner-item': {
@@ -107,7 +124,7 @@ const Sidebar = ({ isMobile }) => {
               mx="15px"
             >
               <Typography variant="h3" display={'flex'} alignItems={'baseline'} color={colors.grey[100]}>
-                iOT Dashboard {isMobile && <Typography variant='body1' marginX={1}>( Device 1 )</Typography>}
+                iOT Dashboard {isMobile && !isPortrait && <Typography variant='body1' marginX={1}>( <b>{deviceName}</b> - {deviceId})</Typography>}
               </Typography>
               <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                 {isCollapsed && <ClearIcon />}

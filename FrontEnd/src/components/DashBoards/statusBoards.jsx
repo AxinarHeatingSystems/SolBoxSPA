@@ -112,7 +112,8 @@ const DevOnOffSwitch = styled(Switch)(({ theme }) => ({
 export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
+  const [deviceId, setDeviceId] = useState('');
+  const [deviceName, setDeviceName] = useState('');
   const [heatOn, setHeatOn] = useState(true);
   const [devOn, setDevOn] = useState(true);
   const [maxVal, setMaxVal] = useState(100);
@@ -123,13 +124,20 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const [savePrice, setSavePrice] = useState(0);
 
   useEffect(() => {
+    console.log(devData);
+    setDeviceId(devData.DeviceID)
+    setDeviceName(devData.DeviceName)
     setDevOn(devData.DeviceEnabled);
     setHeatOn(devData.RelayEnabled);
-    setMaxPower(parseInt((devData.maxPowerPer / devData.leastPowerThirty) * 100));
-    setMinPower(parseInt((devData.minPowerPer / devData.leastPowerThirty) * 100));
-    setNowPower(parseInt((devData.powerNeedlePer / devData.leastPowerThirty) * 100))
+    // setMaxPower(parseInt((devData.maxPowerPer / devData.leastPowerThirty) * 100));
+    // setMinPower(parseInt((devData.minPowerPer / devData.leastPowerThirty) * 100));
+    // setNowPower(parseInt((devData.powerNeedlePer / devData.leastPowerThirty) * 100))
+    setMaxPower(parseFloat(devData.maxPowerPer));
+    setMinPower(parseFloat(devData.minPowerPer));
+    setNowPower(parseFloat(devData.powerNeedlePer))
     setTodayKWH(parseFloat(devData.WattHours / 1000).toFixed(2));
     setSavePrice(parseFloat((devData.WattHours / 1000) * 0.1).toFixed(2));
+
   }, [])
 
   // useEffect(() => {
@@ -178,15 +186,16 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   }
 
   return (
-    <>
-      <Box gap="20px" marginY={2}>
+    <Box display={isPortrait ? 'block' : 'flex'} gap="20px" sx={isPortrait ? {} : { paddingX: '20px', height: '100%', position: 'relative', justifyContent: 'center', alignItems: 'center' }}>
+      <Box gridColumn="span 8" gap="20px" marginY={isPortrait ? 2 : 0} sx={isPortrait ? {} : { height: '100%' }}>
         <Box
           width={'100%'}
+          height={isPortrait ? 'auto' : '100%'}
           position={'relative'}
           backgroundColor={colors.primary[400]}
           zIndex={0}
         >
-          <Grid container paddingX={5} paddingTop={5} paddingBottom={isMobile ? 0 : 5} justifyContent={'space-between'} alignItems={'center'}>
+          <Grid container paddingX={5} paddingTop={isMobile ? 2 : 5} paddingBottom={isMobile ? 0 : 5} justifyContent={'space-between'} alignItems={'center'}>
             <Grid order={{ xs: 1, md: 1 }} backgroundColor={colors.primary[400]} zIndex={1} item>
               <Box textAlign={'center'}>
                 <FormControlLabel
@@ -195,13 +204,13 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                   control={<MaterialUISwitch sx={{ m: 1 }} checked={heatOn} />}
                   label=""
                 />
-                <HeatDev isMobile={isMobile} isOn={heatOn} />
+                <HeatDev isMobile={isMobile} isPortrait={isPortrait} isOn={heatOn} />
               </Box>
             </Grid>
 
-            <Grid order={isPortrait ? { xs: 3, md: 2 } : { xs: 2, md: 2 }} margin={'auto'} zIndex={1} item>
+            <Grid order={isMobile ? { xs: 3 } : { xs: 2, md: 2 }} margin={'auto'} zIndex={1} item>
               <Box>
-                <div className="bowl mx-auto" style={{ background: colors.primary[400], transform: isMobile ? 'scale(0.8)' : 'scale(1)' }}>
+                <div className="bowl mx-auto" style={{ marginTop: isPortrait ? '0' : '-20px', background: colors.primary[400], transform: isMobile ? isPortrait ? 'scale(0.8)' : 'scale(0.5)' : 'scale(1)' }}>
                   <div className="inner">
                     <div className="fill">
                       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300" enableBackground="new 0 0 300 300" xmlSpace="preserve">
@@ -210,24 +219,26 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
 	c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z" />
                       </svg>
                     </div>
-                    <h1 className='inner-text'>{parseFloat(devData.WaterTemp).toFixed(2)} ºC</h1>
+                    <h1 className='inner-text'>{parseFloat(devData.WaterTemp).toFixed(1)} ºC</h1>
                   </div>
                 </div>
               </Box>
             </Grid>
-            <Grid order={isPortrait ? { xs: 2, md: 3 } : { xs: 3, md: 3 }} backgroundColor={colors.primary[400]} zIndex={1} item>
+            <Grid order={isMobile ? { xs: 2 } : { xs: 3, md: 3 }} backgroundColor={colors.primary[400]} zIndex={1} item>
               <Box textAlign={'center'}>
                 <FormControlLabel
-                  sx={{ margin: 'auto' }}
+                  sx={{ margin: 'auto', width: '100%', justifyContent: 'center', alignItems: "center", color: 'yellow', fontSize: '16px !important', fontWeight: '600' }}
                   onClick={() => onDevCtr()}
                   control={<DevOnOffSwitch sx={{ m: 1 }} checked={devOn} />}
-                  label=""
+                  label={!isMobile ? `${devData.DutyCycle}  %` : ""}
                 />
-                <SolarPanel isMobile={isMobile} isOn={devOn} cycleVal={devData.DutyCycle} />
+                <SolarPanel isMobile={isMobile} isPortrait={isPortrait} isOn={devOn} cycleVal={devData.DutyCycle} />
+                {isMobile && <span className='devOn-Cycle'>{devData.DutyCycle} %</span>}
 
               </Box>
             </Grid>
           </Grid>
+
           <Grid className='dev-connector' container paddingX={10} justifyContent={'center'} alignItems={'center'}>
             {!isMobile && <>
               <Grid item xs={6} paddingX={4}>
@@ -276,7 +287,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                 </div>
               </Grid>
             </>}
-            {isMobile && isPortrait && <>
+            {isMobile && <>
               <Grid item xs={12} marginX={'auto'} marginTop={'-25%'}>
                 <Box className="dev-connect-border" sx={{}}>
                   <Box className={heatOn ? "connect-content heat-connect-border" : "connect-content"}></Box>
@@ -284,68 +295,26 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                 </Box>
               </Grid>
             </>}
-            {isMobile && !isPortrait && <>
-              <Grid marginTop={'25px'} item xs={6} paddingX={4}>
-                <div className='heat-connect'>
-                  <hr />
-                  {heatOn &&
-                    <>
-                      <span className='heat-cirl'></span>
-                      <span className='heat-cirl cirl1'></span>
-                      <span className='heat-cirl cirl2'></span>
-                      <span className='heat-cirl cirl3'></span>
-                      <span className='heat-cirl cirl4'></span>
-                      <span className='heat-cirl cirl5'></span>
-                      <span className='heat-cirl cirl6'></span>
-                      <span className='heat-cirl cirl7'></span>
-                      <span className='heat-cirl cirl8'></span>
-                      <span className='heat-cirl cirl9'></span>
-                      <span className='heat-cirl cirl10'></span>
-                      <span className='heat-cirl cirl11'></span>
-                      <span className='heat-cirl cirl12'></span>
-                    </>
-                  }
 
-                </div>
-              </Grid>
-              <Grid marginTop={'25px'} item xs={6} paddingX={4}>
-                <div className='solor-connect'>
-                  <hr />
-                  {devOn &&
-                    <>
-                      <span className='solor-cirl'></span>
-                      <span className='solor-cirl cirl1'></span>
-                      <span className='solor-cirl cirl2'></span>
-                      <span className='solor-cirl cirl3'></span>
-                      <span className='solor-cirl cirl4'></span>
-                      <span className='solor-cirl cirl5'></span>
-                      <span className='solor-cirl cirl6'></span>
-                      <span className='solor-cirl cirl7'></span>
-                      <span className='solor-cirl cirl8'></span>
-                      <span className='solor-cirl cirl9'></span>
-                      <span className='solor-cirl cirl10'></span>
-                      <span className='solor-cirl cirl11'></span>
-                      <span className='solor-cirl cirl12'></span>
-                    </>
-                  }
-                </div>
-              </Grid>
-            </>}
           </Grid>
+          {isMobile && isPortrait && < Box className="dev-label">
+            <Typography variant='h4' fontWeight={700}>{deviceName}</Typography>
+            <Typography variant='body1'>{deviceId}</Typography>
+          </Box>}
         </Box>
 
       </Box>
       {/* GRID & CHARTS */}
-      <Box>
-        <Grid container spacing={3} >
-          <Grid item md="7" xs="12">
+      <Box gridColumn="span 4" sx={isPortrait ? {} : { height: '100%' }}>
+        <Grid container spacing={3} sx={isPortrait ? {} : { marginTop: '0 !important', height: '100%' }}>
+          <Grid item md={7} xs={12} sx={isPortrait ? {} : { minWidth: '100%', height: '100%', paddingTop: '0 !important' }}>
             <Box
               backgroundColor={colors.primary[400]}
-              sx={{ height: 'fit-content' }}
+              sx={isPortrait ? { height: 'fit-content' } : { height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
               textAlign={'center'}
               position={'relative'}
             >
-              <Box position={'relative'} paddingBottom={2}>
+              <Box position={'relative'} paddingBottom={isMobile ? 0 : 2}>
                 <GaugeComponent
                   type="semicircle"
                   arc={{
@@ -395,7 +364,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                 />
 
                 <Grid position={'absolute'} container spacing={1} paddingX={7} justifyContent={'space-between'}
-                sx={{ top: 0, width: '100%', height: '100%' }}
+                  sx={{ top: isMobile ? '-10px' : 0, width: '100%', height: '100%' }}
                 >
                   <Grid item sx={{ height: '100%' }}>
                     <img src={sunSad} width={30} style={{ position: 'relative', top: 'calc(100% - 25px)', }} />
@@ -412,8 +381,8 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
 
 
               {/* <GaugeChart id="gauge-chart1" /> */}
-              {isMobile && <Grid container spacing={1} paddingX={1} paddingY={2} >
-                <Grid item xs={6} paddingX={1}>
+              {isMobile && <Grid container spacing={1} paddingX={1} paddingTop={0} paddingBottom={1} marginTop={-3}>
+                <Grid item xs={12} paddingX={1}>
                   <Box display={'flex'} justifyContent={'space-between'} alignItems={'end'}
                     style={{ borderBottom: '3px solid', paddingBottom: '2px', flexWrap: 'wrap' }}>
                     <Typography
@@ -432,12 +401,12 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                     </Typography>
                   </Box>
                 </Grid>
-                <Grid item xs={6} paddingX={1}>
+                <Grid item xs={12} paddingX={1}>
                   <Box display={'flex'} flexWrap={'wrap'} justifyContent={'space-between'} alignItems={'end'}
                     sx={{ borderBottom: '3px solid', paddingBottom: '2px' }}>
                     <Typography
-                      variant="h4"
-                      fontWeight="bold"
+                      variant="body1"
+                      fontWeight="500"
                       sx={{ color: colors.grey[100], display: 'flex', justifyContent: 'start', alignItems: 'baseline' }}
                     >
                       Saved 
@@ -464,7 +433,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
               sx={{ height: '100%' }}
             >
               <Box margin={2} display={'flex'} justifyContent={'space-between'} alignItems={'end'}
-                sx={{ borderBottom: '3px solid', paddingBottom: '10px' }}
+                sx={{ borderBottom: '3px solid', paddingBottom: '10px', flexWrap: 'wrap' }}
               >
                 <Typography
                   variant="h4"
@@ -476,18 +445,18 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                 <Typography
                   variant='h1'
                   fontWeight='bold'
-                  sx={{ color: colors.grey[100] }}
+                  sx={{ color: colors.grey[100], textWrap: 'nowrap' }}
                 >
                   {todayKWH} kwh
                 </Typography>
               </Box>
               <Box margin={2} display={'flex'} justifyContent={'space-between'} alignItems={'end'}
-                sx={{ borderBottom: '3px solid', paddingBottom: '10px' }}
+                sx={{ borderBottom: '3px solid', paddingBottom: '10px', flexWrap: 'wrap' }}
               >
                 <Typography
                   variant="h4"
                   fontWeight="bold"
-                  sx={{ color: colors.grey[100], display: 'flex', justifyContent: 'start', alignItems: 'baseline' }}
+                  sx={{ color: colors.grey[100], display: 'flex', justifyContent: 'start', alignItems: 'baseline', flexWrap: 'nowrap', textWrap: 'nowrap' }}
                 >
                   Saved 
                   <Typography variant='body1' fontWeight={'bold'} sx={{ marginX: '0.3rem', color: colors.grey[100] }}>
@@ -497,7 +466,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                 <Typography
                   variant='h1'
                   fontWeight='bold'
-                  sx={{ color: colors.grey[100] }}
+                  sx={{ color: colors.grey[100], textWrap: 'nowrap' }}
                 >
                   {savePrice} €
                 </Typography>
@@ -507,6 +476,6 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
         </Grid>
       </Box>
 
-    </>
+    </Box >
   )
 }
