@@ -38,7 +38,7 @@ export const Login = () => {
                 <TextField fullWidth id="outlined-email" label="Email" type='email' variant="outlined" />
               </Grid>
               <Grid item xs={12}>
-                <TextField error={true} fullWidth id="outlined-password" label="Password" type='password' variant="outlined" />
+                <TextField fullWidth id="outlined-password" label="Password" type='password' variant="outlined" />
               </Grid>
               <Grid item xs={12}>
                 <Button fullWidth variant="contained" color={'success'}
