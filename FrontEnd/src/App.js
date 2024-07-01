@@ -14,8 +14,9 @@ import Pie from "./scenes/Pie";
 import Line from "./scenes/line";
 import Geography from "./scenes/geography";
 
-
-
+import { Login } from './scenes/Auth/login';
+import { Register } from './scenes/Auth/register'; 
+import { ForgotPassword } from './scenes/Auth/forgotPassword';
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -27,6 +28,9 @@ function App() {
         <div className="app">
           <Routes>
             <Route path="/" element={<Dashboard />} />
+            <Route path='/login' element={<Login />}/>
+            <Route path='/register' element={<Register />} />
+            <Route path='/forgotPassword' element={<ForgotPassword />}/>
             <Route path="/team" element={<Team />} />
             <Route path="/contacts" element={<Contacts />} />
             <Route path="/invoices" element={<Invoices />} />

@@ -124,7 +124,6 @@ const Dashboard = () => {
                   <Grid item xs={12} sx={{ maxWidth: '10vw !important' }} >
                     <Box
                       onClick={() => { subMenuClicked(1) }}
-
                       backgroundColor={mobileScreenDetect && submenuId === 1 ? colors.primary[300] : colors.primary[400]}
                       display="flex"
                       alignItems="center"
