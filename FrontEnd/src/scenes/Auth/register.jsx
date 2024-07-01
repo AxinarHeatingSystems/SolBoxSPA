@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Box } from "@mui/system"
+import { Box, display } from "@mui/system"
 import iotBg from '../../assets/Backgroound/iotBg.jpg'
 import { useTheme, Button, TextField, Typography, IconButton, Grid } from "@mui/material"
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
@@ -7,11 +7,14 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import { ColorModeContext, tokens } from "../../theme";
 import { Link } from 'react-router-dom';
 import MuiPhoneNumber from 'material-ui-phone-number';
+import { useSelector } from 'react-redux';
 
 export const Register = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
+  const isMobileDetect = useSelector(store => store.isMobileDetect);
+  const isPortrait = useSelector(store => store.isPortrait);
   console.log(theme, colors);
   return (
     <main className="content" >
@@ -23,10 +26,10 @@ export const Register = () => {
           backgroundSize: 'auto 100%',
           backgroundRepeat: 'no-repeat'
         }}>
-        <Box width={'50%'}>
+        <Box width={'50%'} display={isMobileDetect ? 'none' : 'block'}>
 
         </Box>
-        <Box width={'50%'}
+        <Box width={isMobileDetect ? '100%' : '50%'}
           display={'flex'}
           justifyContent={'center'}
           alignItems={'center'}
@@ -36,29 +39,30 @@ export const Register = () => {
           <Box padding={3}>
             <Typography variant="h2" marginBottom={4}>Register - SolBox Control Panel</Typography>
             <Grid container spacing={3}>
-              <Grid item xs={12}>
+              <Grid item xs={isMobileDetect ? isPortrait ? 12 : 6 : 12}>
                 <TextField fullWidth id="outlined-userName" label="User Name" variant="outlined" size='small' />
               </Grid>
               <Grid item xs={6}>
-                <TextField fullWidth id="outlined-name" label="Name" variant="outlined" />
+                <TextField fullWidth id="outlined-name" label="Name" variant="outlined" size='small' />
               </Grid>
               <Grid item xs={6}>
-                <TextField fullWidth id="outlined-surName" label="SurName" variant="outlined" />
+                <TextField fullWidth id="outlined-surName" label="SurName" variant="outlined" size='small' />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={isMobileDetect ? isPortrait ? 12 : 6 : 12}>
                 <MuiPhoneNumber
                   defaultCountry='gr'
                   regions={'europe'}
                   fullWidth
                   variant="outlined"
                   label="Phone Number"
+                  size='small'
                 />
               </Grid>
-              <Grid item xs={12}>
-                <TextField fullWidth id="outlined-email" label="Email" type='email' variant="outlined" />
+              <Grid item xs={isMobileDetect ? isPortrait ? 12 : 6 : 12}>
+                <TextField fullWidth id="outlined-email" label="Email" type='email' variant="outlined" size='small' />
               </Grid>
-              <Grid item xs={12}>
-                <TextField fullWidth id="outlined-password" label="Password" type='password' variant="outlined" />
+              <Grid item xs={isMobileDetect ? isPortrait ? 12 : 6 : 12}>
+                <TextField fullWidth id="outlined-password" label="Password" type='password' variant="outlined" size='small' />
               </Grid>
               <Grid item xs={12}>
                 <Button fullWidth variant="contained" color={'success'}

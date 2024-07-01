@@ -6,11 +6,14 @@ import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import { ColorModeContext, tokens } from "../../theme";
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 export const Login = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
+  const isMobileDetect = useSelector(store => store.isMobileDetect);
+  const isPortrait = useSelector(store => store.isPortrait);
   console.log(theme, colors);
   return (
     <main className="content" >
@@ -22,10 +25,10 @@ export const Login = () => {
           backgroundSize: 'auto 100%',
           backgroundRepeat: 'no-repeat'
         }}>
-        <Box width={'50%'}>
+        <Box width={'50%'} display={isMobileDetect ? 'none' : 'block'}>
 
         </Box>
-        <Box width={'50%'}
+        <Box width={isMobileDetect ? '100%' : '50%'}
           display={'flex'}
           justifyContent={'center'}
           alignItems={'center'}
