@@ -1,5 +1,7 @@
 import { createContext, useState, useMemo } from "react";
 import { createTheme } from "@mui/material/styles";
+import { useDispatch, useSelector } from "react-redux";
+import { colorMode_Store } from "./store/actions/mainAction";
 
 // color design tokens export
 export const tokens = (mode) => ({
@@ -199,12 +201,17 @@ export const ColorModeContext = createContext({
 });
 
 export const useMode = () => {
-  const [mode, setMode] = useState("dark");
+  const colorModeName = useSelector(store => store.colorModeName);
+  const [mode, setMode] = useState(colorModeName);
+  const dispatch = useDispatch();
 
   const colorMode = useMemo(
     () => ({
-      toggleColorMode: () =>
-        setMode((prev) => (prev === "light" ? "dark" : "light")),
+      toggleColorMode: () =>{
+        setMode((prev) => (prev === "light" ? "dark" : "light"))
+        dispatch(colorMode_Store(mode === "light" ? "dark" : "light"));
+        localStorage.setItem('colorMode', mode === "light" ? "dark" : "light");
+      },
     }),
     []
   );

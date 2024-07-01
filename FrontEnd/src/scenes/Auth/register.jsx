@@ -37,7 +37,7 @@ export const Register = () => {
             <Typography variant="h2" marginBottom={4}>Register - SolBox Control Panel</Typography>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <TextField fullWidth id="outlined-userName" label="User Name" variant="outlined" />
+                <TextField fullWidth id="outlined-userName" label="User Name" variant="outlined" size='small' />
               </Grid>
               <Grid item xs={6}>
                 <TextField fullWidth id="outlined-name" label="Name" variant="outlined" />
