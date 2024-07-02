@@ -9,13 +9,7 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { loginApi } from '../../axios/ApiProvider';
 
-import KcAdminClient from '@keycloak/keycloak-admin-client';
-
 export const Login = () => {
-  const kcAdminClient = new KcAdminClient({
-    baseUrl: 'https://solbox-keycloak.axinars.uk/',
-    realmName: 'master',
-  });
 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -27,21 +21,6 @@ export const Login = () => {
   const [emailError, setEmailError] = useState(false);
   const [password, setPassword] = useState();
   const [passwordError, setPasswordError] = useState(false);
-  useEffect(() => {
-    loadKCAdmin();
-  }, [])
-
-  const loadKCAdmin = async () => {
-    await kcAdminClient.auth({
-      username: 'admin',
-      password: '$axinaR%6623&',
-      grantType: 'password',
-      clientId: 'admin-cli',
-      totp: '123456', // optional Time-based One-time Password if OTP is required in authentication flow
-    });
-    const users = await kcAdminClient.users.find();
-    console.log('userData', users);
-  }
 
   const onEmailChange = (e) => {
     setEmail(e.target.value);
