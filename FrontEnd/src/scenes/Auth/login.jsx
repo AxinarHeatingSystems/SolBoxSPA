@@ -7,6 +7,7 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import { ColorModeContext, tokens } from "../../theme";
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { loginApi } from '../../axios/ApiProvider';
 
 export const Login = () => {
   const theme = useTheme();
@@ -15,6 +16,39 @@ export const Login = () => {
   const isMobileDetect = useSelector(store => store.isMobileDetect);
   const isPortrait = useSelector(store => store.isPortrait);
   console.log(theme, colors);
+  const [email, setEmail] = useState();
+  const [emailError, setEmailError] = useState(false);
+  const [password, setPassword] = useState();
+  const [passwordError, setPasswordError] = useState(false);
+  const onEmailChange = (e) => {
+    setEmail(e.target.value);
+    if (e.target.validity.valid) {
+      setEmailError(false);
+    } else {
+      setEmailError(true);
+    }
+  }
+
+  const onPasswordChange = (e) => {
+    setPassword(e.target.value);
+    if (e.target.validity.valid) {
+      setPasswordError(false);
+    } else {
+      setPasswordError(true);
+    }
+  }
+
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    if (e.target.checkValidity()) {
+      const resLog = await loginApi({ email: email, password: password });
+      console.log('email Logged In', resLog);
+      // alert("Form is valid! Submitting the form...");
+    } else {
+      alert("Form is invalid! Please check the fields...");
+    }
+  }
+
   return (
     <main className="content" >
       <Box width={'100%'} height={'100vh'} display={'flex'}
@@ -36,15 +70,26 @@ export const Login = () => {
         >
           <Box padding={3}>
             <Typography variant="h2" marginBottom={4}>Login - SolBox Control Panel</Typography>
-            <Grid marginBottom={2} container spacing={3}>
+            <Grid component={'form'} onSubmit={handleLoginSubmit} marginBottom={2} container spacing={3}>
               <Grid item xs={12}>
-                <TextField fullWidth id="outlined-email" label="Email" type='email' variant="outlined" />
+                <TextField fullWidth id="outlined-email"
+                  label="Email" type='email' variant="outlined"
+                  value={email}
+                  error={emailError}
+                  onChange={onEmailChange}
+                  required />
               </Grid>
               <Grid item xs={12}>
-                <TextField fullWidth id="outlined-password" label="Password" type='password' variant="outlined" />
+                <TextField fullWidth id="outlined-password"
+                  value={password}
+                  error={passwordError}
+                  label="Password" type='password' variant="outlined"
+                  onChange={onPasswordChange}
+                  required />
               </Grid>
               <Grid item xs={12}>
                 <Button fullWidth variant="contained" color={'success'}
+                  type="submit" 
                   sx={{ fontWeight: 600 }}
                 >Login</Button>
               </Grid>
