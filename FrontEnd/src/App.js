@@ -30,13 +30,19 @@ function App() {
   const colorModeName = useSelector(store => store.colorModeName);
   console.log(colorMode, theme);
   useEffect(() => {
-    console.log('colorMode', colorModeName, window.matchMedia("(orientation: portrait)"));
+    console.log('colorMode', colorModeName, isMobileDetect, window.matchMedia("(orientation: portrait)"));
     if(window.matchMedia("(orientation: portrait)").matches){
       dispatch(isPortrait_Store(true));
       window.document.documentElement.style.transform = 'scaleY(1) translateY(0px)';
     }else{
-      dispatch(isPortrait_Store(false));
-      window.document.documentElement.style.transform = 'scaleY(0.8) translateY(-50px)';
+      if(isMobileDetect){
+        dispatch(isPortrait_Store(false));
+        window.document.documentElement.style.transform = 'scaleY(0.8) translateY(-50px)';
+      }else{
+        dispatch(isPortrait_Store(true));
+        window.document.documentElement.style.transform = 'scaleY(1) translateY(0px)';
+      }
+      
     }
     const portraitChange = (e) => {
       if (e.matches) {

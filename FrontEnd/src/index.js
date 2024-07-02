@@ -16,6 +16,7 @@ if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elain
 
 const InitialData = mainConst;
 InitialData.isMobileDetect = mobileScreenDetect;
+InitialData.isPortrait = true;
 InitialData.colorModeName = localStorage.getItem('colorMode')? localStorage.getItem('colorMode') : 'dark';
 console.log('dddd', localStorage.getItem('colorMode'));
 const container = document.getElementById('root');
