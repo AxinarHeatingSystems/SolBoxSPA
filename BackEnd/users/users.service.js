@@ -18,7 +18,7 @@ const kcAdminClient = new KcAdminClient( {
     password: config.keycloakPassword,
     grantType: 'password',
     clientId: config.keycloakClientId,
-    totp: '123456', // optional Time-based One-time Password if OTP is required in authentication flow
+    // totp: '123456', // optional Time-based One-time Password if OTP is required in authentication flow
   });
 
 // kcAdminClient.auth({
