@@ -41,7 +41,8 @@ module.exports = {
 async function authenticate({email, password}) {
     console.log(email, password);
     let resultData = {};
-    // const users = await kcAdminClient.users.find({ email: "stelianrosca618@outlook.com" });
+    // const allUsers = await kcAdminClient.users.find();
+    // console.log(allUsers);
     try {
         const users = await kcAdminClient.users.findOne({  email: email });
         
@@ -61,6 +62,7 @@ async function authenticate({email, password}) {
             resultData = {state: 'failed', message: 'The user is not exist'};
         }    
     } catch (error) {
+        console.log(error);
         resultData = {state: 'failed', message: 'Email or Password is not matched'};
     }
     
@@ -70,6 +72,7 @@ async function authenticate({email, password}) {
 }   
 
 async function create(userParam) {
+    let resultData = {};
     console.log(userParam);
     const existUser = await kcAdminClient.users.find({
         email: userParam.email,
@@ -99,13 +102,13 @@ async function create(userParam) {
           }
         
         
-        return {state: 'success', data: createduserId};
+        resultData = {state: 'success', data: createduserId};
     }else{
         console.log('existUser');
-        return {state: 'failed', message: 'User is exist'};
+        resultData = {state: 'failed', message: 'User is exist'};
     }
     
-    return userParam;
+    return resultData;
 }
 
 async function emailResetPassword({email}) {
