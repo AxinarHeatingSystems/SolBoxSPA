@@ -112,7 +112,7 @@ async function emailResetPassword({email}) {
                 id: selectedUser.id,
                 clientId: config.keycloakClientId,
                 lifespan: 60,
-                actions: RequiredActionAlias.UPDATE_PASSWORD
+                actions: [RequiredActionAlias.UPDATE_PASSWORD]
             })    
         } catch (error) {
             console.log(error);
