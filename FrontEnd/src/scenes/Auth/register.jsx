@@ -85,9 +85,9 @@ export const Register = () => {
     e.preventDefault();
     if (e.target.checkValidity()) {
       const userData = {
-        userName: userName,
+        username: userName,
         firstname: firstname,
-        lastName: lastName,
+        lastname: lastName,
         phone: phone,
         email: email,
         password: password

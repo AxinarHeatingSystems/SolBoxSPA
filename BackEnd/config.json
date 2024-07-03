@@ -10,5 +10,6 @@
     "name": "emqx@172.22.0.2",
     "keycloakPath": "https://solbox-keycloak.axinars.uk",
     "keycloakUser": "admin",
-    "keycloakPassword": "$axinaR%6623&"
+    "keycloakPassword": "$axinaR%6623&",
+    "keycloakClientId": "admin-cli"
 }
