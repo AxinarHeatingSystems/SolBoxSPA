@@ -18,10 +18,10 @@ export const Register = () => {
   const isPortrait = useSelector(store => store.isPortrait);
   console.log(theme, colors);
 
-  const [name, setName] = useState('');
-  const [nameError, setNameError] = useState(false);
-  const [surName, setSurName] = useState('');
-  const [surNameError, setSurNameError] = useState(false);
+  const [firstname, setFirstName] = useState('');
+  const [firstNmeError, setFirstNameError] = useState(false);
+  const [lastName, setLastName] = useState('');
+  const [lastNameError, setLastNameError] = useState(false);
   const [userName, setUserName] = useState('');
   const [userNameError, setUserNameError] = useState(false);
   const [phone, setPhone] = useState('');
@@ -39,20 +39,20 @@ export const Register = () => {
       setUserNameError(true);
     }
   }
-  const onNameChange = (e) => {
-    setName(e.target.value);
+  const onfirstNameChange = (e) => {
+    setFirstName(e.target.value);
     if (e.target.validity.valid) {
-      setNameError(false);
+      setFirstNameError(false);
     } else {
-      setNameError(true);
+      setFirstNameError(true);
     }
   }
-  const onSurNameChange = (e) => {
-    setSurName(e.target.value);
+  const onlastNameChange = (e) => {
+    setLastName(e.target.value);
     if (e.target.validity.valid) {
-      setSurNameError(false);
+      setLastNameError(false);
     } else {
-      setSurNameError(true);
+      setLastNameError(true);
     }
   }
   const onPhoneChange = (e) => {
@@ -85,9 +85,9 @@ export const Register = () => {
     e.preventDefault();
     if (e.target.checkValidity()) {
       const userData = {
-        name: name,
         userName: userName,
-        surName: surName,
+        firstname: firstname,
+        lastName: lastName,
         phone: phone,
         email: email,
         password: password
@@ -134,19 +134,19 @@ export const Register = () => {
               </Grid>
               <Grid item xs={6}>
                 <TextField fullWidth id="outlined-name"
-                  value={name}
-                  error={nameError}
+                  value={firstname}
+                  error={firstNmeError}
                   label="Name" variant="outlined" size='small'
-                  onChange={onNameChange}
+                  onChange={onfirstNameChange}
                   required
                 />
               </Grid>
               <Grid item xs={6}>
-                <TextField fullWidth id="outlined-surName"
-                  value={surName}
-                  error={surNameError}
-                  label="SurName" variant="outlined" size='small'
-                  onChange={onSurNameChange}
+                <TextField fullWidth id="outlined-lastName"
+                  value={lastName}
+                  error={lastNameError}
+                  label="Last Name" variant="outlined" size='small'
+                  onChange={onlastNameChange}
                   required
                 />
               </Grid>

@@ -28,6 +28,7 @@ const io = socketio(httServer, {cors: {
 
 // api routes
 app.use('/mqtt', require('./mqttServe/mqttServe.controller'));
+app.use('/user', require('./users/users.controller'));
 
 // global error handler
 app.use(errorHandler);
@@ -50,7 +51,7 @@ client.on('connect', () => {
   console.log(`${config.protocol}: Connected`)
 })
 client.on('reconnect', (error) => {
-  console.log(`Reconnecting(${config.protocol}):`, error)
+  // console.log(`Reconnecting(${config.protocol}):`, error)
 })
 // start server
 const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 4000;
