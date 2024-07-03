@@ -34,33 +34,40 @@ module.exports = {
     authenticate,
     create,
     emailResetPassword,
-    resetPassword
+    resetPassword,
+    existLogin
 }
 
 async function authenticate({email, password}) {
     console.log(email, password);
-    
+    let resultData = {};
     // const users = await kcAdminClient.users.find({ email: "stelianrosca618@outlook.com" });
-    const users = await kcAdminClient.users.findOne({  email: email });
-
-    if(users.length > 0){
-        console.log(users);
-        const loggedUser = users[0];
-        const userHash = loggedUser.attributes.pass;
-        console.log(userHash, bcrypt.compareSync(password, userHash[0]));
-        if(bcrypt.compareSync(password, userHash[0])){
-            const token = jwt.sign({ sub: loggedUser.id }, config.secret, { expiresIn: '7d' });
-            return {state: 'success', data: loggedUser, token: token};
+    try {
+        const users = await kcAdminClient.users.findOne({  email: email });
+        
+        if(users.length > 0){
+            console.log(users);
+            const loggedUser = users[0];
+            const userHash = loggedUser.attributes.pass;
+            console.log(userHash, bcrypt.compareSync(password, userHash[0]));
+            if(bcrypt.compareSync(password, userHash[0])){
+                const token = jwt.sign({ sub: loggedUser.id }, config.secret, { expiresIn: '7d' });
+                resultData = {state: 'success', data: loggedUser, token: token};;
+            }else{
+                resultData = {state: 'failed', message: 'Email or Password is not matched!'};
+            }
         }else{
-            return {state: 'failed', message: 'Email or Password is not matched'};
-        }
-    }else{
-        console.log('empty');
-        return {state: 'failed', message: 'The user is not exist'};
+            console.log('empty');
+            resultData = {state: 'failed', message: 'The user is not exist'};
+        }    
+    } catch (error) {
+        resultData = {state: 'failed', message: 'Email or Password is not matched'};
     }
-    // console.log(users[0].id);
     
-}
+    // console.log(users[0].id);
+    console.log(resultData);
+    return resultData;
+}   
 
 async function create(userParam) {
     console.log(userParam);
@@ -112,6 +119,7 @@ async function emailResetPassword({email}) {
                 id: selectedUser.id,
                 clientId: config.keycloakClientId,
                 lifespan: 60,
+                // redirectUri: 'https://solbox-clients.axinars.uk',
                 actions: [RequiredActionAlias.UPDATE_PASSWORD]
             })    
         } catch (error) {
@@ -123,6 +131,12 @@ async function emailResetPassword({email}) {
 }
 
 async function resetPassword({email, oldPassword, newPassword}) {
+    console.log('ppp');
     console.log({email, oldPassword, newPassword});
     return {email, oldPassword, newPassword}
+}
+
+async function existLogin() {
+    console.log('login')
+    return 'loggedIn';
 }

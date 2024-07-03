@@ -3,6 +3,38 @@ import axios from 'axios';
 
 export const BASE_BACKEND_URL = process.env.REACT_APP_BASE_BACKEND_URL
 
+const getJWTToken = () => {
+  const strUser = localStorage.getItem('userData');
+  const userData = JSON.parse(strUser);
+  console.log('using Data', userData);
+  return `Bearer ${userData.tokens}`;
+}
+export const logoutApi = async () => {
+  
+  localStorage.removeItem("userData");
+  window.location.reload();
+
+}
+export const existLogin = async () => {
+  let resultState = {state: '', data: {}};
+  const apiUrl = `${BASE_BACKEND_URL}user/existLogin`;
+  const tokenData = getJWTToken();
+  await axios({
+    method: 'get',
+    url: apiUrl,
+    headers: {Authorization: tokenData}
+  }).then(function(response){
+    resultState.state = 'success';
+    resultState.data = response.data;
+  }).catch(function(err) {
+    console.log('err', err);
+    resultState.state = 'error';
+    resultState.data = err.message;
+    window.toastr.error('Email or Password is not matched');
+  })
+
+  return resultState;
+}
 export const loginApi = async (loginInfo) => {
   let resultState = {state: '', data: {}};
   const apiUrl = `${BASE_BACKEND_URL}user/authenticate`;
@@ -20,8 +52,10 @@ export const loginApi = async (loginInfo) => {
     resultState.state = 'success';
     resultState.data = response.data;
   }).catch(function(err) {
+    console.log('err', err);
     resultState.state = 'error';
     resultState.data = err.message;
+    window.toastr.error('Email or Password is not matched');
   })
 
   return resultState;
@@ -39,9 +73,11 @@ export const registerApi = async (userdata) => {
   }).then(function(response) {
     resultState.state = 'succes';
     resultState.data = response;
+    window.toastr.success('The user is created, Please verify your email')
   }).catch(function (err) {
     resultState.state = 'error';
     resultState.data = err.message;
+    window.toastr.error('Register is failed. Please try to do again');
   })
 
   return resultState;
@@ -59,23 +95,44 @@ export const resetPasswordEmail = async (email) => {
   }).then(function(response) {
     resultState.state = 'success';
     resultState.data = response.data;
+    window.toastr.error('Reset Password email was sent. Please check your email to reset password');
   }).catch(function(err) {
     resultState.state = 'error';
     resultState.data = err.message;
   })
   return resultState;
 }
+export const resetPasswordApi = async () => {
+  let resultState = {state: '', data: {}};
+  const apiUrl = `${BASE_BACKEND_URL}user/resetpassword`;
 
+  const tokenData = getJWTToken();
+  await axios({
+    method: 'post',
+    url: apiUrl,
+    data: {token: tokenData},
+    headers: {Authorization: tokenData}
+  }).then(function(response){
+    resultState.state = 'success';
+    resultState.data = response.data;
+  }).catch(function(err) {
+    console.log('err', err);
+    resultState.state = 'error';
+    resultState.data = err.message;
+    window.toastr.error('Email or Password is not matched');
+  })
+}
 export const devConnection = async (devId) => {
   let resultState = {state: '', data: {}};
-
+  const tokenData = getJWTToken();
   const apiUrl = `${BASE_BACKEND_URL}mqtt/devConnect`;
   
   const data = {devId: devId};
     await axios({
       method: 'post',
       url: apiUrl,
-      data: data
+      data: data,
+      headers: {Authorization: tokenData}
     }).then(function(response) {
       resultState.state = 'success';
       resultState.data = response.data;

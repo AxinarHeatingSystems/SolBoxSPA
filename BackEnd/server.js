@@ -6,7 +6,7 @@ var fs = require('fs');
 const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const jwt = require('_helpers/jwt');
+const jwtAuth = require('_helpers/jwt');
 const errorHandler = require('_helpers/error-handler');
 const { default: mqtt } = require('mqtt');
 const socketio = require('socket.io');
@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 
 app.use(cors());
 // use JWT auth to secure the api
-app.use(jwt());
+app.use(jwtAuth());
 const httServer = http.createServer(app);
 
 const io = socketio(httServer, {cors: {

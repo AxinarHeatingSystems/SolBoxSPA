@@ -30,7 +30,7 @@ export const Register = () => {
   const [emailError, setEmailError] = useState(false);
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState(false);
-
+  const [userCreated, setUserCreated] = useState(false);
   const onUserNameChange = (e) => {
     setUserName(e.target.value);
     if (e.target.validity.valid) {
@@ -92,7 +92,10 @@ export const Register = () => {
         email: email,
         password: password
       }
-      await registerApi(userData);
+      const registerRes = await registerApi(userData);
+      if (registerRes.state == 'success') {
+        setUserCreated(true);
+      }
       // const resLog = await loginApi({ email: email, password: password });
       // console.log('email Logged In', resLog);
       // alert("Form is valid! Submitting the form...");
@@ -198,7 +201,7 @@ export const Register = () => {
           </Box>
 
           <Box sx={{ position: 'absolute', top: '0', right: '0', padding: 1 }}>
-            <IconButton onClick={() => { colorMode.toggleColorMode(); }} sx={{ marginY: '10px' }} size={"small"} color={'#fff'}>
+            <IconButton disabled={userCreated} onClick={() => { colorMode.toggleColorMode(); }} sx={{ marginY: '10px' }} size={"small"} color={'#fff'}>
               {theme.palette.mode === "dark" ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
             </IconButton >
           </Box>

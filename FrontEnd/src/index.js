@@ -23,14 +23,14 @@ const container = document.getElementById('root');
 // const store = createStore(rootReducer, InitialData);
 const root = createRoot(container);
 root.render(
-  <StrictMode>
+  // <StrictMode>
     <Provider store={configureStore(InitialData)} serverState={InitialData}>
-    {/* <Router> */}
+    <Router>
       <App /> 
-    {/* </Router> */}
+    </Router>
     </Provider>
   
-  </StrictMode>
+  // </StrictMode>
   
   
 );

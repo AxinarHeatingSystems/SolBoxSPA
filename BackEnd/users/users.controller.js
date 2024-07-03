@@ -6,13 +6,15 @@ router.post('/authenticate', authenticate);
 router.post('/register', register);
 router.post('/resetpasswordemail', resetPasswordEmail);
 router.post('/resetpassword', resetPassword);
+router.get('/existLogin', existLogin);
 
 module.exports = router;
 
 function authenticate(req, res, next) {
     userService.authenticate(req.body)
         .then(user => user? 
-            res.json(user) : res.status(400).json({ message: 'Username or password is incorrect' })
+            user.state == 'success'? 
+            res.json(user) : res.status(400).json({ message: user.message }) : res.status(400).json({ message: 'Username or password is incorrect' })
         )
         .catch(err => next(err));
 }
@@ -33,4 +35,10 @@ function resetPassword(req, res, next){
     userService.resetPassword(req.body)
         .then((data) => res.json(data))
         .catch(err => next(err))
+}
+
+function existLogin(req, res, next){
+    userService.existLogin(req.body)
+        .then(data => res.json(data))
+        .catch(err => next(err));
 }

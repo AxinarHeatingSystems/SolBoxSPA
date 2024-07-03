@@ -3,7 +3,7 @@ import Team from "./scenes/team";
 
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, redirect, useNavigate, defer, useLocation } from "react-router-dom";
 import Dashboard from "./scenes/dashboard";
 import Contacts from "./scenes/contacts";
 import Invoices from "./scenes/invoices";
@@ -22,13 +22,20 @@ import { Provider, useSelector } from 'react-redux';
 
 import { useDispatch } from 'react-redux';
 import { isPortrait_Store } from './store/actions/mainAction';
+import { existLogin } from './axios/ApiProvider';
+
+const authPath = [
+  "/login",
+  "/register",
+  "/forgotPassword"
+]
 
 function App() {
+  // const navigate = useNavigate();
   const [theme, colorMode] = useMode();
   const dispatch = useDispatch();
   const isMobileDetect = useSelector(store => store.isMobileDetect);
   const colorModeName = useSelector(store => store.colorModeName);
-  console.log(colorMode, theme);
   useEffect(() => {
     console.log('colorMode', colorModeName, isMobileDetect, window.matchMedia("(orientation: portrait)"));
     if(window.matchMedia("(orientation: portrait)").matches){
@@ -61,20 +68,47 @@ function App() {
         }
       }
     };
+    // checkLogin();
     window.matchMedia("(orientation: portrait)").addEventListener("change", portraitChange);
     return () => {
       window.matchMedia("(orientation: portrait)").removeEventListener("change", portraitChange)
     }
+    
   }, [])
+  const location = useLocation();
+
+  useEffect(() => {
+    console.log(`The current route is ${location.pathname}`);
+    checkLogin()
+  }, [location]);
+
+  const checkLogin = async () => {
+    const userData = localStorage.getItem('userData');
+    console.log('userDataCheck', userData, window.location);
+    if(!authPath.includes(window.location.pathname)){
+      if(userData){
+        const loginRes = await existLogin();
+        console.log('ssss', loginRes);
+        if(loginRes.state != 'success'){
+          window.location.href = '/login';  
+        }
+      }else{
+        console.log('redirect check', userData);
+        // navigate(`/login`, { replace: true });
+        window.location.href = '/login';
+      }
+    }
+    
+  }
 
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Router>
+        {/* <Router> */}
         <div className="app">
           <Routes>
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/" element={<Dashboard />}/>
             <Route path='/login' element={<Login />}/>
             <Route path='/register' element={<Register />} />
             <Route path='/forgotPassword' element={<ForgotPassword />}/>
@@ -89,7 +123,7 @@ function App() {
             <Route path="/geography" element={<Geography />} />
           </Routes>
         </div>
-        </Router>
+        {/* </Router> */}
       </ThemeProvider>
     </ColorModeContext.Provider>
   );

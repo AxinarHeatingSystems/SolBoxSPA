@@ -6,11 +6,13 @@ import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import { ColorModeContext, tokens } from "../../theme";
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginApi } from '../../axios/ApiProvider';
+import { isLoggedIn_Store, userData_Store } from '../../store/actions/mainAction';
+
 
 export const Login = () => {
-
+  const dispatch = useDispatch();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
@@ -45,6 +47,14 @@ export const Login = () => {
     if (e.target.checkValidity()) {
       const resLog = await loginApi({ email: email, password: password });
       console.log('email Logged In', resLog);
+      if (resLog.data.state == "success") {
+        let tmpUser = resLog.data.data;
+        tmpUser.tokens = resLog.data.token;
+        localStorage.setItem('userData', JSON.stringify(tmpUser));
+        dispatch(userData_Store(tmpUser));
+        dispatch(isLoggedIn_Store(true));
+        setTimeout(() => { window.location.href = '/'; }, 500)
+      }
       // alert("Form is valid! Submitting the form...");
     } else {
       alert("Form is invalid! Please check the fields...");

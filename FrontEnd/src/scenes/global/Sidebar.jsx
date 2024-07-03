@@ -18,6 +18,7 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ClearIcon from '@mui/icons-material/Clear';
+import { logoutApi } from '../../axios/ApiProvider';
 
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -124,7 +125,9 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
       color: "#6870fa !important",
     },
   }
-
+  const onLogOut = () => {
+    logoutApi()
+  }
   return (
     <Box
       sx={isMobile ? mobileStyle : desktopStyle}
@@ -228,7 +231,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
                 <Button variant="outlined" color='success' sx={{ marginY: '10px' }} size={!isCollapsed ? "medium" : "small"}>
                   {!isCollapsed ? 'Setting' : <ManageAccountsIcon />}
                 </Button>
-                <Button variant="outlined" color='secondary' sx={{ marginY: '10px' }} size={!isCollapsed ? "medium" : "small"}>
+                <Button onClick={() => { onLogOut() }} variant="outlined" color='secondary' sx={{ marginY: '10px' }} size={!isCollapsed ? "medium" : "small"}>
                   {!isCollapsed ? 'Log Out' : <LogoutIcon />}
                 </Button>
               </Box>
