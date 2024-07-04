@@ -51,9 +51,9 @@ async function authenticate({email, password}) {
     // console.log(allUsers);
     try {
         const users = await kcAdminClient.users.findOne({  email: email, credentials: [{type: 'password', value: password}], realm: config.keycloakRealm });
-        
+        console.log(users);
         if(users.length > 0){
-            console.log(users);
+            // console.log(users);
             const loggedUser = users[0];
             const userHash = loggedUser.attributes.pass;
             console.log(userHash, bcrypt.compareSync(password, userHash[0]));
