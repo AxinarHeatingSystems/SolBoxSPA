@@ -132,7 +132,7 @@ async function emailResetPassword({email}) {
                 id: selectedUser.id,
                 clientId: config.keycloakClientId2,
                 lifespan: 60,
-                redirectUri: 'https://solbox-clients.axinars.uk/resetpassword',
+                redirectUri: 'https://solbox-clients.axinars.uk/resetpassword?email='+email,
                 actions: [], 
                 realm: config.keycloakRealm
             })    
@@ -144,11 +144,29 @@ async function emailResetPassword({email}) {
     return {email};
 }
 
-async function resetPassword({email, oldPassword, newPassword}) {
+async function resetPassword({email, newPassword}) {
+    let resultData = {};
     await kcAdminAuth();
     console.log('ppp');
-    console.log({email, oldPassword, newPassword});
-    return {email, oldPassword, newPassword}
+    console.log({email, newPassword});
+    try {
+        const user = await kcAdminClient.users.findOne({email: email, realm: config.keycloakRealm});    
+        if(user.length > 0) {
+            const selectedUser = user[0];
+            await kcAdminClient.users.update({id: selectedUser.id, realm: config.keycloakRealm}, {
+                attributes: {
+                    'pass': [bcrypt.hashSync(newPassword, 10)],
+                },
+                credentials: [{type: 'password', value: newPassword}],
+            })
+            resultData = {state: 'Success', message: 'Password is updated'};
+        }else{
+            resultData = {state: 'failed', message: 'User is exist'};            
+        }
+    } catch (error) {
+        resultData = {state: 'failed', message: 'User is exist'};
+    }
+    
 }
 
 async function existLogin() {
