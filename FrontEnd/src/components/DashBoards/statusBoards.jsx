@@ -124,7 +124,6 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const [savePrice, setSavePrice] = useState(0);
 
   useEffect(() => {
-    console.log(devData);
     setDeviceId(devData.DeviceID)
     setDeviceName(devData.DeviceName)
     setDevOn(devData.DeviceEnabled);

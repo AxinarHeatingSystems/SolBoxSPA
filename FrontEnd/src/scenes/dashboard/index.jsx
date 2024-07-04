@@ -69,7 +69,7 @@ const Dashboard = () => {
     socket.on('message', message => {
       const devInfoData = JSON.parse(message);
       if (devId == devInfoData.DeviceID) {
-        // console.log(devInfoData)
+
         setDevInfo(devInfoData)
         setDeviceId(devInfoData.DeviceID)
         setDeviceName(devInfoData.DeviceName)
