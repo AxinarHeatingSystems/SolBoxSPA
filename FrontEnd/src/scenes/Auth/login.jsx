@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginApi } from '../../axios/ApiProvider';
 import { isLoggedIn_Store, userData_Store } from '../../store/actions/mainAction';
-
+import { GoogleLogin } from 'react-google-login';
 
 export const Login = () => {
   const dispatch = useDispatch();
@@ -58,7 +58,9 @@ export const Login = () => {
       alert("Form is invalid! Please check the fields...");
     }
   }
-
+  const responseGoogle = (response) => {
+    console.log(response);
+  }
   return (
     <main className="content" >
       <Box width={'100%'} height={'100vh'} display={'flex'}
@@ -104,6 +106,16 @@ export const Login = () => {
                 >Login</Button>
               </Grid>
             </Grid>
+            <Box width={'100%'} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+              <GoogleLogin
+                clientId="1027778269643-qho44ppioqsc1d1aa4vpdre4tngcufra.apps.googleusercontent.com"
+                buttonText="Login with Google"
+                className='googleSign-Button'
+                onSuccess={responseGoogle}
+                onFailure={responseGoogle}
+                cookiePolicy={'single_host_origin'}
+              />
+            </Box>
             <Box width={'100%'} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
               <Link to="/register">
                 <Typography variant='body1' fontWeight={600}>

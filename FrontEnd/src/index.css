@@ -33,3 +33,7 @@ body,
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+.googleSign-Button {
+  width: 100% !important;
+  justify-content: center;
+}
