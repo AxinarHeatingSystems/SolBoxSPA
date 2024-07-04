@@ -164,9 +164,11 @@ async function resetPassword({email, newPassword}) {
             resultData = {state: 'failed', message: 'User is exist'};            
         }
     } catch (error) {
+        console.log(error);
         resultData = {state: 'failed', message: 'User is exist'};
     }
     
+    return resultData;
 }
 
 async function existLogin() {
