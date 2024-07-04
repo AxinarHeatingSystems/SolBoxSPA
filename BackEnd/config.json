@@ -12,5 +12,6 @@
     "keycloakUser": "admin",
     "keycloakPassword": "$axinaR%6623&",
     "keycloakClientId": "admin-cli",
-    "keycloakRealm": "solbox-dashboard"
+    "keycloakRealm": "solbox-dashboard",
+    "keycloakRealm2": "check-admin"
 }
