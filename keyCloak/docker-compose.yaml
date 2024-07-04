@@ -1,0 +1,42 @@
+version: '3'
+services:
+  
+ postgresql:
+   image: postgres:16
+  # container_name: postgres
+   environment:
+     - POSTGRES_USER=keycloak
+     - POSTGRES_DB=keycloak
+     - POSTGRES_PASSWORD=SUPERsecret
+   user: root:root 
+   volumes:
+     - /home/george/keycloak/postgresql_data:/var/lib/postgresql/data
+ 
+ keycloak:
+   image: quay.io/keycloak/keycloak:24.0   # 25.0.0 up to latest did not work
+    # container_name: keycloak
+   restart: always
+   command: start
+   depends_on:
+     - postgresql
+  
+   ports:
+     - '8080:8080'
+   environment:
+     - KC_PROXY_ADDRESS_FORWARDING=false   
+     - KC_HOSTNAME_STRICT=false
+     - KC_PROXY=edge
+     - KC_HOSTNAME=solbox-keycloak.axinars.uk
+     - KC_HTTP_ENABLED=true  
+     - KC_KOSTNAME_STRICT_HTTPS=false
+      
+     - KC_DB=postgres
+     - KC_DB_USERNAME=keycloak
+     - KC_DB_PASSWORD=SUPERsecret
+     - KC_DB_URL_HOST=keycloak-postgresql-1
+     - KC_DB_URL_PORT=5432
+     - KC_DB_URL_DATABASE=keycloak
+      
+     - KEYCLOAK_ADMIN=admin
+     - KEYCLOAK_ADMIN_PASSWORD=1234  # admin here did not work as initial password
+     - KC_HOSTNAME_ADMIN_URL=https://solbox-keycloak.axinars.uk/

@@ -102,16 +102,14 @@ export const resetPasswordEmail = async (email) => {
   })
   return resultState;
 }
-export const resetPasswordApi = async () => {
+export const resetPasswordApi = async (newPasswordData) => {
   let resultState = {state: '', data: {}};
-  const apiUrl = `${BASE_BACKEND_URL}user/resetpassword`;
+  const apiUrl = `${BASE_BACKEND_URL}user/resetPassword`;
 
-  const tokenData = getJWTToken();
   await axios({
     method: 'post',
     url: apiUrl,
-    data: {token: tokenData},
-    headers: {Authorization: tokenData}
+    data: newPasswordData,
   }).then(function(response){
     resultState.state = 'success';
     resultState.data = response.data;
@@ -119,7 +117,6 @@ export const resetPasswordApi = async () => {
     console.log('err', err);
     resultState.state = 'error';
     resultState.data = err.message;
-    window.toastr.error('Email or Password is not matched');
   })
 }
 export const devConnection = async (devId) => {
