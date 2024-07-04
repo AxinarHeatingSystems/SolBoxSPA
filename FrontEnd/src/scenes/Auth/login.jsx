@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { Box } from "@mui/system"
 import iotBg from '../../assets/Backgroound/iotBg.jpg'
 import { useTheme, Button, TextField, Typography, IconButton, Grid } from "@mui/material"
@@ -17,8 +17,6 @@ export const Login = () => {
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const isMobileDetect = useSelector(store => store.isMobileDetect);
-  const isPortrait = useSelector(store => store.isPortrait);
-  console.log(theme, colors);
   const [email, setEmail] = useState();
   const [emailError, setEmailError] = useState(false);
   const [password, setPassword] = useState();

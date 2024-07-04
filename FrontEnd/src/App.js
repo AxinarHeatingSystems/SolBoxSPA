@@ -3,7 +3,7 @@ import Team from "./scenes/team";
 
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
-import { Routes, Route, redirect, useNavigate, defer, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Dashboard from "./scenes/dashboard";
 import Contacts from "./scenes/contacts";
 import Invoices from "./scenes/invoices";
@@ -13,12 +13,11 @@ import Bar from "./scenes/bar";
 import Pie from "./scenes/Pie";
 import Line from "./scenes/line";
 import Geography from "./scenes/geography";
-import { BrowserRouter as Router } from 'react-router-dom';
 
 import { Login } from './scenes/Auth/login';
 import { Register } from './scenes/Auth/register'; 
 import { ForgotPassword } from './scenes/Auth/forgotPassword';
-import { Provider, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { useDispatch } from 'react-redux';
 import { isPortrait_Store } from './store/actions/mainAction';
@@ -33,7 +32,6 @@ const authPath = [
 ]
 
 function App() {
-  // const navigate = useNavigate();
   const [theme, colorMode] = useMode();
   const dispatch = useDispatch();
   const isMobileDetect = useSelector(store => store.isMobileDetect);

@@ -1,5 +1,5 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { Box, display } from "@mui/system"
+import React, { useState, useContext } from 'react';
+import { Box } from "@mui/system"
 import iotBg from '../../assets/Backgroound/iotBg.jpg'
 import { useTheme, Button, TextField, Typography, IconButton, Grid } from "@mui/material"
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
@@ -58,11 +58,7 @@ export const Register = () => {
   const onPhoneChange = (e) => {
     console.log(e);
     setPhone(e);
-    // if (e.target.validity.valid) {
-    //   setPhoneError(false);
-    // } else {
-    //   setPhoneError(true);
-    // }
+
   }
   const onEmailChange = (e) => {
     setEmail(e.target.value);
@@ -93,12 +89,9 @@ export const Register = () => {
         password: password
       }
       const registerRes = await registerApi(userData);
-      if (registerRes.state == 'success') {
+      if (registerRes.state === 'success') {
         setUserCreated(true);
       }
-      // const resLog = await loginApi({ email: email, password: password });
-      // console.log('email Logged In', resLog);
-      // alert("Form is valid! Submitting the form...");
     } else {
       alert("Form is invalid! Please check the fields...");
     }

@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useTheme, styled, Box, Typography, Switch, FormControlLabel, Grid } from "@mui/material";
 import GaugeComponent from 'react-gauge-component'
-// import GaugeChart from 'react-gauge-chart'
-// import Chart from "react-apexcharts";
 import { tokens } from "../../theme";
 import './statusBoard.css';
 import sunglus from '../../assets/sumimg/sunglus.svg'
 import sunface from '../../assets/sumimg/sunface.svg'
 import sunSad from '../../assets/sumimg/sunsleep.svg'
-import iotLogo from '../../assets/iotLogo.svg'
 import { HeatDev } from '../DeviceComponents/heatDev';
 import { SolarPanel } from '../DeviceComponents/solarPanel';
-import { controlDevice } from '../../axios/ApiProvider'
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 64,
@@ -136,30 +132,19 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
     setNowPower(parseFloat(devData.powerNeedlePer))
     setTodayKWH(parseFloat(devData.WattHours / 1000).toFixed(2));
     setSavePrice(parseFloat((devData.WattHours / 1000) * 0.1).toFixed(2));
+    setMaxVal(100);
 
   }, [devData])
 
-  // useEffect(() => {
-  //   const devInfo = devData;
-  //   devInfo.DeviceEnabled = devOn;
-  //   devInfo.RelayEnabled = heatOn;
-  //   console.log('devInfo Changed', devInfo);
-  //   // devControlFunc(devInfo);
-  // }, [heatOn, devOn])
 
-  // const devControlFunc = (devInfo) => {
-  //   controlDevice(devInfo);
-  // }
   const onHeatCtr = () => {
-    // const devInfo = devData;
-    // devInfo.RelayEnabled = !heatOn;
+
     const devInfo = {
       DeviceID: devData.DeviceID,
       RelayEnabled: !heatOn ? 1 : 0,
       DeviceEnabled: devOn ? 1 : 0,
     }
-    // const payloadStr = JSON.stringify(devInfo);
-    console.log('HeatCTR', devInfo);
+
     socketIo.emit('devUpdate', { devInfo }, (error) => {
       if (error) {
         alert(error);

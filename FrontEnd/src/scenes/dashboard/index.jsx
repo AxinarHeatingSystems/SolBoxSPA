@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Box, IconButton, Grid, useTheme } from "@mui/material";
+import { Box, Grid, useTheme } from "@mui/material";
 
 import { ColorModeContext, tokens } from "../../theme";
 import './dashboard.css'
@@ -19,8 +19,6 @@ import { SettingBoards } from '../../components/DashBoards/settingBoard';
 import { ScheduleBoards } from '../../components/DashBoards/scheduleBoard';
 import { ShareBoards } from '../../components/DashBoards/shareBoard';
 import Sidebar from '../global/Sidebar';
-import { getDeviceMessage, devConnection } from '../../axios/ApiProvider';
-import DeviceOrientation, { Orientation } from 'react-screen-orientation'
 import io from "socket.io-client";
 import { useSelector } from 'react-redux';
 

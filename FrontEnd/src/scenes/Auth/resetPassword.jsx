@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { Box } from "@mui/system"
 import iotBg from '../../assets/Backgroound/iotBg.jpg'
 import { useTheme, Button, TextField, Typography, IconButton, Grid } from "@mui/material"
@@ -7,8 +7,7 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import { ColorModeContext, tokens } from "../../theme";
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginApi, resetPasswordApi } from '../../axios/ApiProvider';
-import { isLoggedIn_Store, userData_Store } from '../../store/actions/mainAction';
+import { resetPasswordApi } from '../../axios/ApiProvider';
 
 
 export const ResetPassword = () => {
@@ -17,7 +16,6 @@ export const ResetPassword = () => {
     const colors = tokens(theme.palette.mode);
     const colorMode = useContext(ColorModeContext);
     const isMobileDetect = useSelector(store => store.isMobileDetect);
-    const isPortrait = useSelector(store => store.isPortrait);
     console.log(theme, colors);
     const [email, setEmail] = useState();
     const [emailError, setEmailError] = useState(false);
@@ -45,7 +43,7 @@ export const ResetPassword = () => {
 
     const onConfirmPasswordChange = (e) => {
         setConfirmPassword(e.target.value);
-        if (e.target.validity.valid || e.target.value != password) {
+        if (e.target.validity.valid || e.target.value !== password) {
             setConfirmPasswordError(false);
         } else {
             setConfirmPasswordError(true);
@@ -56,7 +54,7 @@ export const ResetPassword = () => {
         e.preventDefault();
         if (e.target.checkValidity()) {
             const resLog = await resetPasswordApi({ email: email, newPassword: password });
-            if (resLog.data.state == "success") {
+            if (resLog.data.state === "success") {
                 window.toast.success('Password is Updated');
                 setTimeout(() => { window.location.href = '/login'; }, 1000)
             } else {
