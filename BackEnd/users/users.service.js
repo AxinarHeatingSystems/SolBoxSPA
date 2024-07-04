@@ -13,14 +13,19 @@ const kcAdminClient = new KcAdminClient( {
 //     baseUrl: 'http://localhost:8080/',
 //     realmName: 'master',
 //   });
- kcAdminClient.auth({
-    username: config.keycloakUser,
-    password: config.keycloakPassword,
-    grantType: 'password',
-    clientId: config.keycloakClientId,
-    // totp: '123456', // optional Time-based One-time Password if OTP is required in authentication flow
-  });
+kcAdminAuth();
 
+async function kcAdminAuth () {
+    await kcAdminClient.auth({
+        username: config.keycloakUser,
+        password: config.keycloakPassword,
+        grantType: 'password',
+        clientId: config.keycloakClientId,
+        // totp: '123456', // optional Time-based One-time Password if OTP is required in authentication flow
+      });
+      
+}
+ 
 // kcAdminClient.auth({
 //     username: 'admin',
 //     password: 'admin',
@@ -41,6 +46,7 @@ module.exports = {
 async function authenticate({email, password}) {
     console.log(email, password);
     let resultData = {};
+    await kcAdminAuth();
     // const allUsers = await kcAdminClient.users.find();
     // console.log(allUsers);
     try {
@@ -72,6 +78,7 @@ async function authenticate({email, password}) {
 }   
 
 async function create(userParam) {
+    await kcAdminAuth();
     let resultData = {};
     console.log(userParam);
     const existUser = await kcAdminClient.users.find({
@@ -112,6 +119,7 @@ async function create(userParam) {
 }
 
 async function emailResetPassword({email}) {
+    await kcAdminAuth();
     console.log(email);
     const user = await kcAdminClient.users.findOne({email: email});
     if(user.length > 0){
@@ -134,6 +142,7 @@ async function emailResetPassword({email}) {
 }
 
 async function resetPassword({email, oldPassword, newPassword}) {
+    await kcAdminAuth();
     console.log('ppp');
     console.log({email, oldPassword, newPassword});
     return {email, oldPassword, newPassword}
