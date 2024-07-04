@@ -47,8 +47,8 @@ async function authenticate({email, password}) {
     console.log(email, password);
     let resultData = {};
     await kcAdminAuth();
-    // const allUsers = await kcAdminClient.users.find();
-    // console.log(allUsers);
+    const allUsers = await kcAdminClient.users.find();
+    console.log(allUsers);
     try {
         const users = await kcAdminClient.users.findOne({  email: email, credentials: [{type: 'password', value: password}], realm: config.keycloakRealm });
         console.log(users);
