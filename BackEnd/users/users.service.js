@@ -154,6 +154,13 @@ async function resetPassword({email, newPassword}) {
         if(user.length > 0) {
             const selectedUser = user[0];
             await kcAdminClient.users.update({id: selectedUser.id, realm: config.keycloakRealm}, {
+                username: selectedUser.username,
+                email: selectedUser.email,
+                firstName: selectedUser.firstName,
+                lastName: selectedUser.lastName,
+                // enabled required to be true in order to send actions email
+                emailVerified: selectedUser.emailVerified,
+                enabled: true,
                 attributes: {
                     'pass': [bcrypt.hashSync(newPassword, 10)],
                 },
