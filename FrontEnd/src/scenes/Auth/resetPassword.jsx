@@ -11,12 +11,9 @@ import { resetPasswordApi } from '../../axios/ApiProvider';
 
 
 export const ResetPassword = () => {
-    const dispatch = useDispatch();
     const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
     const colorMode = useContext(ColorModeContext);
     const isMobileDetect = useSelector(store => store.isMobileDetect);
-    console.log(theme, colors);
     const [email, setEmail] = useState();
     const [emailError, setEmailError] = useState(false);
     const [password, setPassword] = useState();
@@ -43,25 +40,23 @@ export const ResetPassword = () => {
 
     const onConfirmPasswordChange = (e) => {
         setConfirmPassword(e.target.value);
-        if (e.target.validity.valid || e.target.value !== password) {
+        if (e.target.validity.valid && e.target.value === password) {
             setConfirmPasswordError(false);
         } else {
             setConfirmPasswordError(true);
         }
     }
 
-    const handleLoginSubmit = async (e) => {
+    const handleResetPasswordSubmit = async (e) => {
         e.preventDefault();
-        if (e.target.checkValidity()) {
+        if (e.target.checkValidity() && !confirmPasswordError) {
             const resLog = await resetPasswordApi({ email: email, newPassword: password });
-            if (resLog.data.state === "success") {
-                window.toast.success('Password is Updated');
+            console.log(resLog);
+            if (resLog.state === "success") {
                 setTimeout(() => { window.location.href = '/login'; }, 1000)
-            } else {
-                window.toastr.error('Reset Password is failed');
-            }
+            } 
         } else {
-            alert("Form is invalid! Please check the fields...");
+            window.toastr.error("Form is invalid! Please check the fields...");
         }
     }
 
@@ -85,8 +80,8 @@ export const ResetPassword = () => {
                     sx={{ backgroundColor: theme.palette.background.paper }}
                 >
                     <Box padding={3}>
-                        <Typography variant="h2" marginBottom={4}>Login - SolBox Control Panel</Typography>
-                        <Grid component={'form'} onSubmit={handleLoginSubmit} marginBottom={2} container spacing={3}>
+                        <Typography variant="h2" marginBottom={4}>ResetPassword - SolBox Control Panel</Typography>
+                        <Grid component={'form'} onSubmit={handleResetPasswordSubmit} marginBottom={2} container spacing={3}>
                             <Grid item xs={12}>
                                 <TextField fullWidth id="outlined-email"
                                     label="Email" type='email' variant="outlined"

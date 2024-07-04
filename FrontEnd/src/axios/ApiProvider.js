@@ -54,7 +54,7 @@ export const loginApi = async (loginInfo) => {
   }).catch(function(err) {
     console.log('err', err);
     resultState.state = 'error';
-    resultState.data = err.message;
+    resultState.data = err.response.data? err.response.data.message : err.message;
     window.toastr.error('Email or Password is not matched');
   })
 
@@ -73,11 +73,11 @@ export const registerApi = async (userdata) => {
   }).then(function(response) {
     resultState.state = 'succes';
     resultState.data = response;
-    window.toastr.success('The user is created, Please verify your email')
+    window.toastr.info('The user is created, Please verify your email')
   }).catch(function (err) {
     resultState.state = 'error';
-    resultState.data = err.message;
-    window.toastr.error('Register is failed. Please try to do again');
+    resultState.data = resultState.data = err.response.data? err.response.data.message : err.message;;
+    window.toastr.error(resultState.data);
   })
 
   return resultState;
@@ -95,10 +95,11 @@ export const resetPasswordEmail = async (email) => {
   }).then(function(response) {
     resultState.state = 'success';
     resultState.data = response.data;
-    window.toastr.error('Reset Password email was sent. Please check your email to reset password');
+    window.toastr.info('Reset Password email was sent. Please check your email to reset password');
   }).catch(function(err) {
     resultState.state = 'error';
-    resultState.data = err.message;
+    resultState.data = err.response.data? err.response.data.message : err.message;
+    window.toastr.error(resultState.data);
   })
   return resultState;
 }
@@ -113,11 +114,14 @@ export const resetPasswordApi = async (newPasswordData) => {
   }).then(function(response){
     resultState.state = 'success';
     resultState.data = response.data;
+    window.toastr.info('Password is Updated');
   }).catch(function(err) {
     console.log('err', err);
     resultState.state = 'error';
-    resultState.data = err.message;
+    resultState.data = err.response.data? err.response.data.message : err.message;
+    window.toastr.error(resultState.data);
   })
+  return resultState;
 }
 export const devConnection = async (devId) => {
   let resultState = {state: '', data: {}};

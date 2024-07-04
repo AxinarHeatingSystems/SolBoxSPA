@@ -64,7 +64,6 @@ async function authenticate({email, password}) {
                 resultData = {state: 'failed', message: 'Email or Password is not matched!'};
             }
         }else{
-            console.log('empty');
             resultData = {state: 'failed', message: 'The user is not exist'};
         }
     } catch (error) {
@@ -109,11 +108,8 @@ async function create(userParam) {
           } catch (error) {
             console.log(error);
           }
-        
-        
-        resultData = {state: 'success', data: createduserId};
+       resultData = {state: 'success', data: createduserId};
     }else{
-        console.log('existUser');
         resultData = {state: 'failed', message: 'User is exist'};
     }
     
@@ -121,6 +117,7 @@ async function create(userParam) {
 }
 
 async function emailResetPassword({email}) {
+    let resultData = {};
     await kcAdminAuth();
     console.log(email);
     const user = await kcAdminClient.users.findOne({email: email, realm: config.keycloakRealm});
@@ -136,12 +133,16 @@ async function emailResetPassword({email}) {
                 actions: [], 
                 realm: config.keycloakRealm
             })    
+            resultData = {state: 'success', message: 'The Reset Password Email was sent. Please check your email'};
         } catch (error) {
+            resultData = {state: 'failed', message: 'The Reset Password Email is failed'};
             console.log(error);
         }
         console.log(selectedUser);
+    }else{
+        resultData = {state: 'failed', message: 'User is not exist'};
     }
-    return {email};
+    return resultData;
 }
 
 async function resetPassword({email, newPassword}) {
@@ -166,13 +167,13 @@ async function resetPassword({email, newPassword}) {
                 },
                 credentials: [{type: 'password', value: newPassword}],
             })
-            resultData = {state: 'Success', message: 'Password is updated'};
+            resultData = {state: 'success', message: 'Password is updated'};
         }else{
-            resultData = {state: 'failed', message: 'User is exist'};            
+            resultData = {state: 'failed', message: 'User is not exist'};            
         }
     } catch (error) {
         console.log(error);
-        resultData = {state: 'failed', message: 'User is exist'};
+        resultData = {state: 'failed', message: 'User is not exist'};
     }
     
     return resultData;

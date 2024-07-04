@@ -21,24 +21,28 @@ function authenticate(req, res, next) {
 
 function register(req, res, next) {
     userService.create(req.body)
-        .then((user) => res.json({user}))
+        .then((user) => user? 
+            user.state == 'success'? 
+            res.json(user) : res.status(400).json({ message: user.message }) : res.status(400).json({ message: 'Registeration is failed' })
+        )
         .catch(err => next(err));
 }
 
 function resetPasswordEmail(req, res, next){
     userService.emailResetPassword(req.body)
-        .then((data) => res.json({data}))
+        .then((data) => data? data.state == 'success'? res.json({data}) : res.status(400).json({ message: data.message }) : res.state(400).json({message: 'Reset Password Emailing is faild'}))
         .catch(err => next(err));
 }
 
 function resetPassword(req, res, next){
     userService.resetPassword(req.body)
-        .then((data) => res.json(data))
+        .then((data) => data? data.state == 'success'? res.json(data) : res.status(400).json({ message: data.message }) : res.state(400).json({message: 'Reset Password is faild'}))
         .catch(err => next(err))
 }
 
 function existLogin(req, res, next){
     userService.existLogin(req.body)
-        .then(data => res.json(data))
+        .then(data => 
+            res.json(data))
         .catch(err => next(err));
 }

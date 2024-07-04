@@ -351,13 +351,13 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                   sx={{ top: isMobile ? '-10px' : 0, width: '100%', height: '100%' }}
                 >
                   <Grid item sx={{ height: '100%' }}>
-                    <img src={sunSad} width={30} style={{ position: 'relative', top: 'calc(100% - 25px)', }} />
+                    <img alt='sunSad' src={sunSad} width={30} style={{ position: 'relative', top: 'calc(100% - 25px)', }} />
                   </Grid>
                   <Grid item sx={{ height: '100%' }} alignItems={'center'}>
-                    <img src={sunface} width={30} style={{ position: 'relative', top: '60px' }} />
+                    <img alt='sunFace' src={sunface} width={30} style={{ position: 'relative', top: '60px' }} />
                   </Grid>
                   <Grid item sx={{ height: '100%' }}>
-                    <img src={sunglus} width={30} style={{ position: 'relative', top: 'calc(100% - 25px)' }} />
+                    <img alt='sunGlus' src={sunglus} width={30} style={{ position: 'relative', top: 'calc(100% - 25px)' }} />
                   </Grid>
 
                 </Grid>

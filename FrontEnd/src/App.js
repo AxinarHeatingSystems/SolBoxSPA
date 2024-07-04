@@ -35,9 +35,25 @@ function App() {
   const [theme, colorMode] = useMode();
   const dispatch = useDispatch();
   const isMobileDetect = useSelector(store => store.isMobileDetect);
-  const colorModeName = useSelector(store => store.colorModeName);
-  useEffect(() => {
-    console.log('colorMode', colorModeName, isMobileDetect, window.matchMedia("(orientation: portrait)"));
+ 
+  const portraitChange = (e) => {
+    if (e.matches) {
+      // Portrait mode
+      
+      dispatch(isPortrait_Store(true));
+      window.document.documentElement.style.transform = 'scaleY(1) translateY(0px)';
+    } else {
+      // Landscape
+      if (isMobileDetect) {
+        dispatch(isPortrait_Store(false));
+        window.document.documentElement.style.transform = 'scaleY(0.8) translateY(-50px)';
+      } else {
+        dispatch(isPortrait_Store(true));
+        window.document.documentElement.style.transform = 'scaleY(1) translateY(0px)';
+      }
+    }
+  };
+  const initPortraidFunc = () => {
     if(window.matchMedia("(orientation: portrait)").matches){
       dispatch(isPortrait_Store(true));
       window.document.documentElement.style.transform = 'scaleY(1) translateY(0px)';
@@ -51,23 +67,11 @@ function App() {
       }
       
     }
-    const portraitChange = (e) => {
-      if (e.matches) {
-        // Portrait mode
-        
-        dispatch(isPortrait_Store(true));
-        window.document.documentElement.style.transform = 'scaleY(1) translateY(0px)';
-      } else {
-        // Landscape
-        if (isMobileDetect) {
-          dispatch(isPortrait_Store(false));
-          window.document.documentElement.style.transform = 'scaleY(0.8) translateY(-50px)';
-        } else {
-          dispatch(isPortrait_Store(true));
-          window.document.documentElement.style.transform = 'scaleY(1) translateY(0px)';
-        }
-      }
-    };
+  }
+  
+  useEffect(() => {
+    initPortraidFunc();
+    
     // checkLogin();
     window.matchMedia("(orientation: portrait)").addEventListener("change", portraitChange);
     return () => {
@@ -75,6 +79,8 @@ function App() {
     }
     
   }, [])
+  
+
   const location = useLocation();
 
   useEffect(() => {
@@ -88,14 +94,12 @@ function App() {
     if(!authPath.includes(window.location.pathname)){
       if(userData){
         const loginRes = await existLogin();
-        console.log('ssss', loginRes);
-        if(loginRes.state != 'success'){
+         if(loginRes.state !== 'success'){
           window.location.href = '/login';  
         }
       }else{
         console.log('redirect check', userData);
-        // navigate(`/login`, { replace: true });
-        window.location.href = '/login';
+         window.location.href = '/login';
       }
     }
     
