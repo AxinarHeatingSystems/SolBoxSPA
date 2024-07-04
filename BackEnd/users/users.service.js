@@ -132,7 +132,7 @@ async function emailResetPassword({email}) {
                 id: selectedUser.id,
                 clientId: config.keycloakClientId,
                 lifespan: 60,
-                // redirectUri: 'https://solbox-clients.axinars.uk',
+                redirectUri: 'https://solbox-clients.axinars.uk/',
                 actions: [RequiredActionAlias.UPDATE_PASSWORD], 
                 realm: config.keycloakRealm
             })    
