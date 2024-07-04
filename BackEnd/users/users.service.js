@@ -20,7 +20,7 @@ async function kcAdminAuth () {
         username: config.keycloakUser,
         password: config.keycloakPassword,
         grantType: 'password',
-        clientId: config.keycloakClientId2,
+        clientId: config.keycloakClientId,
         // totp: '123456', // optional Time-based One-time Password if OTP is required in authentication flow
       });
       
