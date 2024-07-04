@@ -20,7 +20,7 @@ async function kcAdminAuth () {
         username: config.keycloakUser,
         password: config.keycloakPassword,
         grantType: 'password',
-        clientId: config.keycloakRealm2,
+        clientId: config.keycloakClientId2,
         // totp: '123456', // optional Time-based One-time Password if OTP is required in authentication flow
       });
       
@@ -105,7 +105,7 @@ async function create(userParam) {
           })
           console.log(createduserId);
           try {
-            await kcAdminClient.users.sendVerifyEmail({id: createduserId.id, clientId: config.keycloakClientId, realm: config.keycloakRealm});    
+            await kcAdminClient.users.sendVerifyEmail({id: createduserId.id, clientId: config.keycloakClientId2, realm: config.keycloakRealm});    
           } catch (error) {
             console.log(error);
           }
@@ -130,7 +130,7 @@ async function emailResetPassword({email}) {
         try {
             await kcAdminClient.users.executeActionsEmail({
                 id: selectedUser.id,
-                clientId: config.keycloakClientId,
+                clientId: config.keycloakClientId2,
                 lifespan: 60,
                 redirectUri: 'https://solbox-clients.axinars.uk/',
                 actions: [RequiredActionAlias.UPDATE_PASSWORD], 
