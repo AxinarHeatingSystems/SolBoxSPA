@@ -50,7 +50,7 @@ async function authenticate({email, password}) {
     // const allUsers = await kcAdminClient.users.find();
     // console.log(allUsers);
     try {
-        const users = await kcAdminClient.users.findOne({  email: email, realm: config.keycloakRealm });
+        const users = await kcAdminClient.users.findOne({  email: email, credentials: [{type: 'password', value: password}], realm: config.keycloakRealm });
         
         if(users.length > 0){
             console.log(users);
