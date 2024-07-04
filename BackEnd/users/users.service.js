@@ -50,7 +50,7 @@ async function authenticate({email, password}) {
     // const allUsers = await kcAdminClient.users.find();
     // console.log(allUsers);
     try {
-        const users = await kcAdminClient.users.findOne({  email: email });
+        const users = await kcAdminClient.users.findOne({  email: email, realm: config.keycloakRealm });
         
         if(users.length > 0){
             console.log(users);
@@ -66,7 +66,7 @@ async function authenticate({email, password}) {
         }else{
             console.log('empty');
             resultData = {state: 'failed', message: 'The user is not exist'};
-        }    
+        }
     } catch (error) {
         console.log(error);
         resultData = {state: 'failed', message: 'Email or Password is not matched'};
@@ -83,7 +83,8 @@ async function create(userParam) {
     console.log(userParam);
     const existUser = await kcAdminClient.users.find({
         email: userParam.email,
-        username: userParam.username
+        username: userParam.username,
+        realm: config.keycloakRealm
     });
     console.log(existUser);
     if(existUser.length < 1){
@@ -100,10 +101,11 @@ async function create(userParam) {
                 'phone': [userParam.phone],
             },
             credentials: [{type: 'password', value: userParam.password}],
+            realm: config.keycloakRealm
           })
           console.log(createduserId);
           try {
-            await kcAdminClient.users.sendVerifyEmail({id: createduserId.id, clientId: config.keycloakClientId});    
+            await kcAdminClient.users.sendVerifyEmail({id: createduserId.id, clientId: config.keycloakClientId, realm: config.keycloakRealm});    
           } catch (error) {
             console.log(error);
           }
@@ -121,7 +123,7 @@ async function create(userParam) {
 async function emailResetPassword({email}) {
     await kcAdminAuth();
     console.log(email);
-    const user = await kcAdminClient.users.findOne({email: email});
+    const user = await kcAdminClient.users.findOne({email: email, realm: config.keycloakRealm});
     if(user.length > 0){
         const selectedUser = user[0];
         
@@ -131,7 +133,8 @@ async function emailResetPassword({email}) {
                 clientId: config.keycloakClientId,
                 lifespan: 60,
                 // redirectUri: 'https://solbox-clients.axinars.uk',
-                actions: [RequiredActionAlias.UPDATE_PASSWORD]
+                actions: [RequiredActionAlias.UPDATE_PASSWORD], 
+                realm: config.keycloakRealm
             })    
         } catch (error) {
             console.log(error);

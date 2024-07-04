@@ -11,5 +11,6 @@
     "keycloakPath": "https://solbox-keycloak.axinars.uk",
     "keycloakUser": "admin",
     "keycloakPassword": "$axinaR%6623&",
-    "keycloakClientId": "admin-cli"
+    "keycloakClientId": "admin-cli",
+    "keycloakRealm": "solbox-dashboard"
 }
