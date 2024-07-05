@@ -130,7 +130,7 @@ async function googleSignUp(authload){
                     clientId: config.keycloakClientId2,
                     lifespan: 60,
                     redirectUri: 'https://solbox-clients.axinars.uk/login',
-                    actions: [RequiredActionAlias.VERIFY_EMAIL, RequiredActionAlias.UPDATE_PROFILE], 
+                    actions: [RequiredActionAlias.VERIFY_EMAIL], 
                     realm: config.keycloakRealm
                 })   
             
