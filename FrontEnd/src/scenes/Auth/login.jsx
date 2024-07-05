@@ -13,8 +13,6 @@ import { GoogleLogin } from 'react-google-login';
 import { SetLang } from '../../components/Language/SetLang';
 import { useTranslation } from 'react-i18next';
 
-
-console.log(GoogleClientID);
 export const Login = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();

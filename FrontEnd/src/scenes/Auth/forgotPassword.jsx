@@ -32,7 +32,6 @@ export const ForgotPassword = () => {
     e.preventDefault();
     if (e.target.checkValidity()) {
       const emailSentRes = await resetPasswordEmail(email);
-      console.log(emailSentRes);
     } else {
       alert("Form is invalid! Please check the fields...");
     }

@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { langugeCode_Store } from '../../store/actions/mainAction';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
 
@@ -12,9 +12,8 @@ const languges = [
 
 export const SetLang = ({ style }) => {
 
-    const { i18n, t } = useTranslation();
+    const { i18n } = useTranslation();
     const dispatch = useDispatch();
-    const defaultLang = useSelector(store => store.langugeCode)
 
     const onlanguageChagne = (e) => {
         console.log(e);
