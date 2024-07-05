@@ -1,5 +1,5 @@
 {
-  "name": "iot-dashboard",
+  "name": "solbox-control-panel",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

@@ -8,6 +8,7 @@
     "password": "$axinaR%6623&",
     "clientId": "mqttx_6885a045",
     "name": "emqx@172.22.0.2",
+    "solbox-frontend": "https://solbox-clients.axinars.uk/",
     "keycloakPath": "https://solbox-keycloak.axinars.uk",
     "keycloakUser": "admin",
     "keycloakPassword": "$axinaR%6623&",

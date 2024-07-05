@@ -81,7 +81,7 @@ export const ForgotPassword = () => {
               </Grid>
             </Grid>
             <Box width={'100%'}>
-              <Link to="/login">
+              <Link to="/login" style={{ color: theme.palette.mode === "dark" ? colors.primary[100] : colors.primary[600] }}>
                 <Typography variant='body1' fontWeight={600}>
                   {t("back_login")}
                 </Typography>

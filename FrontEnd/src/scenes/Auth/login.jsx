@@ -134,13 +134,13 @@ export const Login = () => {
               />
             </Box>
             <Box width={'100%'} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
-              <Link to="/register">
+              <Link to="/register" style={{ color: theme.palette.mode === "dark" ? colors.primary[100] : colors.primary[600] }}>
                 <Typography variant='body1' fontWeight={600}>
                   {t("register_now")}
                 </Typography>
               </Link>
-              <Link to={'/forgotPassword'} color={theme.palette.text}>
-                <Typography variant='body1' fontWeight={600} color={theme.palette.text}>
+              <Link to={'/forgotPassword'} style={{ color: theme.palette.mode === "dark" ? colors.primary[100] : colors.primary[600] }}>
+                <Typography variant='body1' fontWeight={600}>
                   {t("forgot_password")}
                 </Typography>
               </Link>

@@ -209,12 +209,20 @@ async function create(userParam) {
             realm: config.keycloakRealm
           })
           console.log(createduserId);
-          try {
-            await kcAdminClient.users.sendVerifyEmail({id: createduserId.id, clientId: config.keycloakClientId2, 
-                redirectUri: 'https://solbox-clients.axinars.uk/login', realm: config.keycloakRealm});    
-          } catch (error) {
-            console.log(error);
-          }
+        //   try {
+            // await kcAdminClient.users.sendVerifyEmail({id: createduserId.id, clientId: config.keycloakClientId2, 
+            //     redirectUri: 'https://solbox-clients.axinars.uk/login', realm: config.keycloakRealm});    
+            await kcAdminClient.users.executeActionsEmail({
+                id: createduserId.id,
+                clientId: config.keycloakClientId2,
+                lifespan: 60,
+                redirectUri: 'https://solbox-clients.axinars.uk/login',
+                actions: [RequiredActionAlias.VERIFY_EMAIL], 
+                realm: config.keycloakRealm
+            })   
+        //   } catch (error) {
+        //     console.log(error);
+        //   }
        resultData = {state: 'success', data: createduserId};
     }else{
         resultData = {state: 'failed', message: 'User is exist'};

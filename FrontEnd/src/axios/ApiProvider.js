@@ -77,7 +77,27 @@ export const googleAuthApi = async (googleUser) => {
     console.log('err', err);
     resultState.state = 'error';
     resultState.data = err.response.data? err.response.data.message : err.message;
-    window.toastr.error('Google login is failed');
+    window.toastr.error(resultState.data);
+  })
+  return resultState;
+}
+
+export const googleSignUpApi = async (googleUser) => {
+  let resultState = {state: '', data: {}};
+  const apiUrl = `${BASE_BACKEND_URL}user/googleregister`;;
+
+  await axios({
+    method: 'post',
+    url: apiUrl,
+    data: googleUser
+  }).then(function (response) {
+    resultState.state = "success";
+    resultState.data = response.data;
+    window.toastr.info('The user is created. An email has been sent to your email address. Please verify your email.')
+  }).catch(function(err) {
+    resultState.state = 'error';
+    resultState.data = err.response.data? err.response.data.message : err.message;
+    window.toastr.error(resultState.data);
   })
   return resultState;
 }
@@ -94,7 +114,7 @@ export const registerApi = async (userdata) => {
   }).then(function(response) {
     resultState.state = 'succes';
     resultState.data = response;
-    window.toastr.info('The user is created, Please verify your email')
+    window.toastr.info('The user is created. An email has been sent to your email address. Please verify your email.')
   }).catch(function (err) {
     resultState.state = 'error';
     resultState.data = resultState.data = err.response.data? err.response.data.message : err.message;;

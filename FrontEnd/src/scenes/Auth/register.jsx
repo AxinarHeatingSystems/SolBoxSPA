@@ -8,7 +8,7 @@ import { ColorModeContext, tokens } from "../../theme";
 import { Link } from 'react-router-dom';
 import MuiPhoneNumber from 'material-ui-phone-number';
 import { useDispatch, useSelector } from 'react-redux';
-import { googleAuthApi, GoogleClientID, registerApi } from '../../axios/ApiProvider';
+import { GoogleClientID, googleSignUpApi, registerApi } from '../../axios/ApiProvider';
 import { isLoggedIn_Store, userData_Store } from '../../store/actions/mainAction';
 import { GoogleLogin } from 'react-google-login';
 import { useTranslation } from 'react-i18next';
@@ -37,6 +37,9 @@ export const Register = () => {
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState(false);
   const [userCreated, setUserCreated] = useState(false);
+
+  const [isSignUp, setIsSignUp] = useState(false);
+
   const onUserNameChange = (e) => {
     setUserName(e.target.value);
     if (e.target.validity.valid) {
@@ -84,6 +87,7 @@ export const Register = () => {
   }
 
   const onRegisterSubmit = async (e) => {
+    setIsSignUp(true);
     e.preventDefault();
     if (e.target.checkValidity()) {
       const userData = {
@@ -94,27 +98,37 @@ export const Register = () => {
         email: email,
         password: password
       }
+
       const registerRes = await registerApi(userData);
       if (registerRes.state === 'success') {
         setUserCreated(true);
+      } else {
+        setIsSignUp(false);
       }
     } else {
       alert("Form is invalid! Please check the fields...");
+      setIsSignUp(false);
     }
   }
   const responseGoogle = async (response) => {
+    setIsSignUp(true);
     console.log(response);
     if (response.profileObj) {
       const profileData = response.profileObj;
-      const googleRes = await googleAuthApi(profileData);
+      const googleRes = await googleSignUpApi(profileData);
       if (googleRes.state === 'success') {
-        let tmpUser = googleRes.data.data;
-        tmpUser.tokens = googleRes.data.token;
-        localStorage.setItem('userData', JSON.stringify(tmpUser));
-        dispatch(userData_Store(tmpUser));
-        dispatch(isLoggedIn_Store(true));
-        setTimeout(() => { window.location.href = '/'; }, 500)
+
+        // let tmpUser = googleRes.data.data;
+        // tmpUser.tokens = googleRes.data.token;
+        // localStorage.setItem('userData', JSON.stringify(tmpUser));
+        // dispatch(userData_Store(tmpUser));
+        // dispatch(isLoggedIn_Store(true));
+        // setTimeout(() => { window.location.href = '/'; }, 500)
+      } else {
+        setIsSignUp(false);
       }
+    } else {
+      setIsSignUp(false);
     }
 
   }
@@ -202,23 +216,24 @@ export const Register = () => {
               </Grid>
               <Grid item xs={12}>
                 <Button fullWidth variant="contained" color={'success'}
-                  sx={{ fontWeight: 600 }} type='submit'
+                  sx={{ fontWeight: 600 }} type='submit' disabled={isSignUp}
                 >{t("register")}</Button>
               </Grid>
             </Grid>
-            <Box width={'100%'} display={'flex'} justifyContent={'center'} alignItems={'center'} marginBottom={1}>
+            <Box width={'100%'} display={'flex'} justifyContent={'center'} alignItems={'center'} marginY={1}>
               <GoogleLogin
                 clientId={GoogleClientID}
                 buttonText={t("regist_with_google")}
                 className='googleSign-Button'
                 onSuccess={responseGoogle}
                 onFailure={responseGoogle}
+                disabled={isSignUp}
                 cookiePolicy={'single_host_origin'}
               />
             </Box>
-            <Box marginTop={1} width={'100%'} textAlign={'right'}>
-              <Link to="/login">
-                <Typography variant='body1' fontWeight={600}>
+            <Box marginTop={1} width={'100%'} textAlign={'right'} >
+              <Link to="/login" style={{ color: theme.palette.mode === "dark" ? colors.primary[100] : colors.primary[600] }}>
+                <Typography variant='body1' fontWeight={600} >
                   {t("back_login")}
                 </Typography>
               </Link>

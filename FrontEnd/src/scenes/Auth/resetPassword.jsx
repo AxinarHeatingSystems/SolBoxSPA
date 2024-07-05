@@ -117,11 +117,11 @@ export const ResetPassword = () => {
                         </Grid>
                         <Box width={'100%'} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
                             <Link to="/register">
-                                <Typography variant='body1' fontWeight={600}>
+                                <Typography variant='body1' fontWeight={600} style={{ color: theme.palette.mode === "dark" ? colors.primary[100] : colors.primary[600] }}>
                                     {t("register_now")}
                                 </Typography>
                             </Link>
-                            <Link to={'/login'} color={theme.palette.text}>
+                            <Link to={'/login'} color={theme.palette.text} style={{ color: theme.palette.mode === "dark" ? colors.primary[100] : colors.primary[600] }}>
                                 <Typography variant='body1' fontWeight={600} color={theme.palette.text}>
                                     {t("login_now")}
                                 </Typography>
