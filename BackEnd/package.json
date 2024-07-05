@@ -1,11 +1,11 @@
 {
-    "name": "node-mongo-registration-login-api",
+    "name": "solbox-backend",
     "version": "1.0.0",
-    "description": "NodeJS + MongoDB API for User Management, Authentication and Registration",
+    "description": "NodeJS + Keycloak for Solbox Control Panel",
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/cornflourblue/node-mongo-registration-login-api.git"
+        "url": "https://github.com/AxinarHeatingSystems/SolBoxSPA.git"
     },
     "scripts": {
         "prod": "pm2 start npm -- start",
