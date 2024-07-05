@@ -68,14 +68,14 @@ async function googleAuth(authload) {
         }else{
             const newUser = await kcAdminClient.users.create({
                 username: authload.name,
-                email: userParam.email,
-                firstName: userParam.givenName,
-                lastName: userParam.familyName,
+                email: authload.email,
+                firstName: authload.givenName,
+                lastName: authload.familyName,
                 // enabled required to be true in order to send actions email
                 emailVerified: true,
                 enabled: true,
                 attributes: {
-                    'googleId': [userParam.googleId],
+                    'googleId': [authload.googleId],
                 },
                 realm: config.keycloakRealm
               });
