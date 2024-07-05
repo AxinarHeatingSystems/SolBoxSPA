@@ -11,6 +11,7 @@ function jwtAuth() {
         path: [
             // public routes that don't require authentication
             '/user/googleauth',
+            '/user/googleregister',
             '/user/resetPassword',
             '/user/resetpasswordemail',
             '/user/register',
