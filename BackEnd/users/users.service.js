@@ -45,6 +45,7 @@ module.exports = {
 }
 
 async function googleAuth(authload) {
+    console.log(authload)
     let resultData = {};
     await kcAdminAuth();
     try {
@@ -84,6 +85,7 @@ async function googleAuth(authload) {
             // resultData = {state: 'success', data: newUser};
         }
     } catch (error) {
+        console.log(error);
         resultData = {state: 'failed', message: 'Google login is failed'};
     }
     return resultData;
