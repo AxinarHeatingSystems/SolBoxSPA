@@ -7,10 +7,13 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import { ColorModeContext, tokens } from "../../theme";
 import { Link } from 'react-router-dom';
 import MuiPhoneNumber from 'material-ui-phone-number';
-import { useSelector } from 'react-redux';
-import { registerApi } from '../../axios/ApiProvider';
+import { useDispatch, useSelector } from 'react-redux';
+import { googleAuthApi, GoogleClientID, registerApi } from '../../axios/ApiProvider';
+import { isLoggedIn_Store, userData_Store } from '../../store/actions/mainAction';
+import { GoogleLogin } from 'react-google-login';
 
 export const Register = () => {
+  const dispatch = useDispatch();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
@@ -95,6 +98,22 @@ export const Register = () => {
     } else {
       alert("Form is invalid! Please check the fields...");
     }
+  }
+  const responseGoogle = async (response) => {
+    console.log(response);
+    if (response.profileObj) {
+      const profileData = response.profileObj;
+      const googleRes = await googleAuthApi(profileData);
+      if (googleRes.state === 'success') {
+        let tmpUser = googleRes.data.data;
+        tmpUser.tokens = googleRes.data.token;
+        localStorage.setItem('userData', JSON.stringify(tmpUser));
+        dispatch(userData_Store(tmpUser));
+        dispatch(isLoggedIn_Store(true));
+        setTimeout(() => { window.location.href = '/'; }, 500)
+      }
+    }
+
   }
   return (
     <main className="content" >
@@ -184,6 +203,16 @@ export const Register = () => {
                 >Register</Button>
               </Grid>
             </Grid>
+            <Box width={'100%'} display={'flex'} justifyContent={'center'} alignItems={'center'} marginBottom={1}>
+              <GoogleLogin
+                clientId={GoogleClientID}
+                buttonText="Regist with Google"
+                className='googleSign-Button'
+                onSuccess={responseGoogle}
+                onFailure={responseGoogle}
+                cookiePolicy={'single_host_origin'}
+              />
+            </Box>
             <Box marginTop={1} width={'100%'} textAlign={'right'}>
               <Link to="/login">
                 <Typography variant='body1' fontWeight={600}>

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const userService = require('./users.service');
 
+router.post('/googleauth', googleauth);
 router.post('/authenticate', authenticate);
 router.post('/register', register);
 router.post('/resetpasswordemail', resetPasswordEmail);
@@ -9,6 +10,15 @@ router.post('/resetpassword', resetPassword);
 router.get('/existLogin', existLogin);
 
 module.exports = router;
+
+function googleauth (req, res, next) {
+    userService.googleAuth(req.body)
+        .then(user => user? 
+            user.state == 'success'? 
+            res.json(user) : res.status(400).json({ message: user.message }) : res.status(400).json({ message: 'Username or password is incorrect' })
+        )
+        .catch(err => next(err));
+}
 
 function authenticate(req, res, next) {
     userService.authenticate(req.body)

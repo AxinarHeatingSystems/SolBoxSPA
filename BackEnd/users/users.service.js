@@ -36,11 +36,52 @@ async function kcAdminAuth () {
 
 
 module.exports = {
+    googleAuth,
     authenticate,
     create,
     emailResetPassword,
     resetPassword,
     existLogin
+}
+
+async function googleAuth(authload) {
+    let resultData = {};
+    await kcAdminAuth();
+    try {
+        const users = await kcAdminClient.users.findOne({email: authload.email, realm: config.keycloakRealm});
+        if(users.length > 0){
+            const loggedUser = users[0];
+            if(loggedUser.attributes.googleId){
+                const userHash = loggedUser.attributes.googleId[0];
+            }else{
+                loggedUser.attributes.googleId[0] = authload.googleId;
+                await kcAdminClient.users.update({id: loggedUser.id, realm: config.keycloakRealm}, loggedUser);
+            }
+            const token = jwt.sign({ sub: loggedUser.id }, config.secret, { expiresIn: '7d' });
+            resultData = {state: 'success', data: loggedUser, token: token};;
+        }else{
+            const newUser = await kcAdminClient.users.create({
+                username: authload.name,
+                email: userParam.email,
+                firstName: userParam.givenName,
+                lastName: userParam.familyName,
+                // enabled required to be true in order to send actions email
+                emailVerified: true,
+                enabled: true,
+                attributes: {
+                    'googleId': [userParam.googleId],
+                },
+                realm: config.keycloakRealm
+              });
+              const loggedUser = await kcAdminClient.users.findOne({id: newUser.id, realm: config.keycloakRealm})
+              const token = jwt.sign({ sub: loggedUser[0].id }, config.secret, { expiresIn: '7d' });
+              resultData = {state: 'success', data: loggedUser[0], token: token};;
+        }
+    } catch (error) {
+        resultData = {state: 'failed', message: 'Google login is failed'};
+    }
+    return resultData;
+
 }
 
 async function authenticate({email, password}) {

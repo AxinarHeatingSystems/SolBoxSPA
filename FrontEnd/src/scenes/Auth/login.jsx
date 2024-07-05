@@ -7,10 +7,10 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import { ColorModeContext, tokens } from "../../theme";
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginApi } from '../../axios/ApiProvider';
+import { googleAuthApi, loginApi, GoogleClientID } from '../../axios/ApiProvider';
 import { isLoggedIn_Store, userData_Store } from '../../store/actions/mainAction';
 import { GoogleLogin } from 'react-google-login';
-
+console.log(GoogleClientID);
 export const Login = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -45,7 +45,7 @@ export const Login = () => {
     if (e.target.checkValidity()) {
       const resLog = await loginApi({ email: email, password: password });
       console.log('email Logged In', resLog);
-      if (resLog.data.state == "success") {
+      if (resLog.data.state === "success") {
         let tmpUser = resLog.data.data;
         tmpUser.tokens = resLog.data.token;
         localStorage.setItem('userData', JSON.stringify(tmpUser));
@@ -58,8 +58,21 @@ export const Login = () => {
       alert("Form is invalid! Please check the fields...");
     }
   }
-  const responseGoogle = (response) => {
+  const responseGoogle = async (response) => {
     console.log(response);
+    if (response.profileObj) {
+      const profileData = response.profileObj;
+      const googleRes = await googleAuthApi(profileData);
+      if (googleRes.state === 'success') {
+        let tmpUser = googleRes.data.data;
+        tmpUser.tokens = googleRes.data.token;
+        localStorage.setItem('userData', JSON.stringify(tmpUser));
+        dispatch(userData_Store(tmpUser));
+        dispatch(isLoggedIn_Store(true));
+        setTimeout(() => { window.location.href = '/'; }, 500)
+      }
+    }
+
   }
   return (
     <main className="content" >
@@ -106,9 +119,9 @@ export const Login = () => {
                 >Login</Button>
               </Grid>
             </Grid>
-            <Box width={'100%'} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+            <Box width={'100%'} display={'flex'} justifyContent={'center'} alignItems={'center'} marginBottom={1}>
               <GoogleLogin
-                clientId="1027778269643-qho44ppioqsc1d1aa4vpdre4tngcufra.apps.googleusercontent.com"
+                clientId={GoogleClientID}
                 buttonText="Login with Google"
                 className='googleSign-Button'
                 onSuccess={responseGoogle}

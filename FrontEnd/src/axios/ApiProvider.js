@@ -2,6 +2,7 @@
 import axios from 'axios';
 
 export const BASE_BACKEND_URL = process.env.REACT_APP_BASE_BACKEND_URL
+export const GoogleClientID = "1095375617733-7epn0ikmfmvisfir90k57s4ih975mrh5.apps.googleusercontent.com"
 
 const getJWTToken = () => {
   const strUser = localStorage.getItem('userData');
@@ -58,6 +59,26 @@ export const loginApi = async (loginInfo) => {
     window.toastr.error('Email or Password is not matched');
   })
 
+  return resultState;
+}
+
+export const googleAuthApi = async (googleUser) => {
+  let resultState = {state: '', data: {}};
+  const apiUrl = `${BASE_BACKEND_URL}user/googleauth`;
+
+  await axios({
+    method: 'post',
+    url: apiUrl,
+    data: googleUser
+  }).then(function(response){
+    resultState.state = 'success';
+    resultState.data = response.data;
+  }).catch(function(err) {
+    console.log('err', err);
+    resultState.state = 'error';
+    resultState.data = err.response.data? err.response.data.message : err.message;
+    window.toastr.error('Google login is failed');
+  })
   return resultState;
 }
 
