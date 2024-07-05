@@ -135,6 +135,7 @@ async function googleSignUp(authload){
             resultData = {state: 'failed', message: 'User is exist'};
         }
     } catch (error) {
+        console.log(error);
         resultData = {state: 'failed', message: 'Google signup is failed'};
     }
 
