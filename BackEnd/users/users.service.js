@@ -108,7 +108,7 @@ async function googleSignUp(authload){
     await kcAdminAuth();
     try {
         const users = await kcAdminClient.users.findOne({email: authload.email, realm: config.keycloakRealm});
-        if(users.length < 0){
+        if(users.length < 1){
             const newUser = await kcAdminClient.users.create({
                 username: authload.name,
                 email: authload.email,
