@@ -79,6 +79,7 @@ async function googleAuth(authload) {
                 },
                 realm: config.keycloakRealm
               });
+              console.log(newUser);
               const loggedUser = await kcAdminClient.users.findOne({id: newUser.id, realm: config.keycloakRealm})
               const token = jwt.sign({ sub: loggedUser[0].id }, config.secret, { expiresIn: '7d' });
               resultData = {state: 'success', data: loggedUser[0], token: token};;
