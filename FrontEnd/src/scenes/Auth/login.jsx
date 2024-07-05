@@ -19,6 +19,7 @@ export const Login = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const isMobileDetect = useSelector(store => store.isMobileDetect);
   const [email, setEmail] = useState();

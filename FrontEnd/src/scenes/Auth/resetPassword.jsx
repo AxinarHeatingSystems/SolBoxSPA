@@ -4,7 +4,7 @@ import iotBg from '../../assets/Backgroound/iotBg.jpg'
 import { useTheme, Button, TextField, Typography, IconButton, Grid } from "@mui/material"
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import { ColorModeContext } from "../../theme";
+import { ColorModeContext, tokens } from "../../theme";
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { resetPasswordApi } from '../../axios/ApiProvider';
@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 export const ResetPassword = () => {
     const { t } = useTranslation();
     const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
     const colorMode = useContext(ColorModeContext);
     const isMobileDetect = useSelector(store => store.isMobileDetect);
     const [email, setEmail] = useState();

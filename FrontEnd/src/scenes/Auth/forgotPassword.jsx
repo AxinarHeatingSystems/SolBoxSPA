@@ -17,7 +17,6 @@ export const ForgotPassword = () => {
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const isMobileDetect = useSelector(store => store.isMobileDetect);
-  console.log(theme, colors);
   const [email, setEmail] = useState();
   const [emailError, setEmailError] = useState();
   const onEmailChange = (e) => {

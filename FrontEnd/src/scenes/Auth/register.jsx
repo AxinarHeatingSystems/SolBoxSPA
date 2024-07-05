@@ -16,14 +16,11 @@ import { SetLang } from '../../components/Language/SetLang';
 
 export const Register = () => {
   const { t } = useTranslation();
-  const dispatch = useDispatch();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const isMobileDetect = useSelector(store => store.isMobileDetect);
   const isPortrait = useSelector(store => store.isPortrait);
-  console.log(theme, colors);
-
   const [firstname, setFirstName] = useState('');
   const [firstNmeError, setFirstNameError] = useState(false);
   const [lastName, setLastName] = useState('');
