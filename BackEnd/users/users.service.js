@@ -124,8 +124,16 @@ async function googleSignUp(authload){
               });
               console.log(newUser, newUser.id);
               try {
-                await kcAdminClient.users.sendVerifyEmail({id: newUser.id, clientId: config.keycloakClientId2, 
-                    redirectUri: 'https://solbox-clients.axinars.uk/login', realm: config.keycloakRealm});    
+                // await kcAdminClient.users.sendVerifyEmail({id: newUser.id, clientId: config.keycloakClientId2, 
+                //     redirectUri: 'https://solbox-clients.axinars.uk/login', realm: config.keycloakRealm});    
+                await kcAdminClient.users.executeActionsEmail({
+                    id: selectedUser.id,
+                    clientId: config.keycloakClientId2,
+                    lifespan: 60,
+                    redirectUri: 'https://solbox-clients.axinars.uk/login',
+                    actions: [RequiredActionAlias.VERIFY_EMAIL, RequiredActionAlias.UPDATE_PROFILE], 
+                    realm: config.keycloakRealm
+                })   
               } catch (error) {
                 console.log(error);
               }
