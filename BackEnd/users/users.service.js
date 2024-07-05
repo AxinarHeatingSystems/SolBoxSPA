@@ -123,20 +123,17 @@ async function googleSignUp(authload){
                 realm: config.keycloakRealm
               });
               console.log(newUser, newUser.id);
-              try {
                 // await kcAdminClient.users.sendVerifyEmail({id: newUser.id, clientId: config.keycloakClientId2, 
                 //     redirectUri: 'https://solbox-clients.axinars.uk/login', realm: config.keycloakRealm});    
                 await kcAdminClient.users.executeActionsEmail({
-                    id: selectedUser.id,
+                    id: newUser.id,
                     clientId: config.keycloakClientId2,
                     lifespan: 60,
                     redirectUri: 'https://solbox-clients.axinars.uk/login',
                     actions: [RequiredActionAlias.VERIFY_EMAIL, RequiredActionAlias.UPDATE_PROFILE], 
                     realm: config.keycloakRealm
                 })   
-              } catch (error) {
-                console.log(error);
-              }
+            
             //   const loggedUser = await kcAdminClient.users.findOne({id: newUser.id, realm: config.keycloakRealm})
             //   const token = jwt.sign({ sub: newUser.id }, config.secret, { expiresIn: '7d' });
             //   resultData = {state: 'success', data: authload, token: token};;
