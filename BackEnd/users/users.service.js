@@ -102,6 +102,8 @@ async function googleAuth(authload) {
 }
 
 async function googleSignUp(authload){
+    console.log('googleSign');
+    console.log(authload);
     let resultData = {};
     await kcAdminAuth();
     try {
