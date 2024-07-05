@@ -37,6 +37,7 @@ async function kcAdminAuth () {
 
 module.exports = {
     googleAuth,
+    googleSignUp,
     authenticate,
     create,
     emailResetPassword,
@@ -66,6 +67,46 @@ async function googleAuth(authload) {
             }
             
         }else{
+            resultData = {state: 'failed', message: 'User is not exist'};
+            // const newUser = await kcAdminClient.users.create({
+            //     username: authload.name,
+            //     email: authload.email,
+            //     firstName: authload.givenName,
+            //     lastName: authload.familyName,
+            //     // enabled required to be true in order to send actions email
+            //     emailVerified: true,
+            //     enabled: true,
+            //     attributes: {
+            //         'googleId': [authload.googleId],
+            //     },
+            //     realm: config.keycloakRealm
+            //   });
+            //   console.log(newUser, newUser.id);
+            //   try {
+            //     await kcAdminClient.users.sendVerifyEmail({id: newUser.id, clientId: config.keycloakClientId2, 
+            //         redirectUri: 'https://solbox-clients.axinars.uk/login', realm: config.keycloakRealm});    
+            //   } catch (error) {
+            //     console.log(error);
+            //   }
+            // //   const loggedUser = await kcAdminClient.users.findOne({id: newUser.id, realm: config.keycloakRealm})
+            // //   const token = jwt.sign({ sub: newUser.id }, config.secret, { expiresIn: '7d' });
+            // //   resultData = {state: 'success', data: authload, token: token};;
+            // resultData = {state: 'success', data: newUser};
+        }
+    } catch (error) {
+        console.log(error);
+        resultData = {state: 'failed', message: 'Google login is failed'};
+    }
+    return resultData;
+
+}
+
+async function googleSignUp(authload){
+    let resultData = {};
+    await kcAdminAuth();
+    try {
+        const users = await kcAdminClient.users.findOne({email: authload.email, realm: config.keycloakRealm});
+        if(users.length < 0){
             const newUser = await kcAdminClient.users.create({
                 username: authload.name,
                 email: authload.email,
@@ -80,17 +121,24 @@ async function googleAuth(authload) {
                 realm: config.keycloakRealm
               });
               console.log(newUser, newUser.id);
+              try {
+                await kcAdminClient.users.sendVerifyEmail({id: newUser.id, clientId: config.keycloakClientId2, 
+                    redirectUri: 'https://solbox-clients.axinars.uk/login', realm: config.keycloakRealm});    
+              } catch (error) {
+                console.log(error);
+              }
             //   const loggedUser = await kcAdminClient.users.findOne({id: newUser.id, realm: config.keycloakRealm})
-              const token = jwt.sign({ sub: newUser.id }, config.secret, { expiresIn: '7d' });
-              resultData = {state: 'success', data: authload, token: token};;
-            // resultData = {state: 'success', data: newUser};
+            //   const token = jwt.sign({ sub: newUser.id }, config.secret, { expiresIn: '7d' });
+            //   resultData = {state: 'success', data: authload, token: token};;
+            resultData = {state: 'success', data: newUser};
+        } else{
+            resultData = {state: 'failed', message: 'User is exist'};
         }
     } catch (error) {
-        console.log(error);
-        resultData = {state: 'failed', message: 'Google login is failed'};
+        resultData = {state: 'failed', message: 'Google signup is failed'};
     }
-    return resultData;
 
+    return resultData;
 }
 
 async function authenticate({email, password}) {
@@ -154,7 +202,8 @@ async function create(userParam) {
           })
           console.log(createduserId);
           try {
-            await kcAdminClient.users.sendVerifyEmail({id: createduserId.id, clientId: config.keycloakClientId2, realm: config.keycloakRealm});    
+            await kcAdminClient.users.sendVerifyEmail({id: createduserId.id, clientId: config.keycloakClientId2, 
+                redirectUri: 'https://solbox-clients.axinars.uk/login', realm: config.keycloakRealm});    
           } catch (error) {
             console.log(error);
           }
