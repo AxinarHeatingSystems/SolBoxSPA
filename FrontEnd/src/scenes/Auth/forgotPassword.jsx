@@ -8,8 +8,11 @@ import { ColorModeContext, tokens } from "../../theme";
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { resetPasswordEmail } from '../../axios/ApiProvider';
+import { useTranslation } from 'react-i18next';
+import { SetLang } from '../../components/Language/SetLang';
 
 export const ForgotPassword = () => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
@@ -56,36 +59,37 @@ export const ForgotPassword = () => {
           sx={{ backgroundColor: theme.palette.background.paper }}
         >
           <Box padding={3}>
-            <Typography variant="h2" marginBottom={4}>Forgot Password?</Typography>
+            <Typography variant="h2" marginBottom={4}>{t("forgot_password")}</Typography>
             <Grid component={'form'} onSubmit={handleForgotPasswordSubmit} marginBottom={2} container spacing={3}>
               <Grid item xs={12}>
                 <Typography variant='h4'>
-                  Enter your email and we'll send you instructions to reset your password
+                  {t("forgetpassword_txt")}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
                 <TextField fullWidth id="forgotPassword-input"
                   value={email}
                   error={emailError}
-                  label="Email" type="email" variant="outlined"
+                  label={t("email")} type="email" variant="outlined"
                   onChange={onEmailChange}
                   required />
               </Grid>
               <Grid item xs={12}>
                 <Button fullWidth variant="contained" type='submit' color={'success'}
                   sx={{ fontWeight: 600 }}
-                >Send Reset Link</Button>
+                >{t("sen_reset_link")}</Button>
               </Grid>
             </Grid>
             <Box width={'100%'}>
               <Link to="/login">
                 <Typography variant='body1' fontWeight={600}>
-                  Back to Login
+                  {t("back_login")}
                 </Typography>
               </Link>
             </Box>
           </Box>
-          <Box sx={{ position: 'absolute', top: '0', right: '0', padding: 1 }}>
+          <Box sx={{ position: 'absolute', top: '0', right: '0', padding: 1, display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
+            <SetLang />
             <IconButton onClick={() => { colorMode.toggleColorMode(); }} sx={{ marginY: '10px' }} size={"small"} color={'#fff'}>
               {theme.palette.mode === "dark" ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
             </IconButton >

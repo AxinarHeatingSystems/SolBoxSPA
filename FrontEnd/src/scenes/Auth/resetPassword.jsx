@@ -4,13 +4,15 @@ import iotBg from '../../assets/Backgroound/iotBg.jpg'
 import { useTheme, Button, TextField, Typography, IconButton, Grid } from "@mui/material"
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import { ColorModeContext, tokens } from "../../theme";
+import { ColorModeContext } from "../../theme";
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { resetPasswordApi } from '../../axios/ApiProvider';
-
+import { SetLang } from '../../components/Language/SetLang';
+import { useTranslation } from 'react-i18next';
 
 export const ResetPassword = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const colorMode = useContext(ColorModeContext);
     const isMobileDetect = useSelector(store => store.isMobileDetect);
@@ -80,11 +82,11 @@ export const ResetPassword = () => {
                     sx={{ backgroundColor: theme.palette.background.paper }}
                 >
                     <Box padding={3}>
-                        <Typography variant="h2" marginBottom={4}>ResetPassword - SolBox Control Panel</Typography>
+                        <Typography variant="h2" marginBottom={4}>{t("resetpassword")} -{t("title")} </Typography>
                         <Grid component={'form'} onSubmit={handleResetPasswordSubmit} marginBottom={2} container spacing={3}>
                             <Grid item xs={12}>
                                 <TextField fullWidth id="outlined-email"
-                                    label="Email" type='email' variant="outlined"
+                                    label={t("email")} type='email' variant="outlined"
                                     value={email}
                                     error={emailError}
                                     onChange={onEmailChange}
@@ -94,7 +96,7 @@ export const ResetPassword = () => {
                                 <TextField fullWidth id="outlined-password"
                                     value={password}
                                     error={passwordError}
-                                    label="New Password" type='password' variant="outlined"
+                                    label={t("new_password")} type='password' variant="outlined"
                                     onChange={onPasswordChange}
                                     required />
                             </Grid>
@@ -102,7 +104,7 @@ export const ResetPassword = () => {
                                 <TextField fullWidth id="outlined-password"
                                     value={confirmPassword}
                                     error={confirmPasswordError}
-                                    label="Confrim Password" type='password' variant="outlined"
+                                    label={t("confirm_password")} type='password' variant="outlined"
                                     onChange={onConfirmPasswordChange}
                                     required />
                             </Grid>
@@ -110,24 +112,25 @@ export const ResetPassword = () => {
                                 <Button fullWidth variant="contained" color={'success'}
                                     type="submit"
                                     sx={{ fontWeight: 600 }}
-                                >Reset Password</Button>
+                                >{t("resetpassword")}</Button>
                             </Grid>
                         </Grid>
                         <Box width={'100%'} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
                             <Link to="/register">
                                 <Typography variant='body1' fontWeight={600}>
-                                    Register Now!
+                                    {t("register_now")}
                                 </Typography>
                             </Link>
                             <Link to={'/login'} color={theme.palette.text}>
                                 <Typography variant='body1' fontWeight={600} color={theme.palette.text}>
-                                    Login Now!
+                                    {t("login_now")}
                                 </Typography>
                             </Link>
 
                         </Box>
                     </Box>
-                    <Box sx={{ position: 'absolute', top: '0', right: '0', padding: 1 }}>
+                    <Box sx={{ position: 'absolute', top: '0', right: '0', padding: 1, display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
+                        <SetLang />
                         <IconButton onClick={() => { colorMode.toggleColorMode(); }} sx={{ marginY: '10px' }} size={"small"} color={'#fff'}>
                             {theme.palette.mode === "dark" ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
                         </IconButton >

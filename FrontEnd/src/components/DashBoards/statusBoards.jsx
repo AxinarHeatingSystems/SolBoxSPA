@@ -8,6 +8,7 @@ import sunface from '../../assets/sumimg/sunface.svg'
 import sunSad from '../../assets/sumimg/sunsleep.svg'
 import { HeatDev } from '../DeviceComponents/heatDev';
 import { SolarPanel } from '../DeviceComponents/solarPanel';
+import { useTranslation } from 'react-i18next';
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 64,
@@ -106,6 +107,7 @@ const DevOnOffSwitch = styled(Switch)(({ theme }) => ({
 
 
 export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [deviceId, setDeviceId] = useState('');
@@ -374,7 +376,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                       fontWeight="500"
                       sx={{ color: colors.grey[100] }}
                     >
-                      Today
+                      {t("today")}
                     </Typography>
                     <Typography
                       variant='body1'
@@ -393,7 +395,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                       fontWeight="500"
                       sx={{ color: colors.grey[100], display: 'flex', justifyContent: 'start', alignItems: 'baseline' }}
                     >
-                      Saved 
+                      {t("saved")} 
                       <Typography variant='body1' fontWeight={'bold'} sx={{ marginX: '0.3rem', color: colors.grey[100] }}>
                         (0.10 € / kwh)
                       </Typography>
@@ -424,7 +426,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                   fontWeight="bold"
                   sx={{ color: colors.grey[100] }}
                 >
-                  Today
+                  {t("today")}
                 </Typography>
                 <Typography
                   variant='h1'
@@ -442,7 +444,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                   fontWeight="bold"
                   sx={{ color: colors.grey[100], display: 'flex', justifyContent: 'start', alignItems: 'baseline', flexWrap: 'nowrap', textWrap: 'nowrap' }}
                 >
-                  Saved 
+                  {t("saved")} 
                   <Typography variant='body1' fontWeight={'bold'} sx={{ marginX: '0.3rem', color: colors.grey[100] }}>
                     (0.10 € / kwh)
                   </Typography>

@@ -10,11 +10,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { googleAuthApi, loginApi, GoogleClientID } from '../../axios/ApiProvider';
 import { isLoggedIn_Store, userData_Store } from '../../store/actions/mainAction';
 import { GoogleLogin } from 'react-google-login';
+import { SetLang } from '../../components/Language/SetLang';
+import { useTranslation } from 'react-i18next';
+
+
 console.log(GoogleClientID);
 export const Login = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const isMobileDetect = useSelector(store => store.isMobileDetect);
   const [email, setEmail] = useState();
@@ -94,11 +98,11 @@ export const Login = () => {
           sx={{ backgroundColor: theme.palette.background.paper }}
         >
           <Box padding={3}>
-            <Typography variant="h2" marginBottom={4}>Login - SolBox Control Panel</Typography>
+            <Typography variant="h2" marginBottom={4}>{t("login")} - {t("title")}</Typography>
             <Grid component={'form'} onSubmit={handleLoginSubmit} marginBottom={2} container spacing={3}>
               <Grid item xs={12}>
                 <TextField fullWidth id="outlined-email"
-                  label="Email" type='email' variant="outlined"
+                  label={t("email")} type='email' variant="outlined"
                   value={email}
                   error={emailError}
                   onChange={onEmailChange}
@@ -108,7 +112,7 @@ export const Login = () => {
                 <TextField fullWidth id="outlined-password"
                   value={password}
                   error={passwordError}
-                  label="Password" type='password' variant="outlined"
+                  label={t("password")} type='password' variant="outlined"
                   onChange={onPasswordChange}
                   required />
               </Grid>
@@ -116,13 +120,13 @@ export const Login = () => {
                 <Button fullWidth variant="contained" color={'success'}
                   type="submit" 
                   sx={{ fontWeight: 600 }}
-                >Login</Button>
+                >{t("login")}</Button>
               </Grid>
             </Grid>
             <Box width={'100%'} display={'flex'} justifyContent={'center'} alignItems={'center'} marginBottom={1}>
               <GoogleLogin
                 clientId={GoogleClientID}
-                buttonText="Login with Google"
+                buttonText={t("login_with_google")}
                 className='googleSign-Button'
                 onSuccess={responseGoogle}
                 onFailure={responseGoogle}
@@ -132,18 +136,19 @@ export const Login = () => {
             <Box width={'100%'} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
               <Link to="/register">
                 <Typography variant='body1' fontWeight={600}>
-                  Register Now!
+                  {t("register_now")}
                 </Typography>
               </Link>
               <Link to={'/forgotPassword'} color={theme.palette.text}>
                 <Typography variant='body1' fontWeight={600} color={theme.palette.text}>
-                  Forgot your Password?
+                  {t("forgot_password")}
                 </Typography>
               </Link>
 
             </Box>
           </Box>
-          <Box sx={{ position: 'absolute', top: '0', right: '0', padding: 1 }}>
+          <Box sx={{ position: 'absolute', top: '0', right: '0', padding: 1, display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
+            <SetLang />
             <IconButton onClick={() => { colorMode.toggleColorMode(); }} sx={{ marginY: '10px' }} size={"small"} color={'#fff'}>
               {theme.palette.mode === "dark" ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
             </IconButton >

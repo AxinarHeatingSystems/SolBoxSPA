@@ -19,15 +19,18 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ClearIcon from '@mui/icons-material/Clear';
 import { logoutApi } from '../../axios/ApiProvider';
-
+import { useSelector } from 'react-redux';
+import { SetLang } from '../../components/Language/SetLang';
+import { useTranslation } from 'react-i18next';
 
 const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("dashboard");
-
+  const userData = useSelector(store => store.userData);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -40,6 +43,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
   };
 
   useEffect(() => {
+    console.log('useData', userData);
     const handleResize = (e) => {
       if (e.target.innerWidth < 1024) {
         setIsCollapsed(true);
@@ -123,7 +127,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
           mt={'10px'}
         >
           <Typography variant="h3" display={'flex'} alignItems={'baseline'} color={colors.grey[100]}>
-            SolBox Control Panel {isMobile && !isPortrait && <Typography variant='body1' marginX={1}>( <b>{deviceName}</b> - {deviceId})</Typography>}
+            {t("title")} {isMobile && !isPortrait && <Typography variant='body1' marginX={1}>( <b>{deviceName}</b> - {deviceId})</Typography>}
           </Typography>
           <IconButton onClick={handleClick}>
             {isCollapsed && <ClearIcon />}
@@ -146,14 +150,28 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
             color={colors.grey[300]}
             sx={{ m: "15px 0 5px 20px" }}
           >
-            Theme
+            ${t("language")}
+          </Typography>
+          <MenuItem >
+            <div style={{ width: '100%', height: '30px' }} >
+              <SetLang />
+            </div>
+
+          </MenuItem>
+          <Divider />
+          <Typography
+            variant="h6"
+            color={colors.grey[300]}
+            sx={{ m: "15px 0 5px 20px" }}
+          >
+            ${t("theme")}
           </Typography>
           <MenuItem onClick={() => { colorMode.toggleColorMode(); handleClose(); }} sx={{ width: '100vw' }}>
             <ListItemIcon>
               {theme.palette.mode === "dark" ? <DarkModeOutlinedIcon fontSize="small" /> : <LightModeOutlinedIcon fontSize="small" />}
             </ListItemIcon>
             <ListItemText>
-              {theme.palette.mode === "dark" ? 'Dark Mode' : 'Light Mode'}
+              {theme.palette.mode === "dark" ? t("dark_mode") : t("light_mode")}
             </ListItemText>
           </MenuItem>
           <Divider />
@@ -162,7 +180,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
             color={colors.grey[300]}
             sx={{ m: "15px 0 5px 20px" }}
           >
-            Devices
+            ${t("devices")}
           </Typography>
           <MenuItem selected={selected === 'dashboard'} onClick={() => { setSelected('dashboard'); handleClose() }}
             sx={{ width: '100vw' }}>
@@ -184,7 +202,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
               width={'100%'}
             >
               {!isCollapsed && <Typography variant="h4" display={'flex'} alignItems={'baseline'} color={colors.grey[100]}>
-                SolBox Control Panel {isMobile && !isPortrait && <Typography variant='body1' marginX={1}>( <b>{deviceName}</b> - {deviceId})</Typography>}
+                {t("title")} {isMobile && !isPortrait && <Typography variant='body1' marginX={1}>( <b>{deviceName}</b> - {deviceId})</Typography>}
               </Typography>}
               <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                 {isCollapsed && <MenuOutlinedIcon />}
@@ -207,14 +225,14 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
                 />
               </Box>
               {!isCollapsed && <Box marginY={1}>
-                <Typography variant='h5' fontWeight={700} textAlign={'center'}>Join User</Typography>
+                <Typography variant='h5' fontWeight={700} textAlign={'center'}>{userData.firstName} {userData.lastName}</Typography>
               </Box>}
               <Box display={'flex'} justifyContent={isCollapsed ? 'center' : 'space-between'} alignItems={'center'} flexWrap={'wrap'}>
                 <Button variant="outlined" color='success' sx={{ marginY: '10px' }} size={!isCollapsed ? "medium" : "small"}>
-                  {!isCollapsed ? 'Setting' : <ManageAccountsIcon />}
+                  {!isCollapsed ? t("setting") : <ManageAccountsIcon />}
                 </Button>
                 <Button onClick={() => { onLogOut() }} variant="outlined" color='secondary' sx={{ marginY: '10px' }} size={!isCollapsed ? "medium" : "small"}>
-                  {!isCollapsed ? 'Log Out' : <LogoutIcon />}
+                  {!isCollapsed ? t("logout") : <LogoutIcon />}
                 </Button>
               </Box>
             </Box>
@@ -225,13 +243,24 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
             color={colors.grey[300]}
             sx={{ m: "15px 0 5px 20px" }}
           >
-            Theme
+            {t("language")}
+          </Typography>
+          <MenuItem >
+            <SetLang />
+          </MenuItem>
+          <Divider />
+          <Typography
+            variant="h6"
+            color={colors.grey[300]}
+            sx={{ m: "15px 0 5px 20px" }}
+          >
+            {t("theme")}
           </Typography>
           <ListItemButton onClick={() => { colorMode.toggleColorMode() }}>
             <ListItemIcon sx={{ justifyContent: 'center' }}>
               {theme.palette.mode === "dark" ? <DarkModeOutlinedIcon /> : <LightModeOutlinedIcon />}
             </ListItemIcon>
-            {!isCollapsed && <ListItemText primary={theme.palette.mode === "dark" ? 'Dark Mode' : 'Light Mode'} />}
+            {!isCollapsed && <ListItemText primary={theme.palette.mode === "dark" ? t("dark_mode") : t("light_mode")} />}
           </ListItemButton>
           <Divider />
           <Typography
@@ -239,7 +268,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
             color={colors.grey[300]}
             sx={{ m: "15px 0 5px 20px" }}
           >
-            Devices
+            {t("devices")}
           </Typography>
           <ListItemButton
             selected={selected === 'dashboard'}

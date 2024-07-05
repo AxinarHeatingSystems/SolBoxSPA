@@ -11,8 +11,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { googleAuthApi, GoogleClientID, registerApi } from '../../axios/ApiProvider';
 import { isLoggedIn_Store, userData_Store } from '../../store/actions/mainAction';
 import { GoogleLogin } from 'react-google-login';
+import { useTranslation } from 'react-i18next';
+import { SetLang } from '../../components/Language/SetLang';
 
 export const Register = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -136,13 +139,13 @@ export const Register = () => {
           sx={{ backgroundColor: theme.palette.background.paper }}
         >
           <Box padding={3}>
-            <Typography variant="h2" marginBottom={4}>Register - SolBox Control Panel</Typography>
+            <Typography variant="h2" marginBottom={4}>{t("register")} - {t("title")}</Typography>
             <Grid component={'form'} onSubmit={onRegisterSubmit} container spacing={3}>
               <Grid item xs={isMobileDetect ? isPortrait ? 12 : 6 : 12}>
                 <TextField fullWidth id="outlined-userName"
                   value={userName}
                   error={userNameError}
-                  label="User Name" variant="outlined" size='small'
+                  label={t("user_name")} variant="outlined" size='small'
                   onChange={onUserNameChange}
                   required
                 />
@@ -151,7 +154,7 @@ export const Register = () => {
                 <TextField fullWidth id="outlined-name"
                   value={firstname}
                   error={firstNmeError}
-                  label="Name" variant="outlined" size='small'
+                  label={t("first_name")} variant="outlined" size='small'
                   onChange={onfirstNameChange}
                   required
                 />
@@ -160,7 +163,7 @@ export const Register = () => {
                 <TextField fullWidth id="outlined-lastName"
                   value={lastName}
                   error={lastNameError}
-                  label="Last Name" variant="outlined" size='small'
+                  label={t("last_name")} variant="outlined" size='small'
                   onChange={onlastNameChange}
                   required
                 />
@@ -171,7 +174,7 @@ export const Register = () => {
                   regions={'europe'}
                   fullWidth
                   variant="outlined"
-                  label="Phone Number"
+                  label={t("phone_number")}
                   size='small'
                   value={phone}
                   error={phoneError}
@@ -183,7 +186,7 @@ export const Register = () => {
                 <TextField fullWidth id="outlined-email"
                   value={email}
                   error={emailError}
-                  label="Email" type='email' variant="outlined" size='small'
+                  label={t("email")} type='email' variant="outlined" size='small'
                   onChange={onEmailChange}
                   required
                 />
@@ -192,7 +195,7 @@ export const Register = () => {
                 <TextField fullWidth id="outlined-password"
                   value={password}
                   error={passwordError}
-                  label="Password" type='password' variant="outlined" size='small'
+                  label={t("Password")} type='password' variant="outlined" size='small'
                   onChange={onPasswordChange}
                   required
                 />
@@ -200,13 +203,13 @@ export const Register = () => {
               <Grid item xs={12}>
                 <Button fullWidth variant="contained" color={'success'}
                   sx={{ fontWeight: 600 }} type='submit'
-                >Register</Button>
+                >{t("register")}</Button>
               </Grid>
             </Grid>
             <Box width={'100%'} display={'flex'} justifyContent={'center'} alignItems={'center'} marginBottom={1}>
               <GoogleLogin
                 clientId={GoogleClientID}
-                buttonText="Regist with Google"
+                buttonText={t("regist_with_google")}
                 className='googleSign-Button'
                 onSuccess={responseGoogle}
                 onFailure={responseGoogle}
@@ -216,14 +219,15 @@ export const Register = () => {
             <Box marginTop={1} width={'100%'} textAlign={'right'}>
               <Link to="/login">
                 <Typography variant='body1' fontWeight={600}>
-                  Back to Login !
+                  {t("back_login")}
                 </Typography>
               </Link>
             </Box>
           </Box>
 
-          <Box sx={{ position: 'absolute', top: '0', right: '0', padding: 1 }}>
-            <IconButton disabled={userCreated} onClick={() => { colorMode.toggleColorMode(); }} sx={{ marginY: '10px' }} size={"small"} color={'#fff'}>
+          <Box sx={{ position: 'absolute', top: '0', right: '0', padding: 1, display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
+            <SetLang />
+            <IconButton onClick={() => { colorMode.toggleColorMode(); }} sx={{ marginY: '10px' }} size={"small"} color={'#fff'}>
               {theme.palette.mode === "dark" ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
             </IconButton >
           </Box>

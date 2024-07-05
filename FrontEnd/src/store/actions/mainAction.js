@@ -1,4 +1,4 @@
-import { ISMOBILEDETECT, ISPORTRAIT, USERDATA, ISLOGGEDIN, COLORMODENAME } from "../constants/main";
+import { ISMOBILEDETECT, ISPORTRAIT, USERDATA, ISLOGGEDIN, COLORMODENAME, LANGUAGECODE } from "../constants/main";
 
 export const isMobileDetect_Store = (params) => {
     return (dispatch) => 
@@ -23,4 +23,9 @@ export const isLoggedIn_Store = (params) => {
 export const colorMode_Store = (params) => {
     return (dispatch) => 
         dispatch({type: COLORMODENAME, payload: params});
+}
+
+export const langugeCode_Store = (params) => {
+    return (dispatch) => 
+        dispatch({type: LANGUAGECODE, payload: params});
 }

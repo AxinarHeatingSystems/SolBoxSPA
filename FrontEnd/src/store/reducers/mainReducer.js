@@ -1,4 +1,4 @@
-import { ISMOBILEDETECT, ISPORTRAIT, USERDATA, ISLOGGEDIN, COLORMODENAME } from "../constants/main";
+import { ISMOBILEDETECT, ISPORTRAIT, USERDATA, ISLOGGEDIN, COLORMODENAME, LANGUAGECODE } from "../constants/main";
 
 export const mainStore = (state = {}, action) => {
     switch(action.type) {
@@ -34,6 +34,13 @@ export const mainStore = (state = {}, action) => {
             return {
                 ...state,
                 colorModeName: action.payload
+            }
+        }
+
+        case LANGUAGECODE: {
+            return {
+                ...state,
+                langugeCode: action.payload
             }
         }
 

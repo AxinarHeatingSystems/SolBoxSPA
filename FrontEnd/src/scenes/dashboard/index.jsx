@@ -21,12 +21,13 @@ import { ShareBoards } from '../../components/DashBoards/shareBoard';
 import Sidebar from '../global/Sidebar';
 import io from "socket.io-client";
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 const EndPoint = process.env.REACT_APP_BASE_BACKEND_URL;
 let socket;
 
 const Dashboard = () => {
-
+  const { t } = useTranslation();
   const isMobileDetect = useSelector(store => store.isMobileDetect);
   const isPortrait = useSelector(store => store.isPortrait);
   console.log('isPOOO', isPortrait);
@@ -107,7 +108,7 @@ const Dashboard = () => {
                       <StatBox
                         isSelected={submenuId === 1}
                         isMobile={isMobileDetect}
-                        title="Status"
+                        title={t("status")}
                         subtitle=""
                         progress="0.75"
                         increase=""
@@ -133,7 +134,7 @@ const Dashboard = () => {
                       <StatBox
                         isSelected={submenuId === 2}
                         isMobile={isMobileDetect}
-                        title="Setting"
+                        title={t("setting")}
                         subtitle=""
                         progress="0.50"
                         increase=""
@@ -159,7 +160,7 @@ const Dashboard = () => {
                       <StatBox
                         isSelected={submenuId === 3}
                         isMobile={isMobileDetect}
-                        title="Schedule"
+                        title={t("schedule")}
                         subtitle=""
                         progress="0.30"
                         increase=""
@@ -185,7 +186,7 @@ const Dashboard = () => {
                       <StatBox
                         isSelected={submenuId === 4}
                         isMobile={isMobileDetect}
-                        title="Share Device"
+                        title={t("share_device")}
                         subtitle=""
                         progress="0.80"
                         increase=""
@@ -236,7 +237,7 @@ const Dashboard = () => {
                               isSelected={submenuId === 1}
                               isMobile={isMobileDetect}
                               isPortrait={isPortrait}
-                              title="Status"
+                              title={t("status")}
                               subtitle=""
                               progress="0.75"
                               increase=""
@@ -263,7 +264,7 @@ const Dashboard = () => {
                               isSelected={submenuId === 2}
                               isMobile={isMobileDetect}
                               isPortrait={isPortrait}
-                              title="Setting"
+                              title={t("setting")}
                               subtitle=""
                               progress="0.50"
                               increase=""
@@ -290,7 +291,7 @@ const Dashboard = () => {
                               isSelected={submenuId === 3}
                               isMobile={isMobileDetect}
                               isPortrait={isPortrait}
-                              title="Schedule"
+                              title={t("schedule")}
                               subtitle=""
                               progress="0.30"
                               increase=""
@@ -317,7 +318,7 @@ const Dashboard = () => {
                               isSelected={submenuId === 4}
                               isMobile={isMobileDetect}
                               isPortrait={isPortrait}
-                              title="Share Device"
+                              title={t("share_device")}
                               subtitle=""
                               progress="0.80"
                               increase=""
