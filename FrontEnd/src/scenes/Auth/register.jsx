@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Box } from "@mui/system"
 import iotBg from '../../assets/Backgroound/iotBg.jpg'
-import { useTheme, Button, TextField, Typography, IconButton, Grid } from "@mui/material"
+import { useTheme, Button, TextField, Typography, IconButton, Grid, FormControl, InputLabel, Select, MenuItem } from "@mui/material"
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import { ColorModeContext, tokens } from "../../theme";
@@ -26,6 +26,8 @@ export const Register = () => {
   const [lastNameError, setLastNameError] = useState(false);
   const [userName, setUserName] = useState('');
   const [userNameError, setUserNameError] = useState(false);
+  const [userType, setUserType] = useState();
+  const [userTypeError, setUserTypeError] = useState(false);
   const [phone, setPhone] = useState('');
   const [phoneError, setPhoneError] = useState(false);
   const [email, setEmail] = useState('');
@@ -82,6 +84,11 @@ export const Register = () => {
     }
   }
 
+  const onUserTypeChange = (e) => {
+    // console.log(e);
+    setUserType(e.target.value);
+  }
+
   const onRegisterSubmit = async (e) => {
     setIsSignUp(true);
     e.preventDefault();
@@ -90,7 +97,8 @@ export const Register = () => {
         username: userName,
         firstname: firstname,
         lastname: lastName,
-        phone: phone,
+        // phone: phone,
+        usertype: userType,
         email: email,
         password: password
       }
@@ -113,7 +121,7 @@ export const Register = () => {
       const profileData = response.profileObj;
       const googleRes = await googleSignUpApi(profileData);
       if (googleRes.state === 'success') {
-
+        setUserCreated(true);
         // let tmpUser = googleRes.data.data;
         // tmpUser.tokens = googleRes.data.token;
         // localStorage.setItem('userData', JSON.stringify(tmpUser));
@@ -178,7 +186,22 @@ export const Register = () => {
                   required
                 />
               </Grid>
-              <Grid item xs={isMobileDetect ? isPortrait ? 12 : 6 : 12}>
+              <Grid item xs={12}>
+                <FormControl fullWidth size="small">
+                  <InputLabel id="demo-simple-select-helper-label">User Type</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-helper-label"
+                    id="demo-simple-select-helper"
+                    label="User Type"
+                    value={userType}
+                    onChange={onUserTypeChange}
+                  >
+                    <MenuItem value={'user'}>User</MenuItem>
+                    <MenuItem value={'technician'}>Technician</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              {/* <Grid item xs={isMobileDetect ? isPortrait ? 12 : 6 : 12}>
                 <MuiPhoneNumber
                   defaultCountry='gr'
                   regions={'europe'}
@@ -191,7 +214,7 @@ export const Register = () => {
                   onChange={onPhoneChange}
                   required
                 />
-              </Grid>
+              </Grid> */}
               <Grid item xs={isMobileDetect ? isPortrait ? 12 : 6 : 12}>
                 <TextField fullWidth id="outlined-email"
                   value={email}

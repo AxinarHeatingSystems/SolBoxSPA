@@ -22,6 +22,7 @@ import { logoutApi } from '../../axios/ApiProvider';
 import { useSelector } from 'react-redux';
 import { SetLang } from '../../components/Language/SetLang';
 import { useTranslation } from 'react-i18next';
+import { AddDevModal } from './AddDevModal';
 
 const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
   const { t } = useTranslation();
@@ -31,7 +32,8 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("dashboard");
   const userData = useSelector(store => store.userData);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [isAddDev, setIsAddDev] = useState(false);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -114,6 +116,14 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
   const onLogOut = () => {
     logoutApi()
   }
+
+  const handleAddDevClose = () => {
+    setIsAddDev(false);
+  }
+  const handelAddDevOpen = () => {
+    setIsAddDev(true);
+  }
+
   return (
     <Box
       sx={isMobile ? mobileStyle : desktopStyle}
@@ -272,7 +282,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
               >
                 {t("devices")}
               </Typography>
-              <Button size='small' color='success'>
+              <Button size='small' color='success' onClick={() => { handelAddDevOpen() }}>
                 + Add
               </Button>
             </Box>
@@ -289,6 +299,8 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
           </ListItemButton>
         </List>
       </ProSidebar>}
+      <AddDevModal isAddDev={isAddDev} onClose={handleAddDevClose} />
+
     </Box>
   );
 };

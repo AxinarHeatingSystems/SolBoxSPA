@@ -198,6 +198,7 @@ async function create(userParam) {
             email: userParam.email,
             firstName: userParam.firstname,
             lastName: userParam.lastname,
+            usertype: userParam.usertype,
             // enabled required to be true in order to send actions email
             emailVerified: false,
             enabled: true,
