@@ -1,12 +1,13 @@
 
-FROM node:latest
+FROM node:20
 
 WORKDIR /usr/src/app
 
 COPY package*.json ./
-RUN npm install
 COPY . .
-CMD ["npm", "run", "prod"]
+RUN npm install --force
+
+CMD ["npm", "run", "start"]
 
 # EXPOSE 4000
 

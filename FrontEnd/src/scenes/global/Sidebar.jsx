@@ -263,13 +263,21 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
             {!isCollapsed && <ListItemText primary={theme.palette.mode === "dark" ? t("dark_mode") : t("light_mode")} />}
           </ListItemButton>
           <Divider />
-          <Typography
-            variant="h6"
-            color={colors.grey[300]}
-            sx={{ m: "15px 0 5px 20px" }}
-          >
-            {t("devices")}
-          </Typography>
+          <ListItem sx={{ padding: '5px 0px' }}>
+            <Box width={'100%'} display={'flex'} justifyContent={'space-between'} alignItems={'baseline'}>
+              <Typography
+                variant="h6"
+                color={colors.grey[300]}
+                sx={{ m: "15px 0 5px 20px" }}
+              >
+                {t("devices")}
+              </Typography>
+              <Button size='small' color='success'>
+                + Add
+              </Button>
+            </Box>
+          </ListItem>
+
           <ListItemButton
             selected={selected === 'dashboard'}
             onClick={() => { setSelected('dashboard') }}
