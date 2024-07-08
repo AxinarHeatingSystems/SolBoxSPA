@@ -1,6 +1,7 @@
 version: "3"
 services:
-  app:
+  nginx-node:
+    container_name: ngixreactapp
     build: 
       dockerfile: Dockerfile
       context: .
