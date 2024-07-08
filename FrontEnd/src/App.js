@@ -23,12 +23,14 @@ import { useDispatch } from 'react-redux';
 import { isPortrait_Store } from './store/actions/mainAction';
 import { existLogin } from './axios/ApiProvider';
 import { ResetPassword } from './scenes/Auth/resetPassword';
+import { EmailVerifyNote } from './scenes/Auth/EmailVerifyNote';
 
 const authPath = [
   "/login",
   "/register",
   "/forgotPassword",
-  "/resetpassword"
+  "/resetpassword",
+  "/registerationsuccess"
 ]
 
 function App() {
@@ -117,6 +119,7 @@ function App() {
             <Route path='/register' element={<Register />} />
             <Route path='/forgotPassword' element={<ForgotPassword />}/>
             <Route path='/resetpassword' element={<ResetPassword />} />
+            <Route path='/registerationsuccess' element={<EmailVerifyNote />}/>
             <Route path="/team" element={<Team />} />
             <Route path="/contacts" element={<Contacts />} />
             <Route path="/invoices" element={<Invoices />} />

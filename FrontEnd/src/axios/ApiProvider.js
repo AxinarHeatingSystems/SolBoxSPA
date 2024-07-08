@@ -112,7 +112,7 @@ export const registerApi = async (userdata) => {
     url: apiUrl,
     data: userdata
   }).then(function(response) {
-    resultState.state = 'succes';
+    resultState.state = 'success';
     resultState.data = response;
     window.toastr.info('The user is created. An email has been sent to your email address. Please verify your email.')
   }).catch(function (err) {

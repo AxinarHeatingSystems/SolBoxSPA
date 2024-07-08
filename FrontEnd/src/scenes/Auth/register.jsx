@@ -104,8 +104,10 @@ export const Register = () => {
       }
 
       const registerRes = await registerApi(userData);
+
       if (registerRes.state === 'success') {
         setUserCreated(true);
+        setTimeout(() => { window.location.href = '/registerationsuccess'; }, 500)
       } else {
         setIsSignUp(false);
       }
@@ -122,6 +124,7 @@ export const Register = () => {
       const googleRes = await googleSignUpApi(profileData);
       if (googleRes.state === 'success') {
         setUserCreated(true);
+        setTimeout(() => { window.location.href = '/registerationsuccess'; }, 500)
         // let tmpUser = googleRes.data.data;
         // tmpUser.tokens = googleRes.data.token;
         // localStorage.setItem('userData', JSON.stringify(tmpUser));
