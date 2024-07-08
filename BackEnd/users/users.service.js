@@ -186,48 +186,54 @@ async function create(userParam) {
     await kcAdminAuth();
     let resultData = {};
     console.log(userParam);
-    const existUser = await kcAdminClient.users.find({
-        email: userParam.email,
-        username: userParam.username,
-        realm: config.keycloakRealm
-    });
-    console.log(existUser);
-    if(existUser.length < 1){
-        const createduserId = await kcAdminClient.users.create({
-            username: userParam.username,
+    try {
+        const existUser = await kcAdminClient.users.find({
             email: userParam.email,
-            firstName: userParam.firstname,
-            lastName: userParam.lastname,
-            usertype: userParam.usertype,
-            // enabled required to be true in order to send actions email
-            emailVerified: false,
-            enabled: true,
-            attributes: {
-                'pass': [bcrypt.hashSync(userParam.password, 10)],
-                'phone': [userParam.phone],
-            },
-            credentials: [{type: 'password', value: userParam.password}],
+            username: userParam.username,
             realm: config.keycloakRealm
-          })
-          console.log(createduserId);
-        //   try {
-            // await kcAdminClient.users.sendVerifyEmail({id: createduserId.id, clientId: config.keycloakClientId2, 
-            //     redirectUri: 'https://solbox-clients.axinars.uk/login', realm: config.keycloakRealm});    
-            await kcAdminClient.users.executeActionsEmail({
-                id: createduserId.id,
-                clientId: config.keycloakClientId2,
-                lifespan: 60,
-                redirectUri: 'https://solbox-clients.axinars.uk/login',
-                actions: [RequiredActionAlias.VERIFY_EMAIL], 
+        });
+        console.log(existUser);
+        if(existUser.length < 1){
+            const createduserId = await kcAdminClient.users.create({
+                username: userParam.username,
+                email: userParam.email,
+                firstName: userParam.firstname,
+                lastName: userParam.lastname,
+                usertype: userParam.usertype,
+                // enabled required to be true in order to send actions email
+                emailVerified: false,
+                enabled: true,
+                attributes: {
+                    'pass': [bcrypt.hashSync(userParam.password, 10)],
+                    'phone': [userParam.phone],
+                },
+                credentials: [{type: 'password', value: userParam.password}],
                 realm: config.keycloakRealm
-            })   
-        //   } catch (error) {
-        //     console.log(error);
-        //   }
-       resultData = {state: 'success', data: createduserId};
-    }else{
-        resultData = {state: 'failed', message: 'User is exist'};
+              })
+              console.log(createduserId);
+            //   try {
+                // await kcAdminClient.users.sendVerifyEmail({id: createduserId.id, clientId: config.keycloakClientId2, 
+                //     redirectUri: 'https://solbox-clients.axinars.uk/login', realm: config.keycloakRealm});    
+                await kcAdminClient.users.executeActionsEmail({
+                    id: createduserId.id,
+                    clientId: config.keycloakClientId2,
+                    lifespan: 60,
+                    redirectUri: 'https://solbox-clients.axinars.uk/login',
+                    actions: [RequiredActionAlias.VERIFY_EMAIL], 
+                    realm: config.keycloakRealm
+                })   
+            //   } catch (error) {
+            //     console.log(error);
+            //   }
+           resultData = {state: 'success', data: createduserId};
+        }else{
+            resultData = {state: 'failed', message: 'User is exist'};
+        }
+    } catch (error) {
+        console.log(error);
+        resultData = {state: 'failed', message: 'Api working is broken'};
     }
+    
     
     return resultData;
 }
