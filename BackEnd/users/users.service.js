@@ -199,13 +199,12 @@ async function create(userParam) {
                 email: userParam.email,
                 firstName: userParam.firstname,
                 lastName: userParam.lastname,
-                usertype: userParam.usertype,
                 // enabled required to be true in order to send actions email
                 emailVerified: false,
                 enabled: true,
                 attributes: {
                     'pass': [bcrypt.hashSync(userParam.password, 10)],
-                    'phone': [userParam.phone],
+                    'userType': [userParam.usertype],
                 },
                 credentials: [{type: 'password', value: userParam.password}],
                 realm: config.keycloakRealm
