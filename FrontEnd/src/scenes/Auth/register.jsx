@@ -6,7 +6,7 @@ import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import { ColorModeContext, tokens } from "../../theme";
 import { Link } from 'react-router-dom';
-import MuiPhoneNumber from 'material-ui-phone-number';
+// import MuiPhoneNumber from 'material-ui-phone-number';
 import { useSelector } from 'react-redux';
 import { GoogleClientID, googleSignUpApi, registerApi } from '../../axios/ApiProvider';
 import { GoogleLogin } from 'react-google-login';
@@ -27,14 +27,14 @@ export const Register = () => {
   const [userName, setUserName] = useState('');
   const [userNameError, setUserNameError] = useState(false);
   const [userType, setUserType] = useState();
-  const [userTypeError, setUserTypeError] = useState(false);
-  const [phone, setPhone] = useState('');
-  const [phoneError, setPhoneError] = useState(false);
+  // const [userTypeError, setUserTypeError] = useState(false);
+  // const [phone, setPhone] = useState('');
+  // const [phoneError, setPhoneError] = useState(false);
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(false);
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState(false);
-  const [userCreated, setUserCreated] = useState(false);
+  // const [userCreated, setUserCreated] = useState(false);
 
   const [isSignUp, setIsSignUp] = useState(false);
 
@@ -62,11 +62,11 @@ export const Register = () => {
       setLastNameError(true);
     }
   }
-  const onPhoneChange = (e) => {
-    console.log(e);
-    setPhone(e);
+  // const onPhoneChange = (e) => {
+  //   console.log(e);
+  //   setPhone(e);
 
-  }
+  // }
   const onEmailChange = (e) => {
     setEmail(e.target.value);
     if (e.target.validity.valid) {
@@ -106,7 +106,7 @@ export const Register = () => {
       const registerRes = await registerApi(userData);
 
       if (registerRes.state === 'success') {
-        setUserCreated(true);
+        // setUserCreated(true);
         setTimeout(() => { window.location.href = '/registerationsuccess'; }, 500)
       } else {
         setIsSignUp(false);
@@ -123,7 +123,7 @@ export const Register = () => {
       const profileData = response.profileObj;
       const googleRes = await googleSignUpApi(profileData);
       if (googleRes.state === 'success') {
-        setUserCreated(true);
+        // setUserCreated(true);
         setTimeout(() => { window.location.href = '/registerationsuccess'; }, 500)
         // let tmpUser = googleRes.data.data;
         // tmpUser.tokens = googleRes.data.token;

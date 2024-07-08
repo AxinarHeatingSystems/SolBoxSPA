@@ -31,7 +31,7 @@ export const ForgotPassword = () => {
   const handleForgotPasswordSubmit = async (e) => {
     e.preventDefault();
     if (e.target.checkValidity()) {
-      const emailSentRes = await resetPasswordEmail(email);
+      await resetPasswordEmail(email);
     } else {
       alert("Form is invalid! Please check the fields...");
     }
