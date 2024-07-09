@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Checkbox, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Modal, Select, TextField, Typography } from "@mui/material"
+import { Box, Checkbox, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Modal, Select, TextField, Typography } from "@mui/material"
 
 
 
@@ -62,6 +62,13 @@ export const AddDevModal = ({ isAddDev, onClose }) => {
                 </Select>
               </FormControl>
             </Grid>
+            <Grid xs={12} padding={1}>
+              <TextField fullWidth id="outlined-basic" label="SoloPanel Max Power" variant="outlined" size="small" required />
+            </Grid>
+            <Grid xs={12} padding={1}>
+              <TextField fullWidth id="outlined-basic" label="Name Of Installation" variant="outlined" size="small" required />
+            </Grid>
+            <Divider />
             <Grid xs={12} padding={1}>
 
             </Grid>

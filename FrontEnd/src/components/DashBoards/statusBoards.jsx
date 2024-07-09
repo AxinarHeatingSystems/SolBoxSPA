@@ -9,6 +9,7 @@ import sunSad from '../../assets/sumimg/sunsleep.svg'
 import { HeatDev } from '../DeviceComponents/heatDev';
 import { SolarPanel } from '../DeviceComponents/solarPanel';
 import { useTranslation } from 'react-i18next';
+import { yellow } from '@mui/material/colors';
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 64,
@@ -143,8 +144,10 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
 
     const devInfo = {
       DeviceID: devData.DeviceID,
-      RelayEnabled: !heatOn ? 1 : 0,
-      DeviceEnabled: devOn ? 1 : 0,
+      payload: {
+        manualRelayEnable: !heatOn ? 1 : 0,
+        pauseCharging: devOn ? 1 : 0,
+      }
     }
 
     socketIo.emit('devUpdate', { devInfo }, (error) => {
@@ -159,8 +162,10 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
     // devInfo.DeviceEnabled = !devOn;
     const devInfo = {
       DeviceID: devData.DeviceID,
-      RelayEnabled: heatOn ? 1 : 0,
-      DeviceEnabled: !devOn ? 1 : 0,
+      payload: {
+        manualRelayEnable: heatOn ? 1 : 0,
+        pauseCharging: !devOn ? 1 : 0,
+      }
     }
     // const payloadStr = JSON.stringify(devInfo);
     console.log('DevCTR', devInfo);
@@ -205,7 +210,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
 	c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z" />
                       </svg>
                     </div>
-                    <h1 className='inner-text'>{parseFloat(devData.WaterTemp).toFixed(1)} ºC</h1>
+                    <h1 className='inner-text' >{parseFloat(devData.WaterTemp).toFixed(1)} ºC</h1>
                   </div>
                 </div>
               </Box>
@@ -213,13 +218,13 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
             <Grid order={isMobile ? { xs: 2 } : { xs: 3, md: 3 }} backgroundColor={colors.primary[400]} zIndex={1} item>
               <Box textAlign={'center'}>
                 <FormControlLabel
-                  sx={{ margin: 'auto', width: '100%', justifyContent: 'center', alignItems: "center", color: 'yellow', fontSize: '16px !important', fontWeight: '600' }}
+                  sx={{ margin: 'auto', width: '100%', justifyContent: 'center', alignItems: "center", color: theme.palette.mode === "dark" ? 'yellow' : 'gray', fontSize: '16px !important', fontWeight: '600' }}
                   onClick={() => onDevCtr()}
                   control={<DevOnOffSwitch sx={{ m: 1 }} checked={devOn} />}
                   label={!isMobile ? `${devData.DutyCycle}  %` : ""}
                 />
                 <SolarPanel isMobile={isMobile} isPortrait={isPortrait} isOn={devOn} cycleVal={devData.DutyCycle} />
-                {isMobile && <span className='devOn-Cycle'>{devData.DutyCycle} %</span>}
+                {isMobile && <span className='devOn-Cycle' style={{ color: colors.greenAccent[400] }} >{devData.DutyCycle} %</span>}
 
               </Box>
             </Grid>

@@ -96,7 +96,7 @@ function App() {
     if(!authPath.includes(window.location.pathname)){
       if(userData){
         const loginRes = await existLogin();
-         if(loginRes.state !== 'success'){
+        if(loginRes.state !== 'success'){
           window.location.href = '/login';  
         }
       }else{
