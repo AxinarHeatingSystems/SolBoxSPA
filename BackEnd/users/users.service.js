@@ -305,7 +305,7 @@ async function existLogin(useremail) {
     await kcAdminAuth();
     try {
         const user = await kcAdminClient.users.findOne({email: useremail, realm: config.keycloakRealm});    
-        resultData = {state: 'success', data: user};    
+        resultData = {state: 'success', data: user[0]};    
     } catch (error) {
         resultData = {state: 'failed', message: 'User is not exist'};
     }
