@@ -20,7 +20,7 @@ import { ForgotPassword } from './scenes/Auth/forgotPassword';
 import { useSelector } from 'react-redux';
 
 import { useDispatch } from 'react-redux';
-import { isPortrait_Store } from './store/actions/mainAction';
+import { isPortrait_Store, userData_Store } from './store/actions/mainAction';
 import { existLogin } from './axios/ApiProvider';
 import { ResetPassword } from './scenes/Auth/resetPassword';
 import { EmailVerifyNote } from './scenes/Auth/EmailVerifyNote';
@@ -92,16 +92,21 @@ function App() {
 
   const checkLogin = async () => {
     const userData = localStorage.getItem('userData');
-    console.log('userDataCheck', userData, window.location);
+    console.log('userDataCheck', JSON.parse(userData), userData, window.location);
     if(!authPath.includes(window.location.pathname)){
       if(userData){
-        const loginRes = await existLogin(userData.email);
+        const tmpUser = JSON.parse(userData);
+        const loginRes = await existLogin(tmpUser.email);
+        console.log('checkData', loginRes);
+        
         if(loginRes.state !== 'success'){
+          localStorage.setItem('userData', JSON.stringify(loginRes.data));
+          dispatch(userData_Store(loginRes.data));
           window.location.href = '/login';  
         }
       }else{
         console.log('redirect check', userData);
-         window.location.href = '/login';
+        //  window.location.href = '/login';
       }
     }
     

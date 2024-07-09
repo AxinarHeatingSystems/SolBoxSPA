@@ -27,7 +27,7 @@ export const existLogin = async (email) => {
     headers: {Authorization: tokenData}
   }).then(function(response){
     resultState.state = 'success';
-    resultState.data = response.data;
+    resultState.data = response.data.data;
   }).catch(function(err) {
     console.log('err', err);
     resultState.state = 'error';

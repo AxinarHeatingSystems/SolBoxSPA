@@ -66,6 +66,7 @@ const Dashboard = () => {
     });
 
     socket.on('message', message => {
+      console.log(message);
       const devInfoData = JSON.parse(message);
       if (devId == devInfoData.DeviceID) {
 

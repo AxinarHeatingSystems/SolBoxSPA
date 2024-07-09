@@ -300,13 +300,15 @@ async function resetPassword({email, newPassword}) {
     return resultData;
 }
 
-async function existLogin(useremail) {
+async function existLogin(userdata) {
     let resultData = {};
     await kcAdminAuth();
     try {
-        const user = await kcAdminClient.users.findOne({email: useremail, realm: config.keycloakRealm});    
+        console.log(userdata);
+        const user = await kcAdminClient.users.findOne({email: userdata.useremail, realm: config.keycloakRealm});
         resultData = {state: 'success', data: user[0]};    
     } catch (error) {
+        console.log(error);
         resultData = {state: 'failed', message: 'User is not exist'};
     }
     
