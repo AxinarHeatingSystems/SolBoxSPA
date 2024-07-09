@@ -62,7 +62,6 @@ function resetPassword(req, res, next){
 
 function existLogin(req, res, next){
     userService.existLogin(req.body)
-        .then(data => 
-            res.json(data))
+        .then((data) => data? data.state == 'success'? res.json(data) : res.status(400).json({ message: data.message }) : res.state(400).json({message: 'User not exist'}))
         .catch(err => next(err));
 }
