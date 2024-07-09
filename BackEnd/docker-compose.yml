@@ -7,6 +7,7 @@ services:
       context: .
     ports:
       - "4000:4000"
+    restart: unless-stopped
     volumes:
       - .:/usr/src/app
       - ./node_modules:/home/nodejs/node_modules
