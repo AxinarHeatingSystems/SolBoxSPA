@@ -13,7 +13,7 @@ const getJWTToken = () => {
 export const logoutApi = async () => {
   
   localStorage.removeItem("userData");
-  window.location.reload();
+  window.location.href = '/login';
 
 }
 export const existLogin = async (email) => {
