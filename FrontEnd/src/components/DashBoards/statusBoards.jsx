@@ -10,6 +10,7 @@ import { HeatDev } from '../DeviceComponents/heatDev';
 import { SolarPanel } from '../DeviceComponents/solarPanel';
 import { useTranslation } from 'react-i18next';
 import { yellow } from '@mui/material/colors';
+import { useSelector } from 'react-redux';
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 64,
@@ -111,6 +112,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const userData = useSelector(store => store.userData);
   const [deviceId, setDeviceId] = useState('');
   const [deviceName, setDeviceName] = useState('');
   const [heatOn, setHeatOn] = useState(true);
@@ -121,7 +123,22 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const [nowPower, setNowPower] = useState(0);
   const [todayKWH, setTodayKWH] = useState(0);
   const [savePrice, setSavePrice] = useState(0);
+  const [isUser, setIsUser] = useState(false);
+  const [devCyle, setDevCycle] = useState('');
+  // console.log(userData);
+  useEffect(() => {
+    if (userData.attributes) {
+      const attrArr = Object.keys(userData.attributes);
+      const isUserTypeKey = attrArr.find(item => item === 'userType');
+      if (isUserTypeKey && userData.attributes[isUserTypeKey][0] == 'user') {
+        setIsUser(true);
+      }
 
+      // if()
+
+    }
+
+  }, [])
   useEffect(() => {
     setDeviceId(devData.DeviceID)
     setDeviceName(devData.DeviceName)
@@ -130,13 +147,24 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
     // setMaxPower(parseInt((devData.maxPowerPer / devData.leastPowerThirty) * 100));
     // setMinPower(parseInt((devData.minPowerPer / devData.leastPowerThirty) * 100));
     // setNowPower(parseInt((devData.powerNeedlePer / devData.leastPowerThirty) * 100))
-    setMaxPower(parseFloat((devData.maxPowerThirty / devData.ATHwattHours) * 100));
-    setMinPower(parseFloat((devData.leastPowerThirty / devData.ATHwattHours) * 100));
-    setNowPower(parseFloat((devData.WattHours / devData.ATHwattHours) * 100))
+
     setTodayKWH(parseFloat(devData.WattHours / 1000).toFixed(2));
     setSavePrice(parseFloat((devData.WattHours / 1000) * 0.1).toFixed(2));
     // setMaxVal(parseFloat(devData.ATHwattHours));
-    setMaxVal(100)
+    if (isUser) {
+      setDevCycle(`${parseInt(devData.DutyCycle)} %`);
+      setMaxPower(parseInt(devData.maxPowerPer));
+      setMinPower(parseInt(devData.minPowerPer));
+      setNowPower(parseInt(devData.powerNeedlePer));
+      setMaxVal(100);
+    } else {
+      setDevCycle(`${parseInt(devData.PowerIn)} W`);
+      setMaxPower(parseFloat(devData.maxPowerThirty));
+      setMinPower(parseFloat(devData.leastPowerThirty));
+      setNowPower(parseFloat(devData.WattHours));
+      setMaxVal(devData.ATHwattHours);
+    }
+    // setMaxVal(100)
     // console.log(devData);
   }, [devData])
 
@@ -222,10 +250,10 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                   sx={{ margin: 'auto', width: '100%', justifyContent: 'center', alignItems: "center", color: theme.palette.mode === "dark" ? 'yellow' : 'gray', fontSize: '16px !important', fontWeight: '600' }}
                   onClick={() => onDevCtr()}
                   control={<DevOnOffSwitch sx={{ m: 1 }} checked={devOn} />}
-                  label={!isMobile ? `${parseInt(devData.PowerIn)}  W` : ""}
+                  label={!isMobile ? `${devCyle}` : ""}
                 />
-                <SolarPanel isMobile={isMobile} isPortrait={isPortrait} isOn={devOn} cycleVal={devData.PowerIn} />
-                {isMobile && <span className='devOn-Cycle' style={{ color: colors.greenAccent[400] }} >{devData.PowerIn} %</span>}
+                <SolarPanel isMobile={isMobile} isPortrait={isPortrait} isOn={devOn} cycleVal={devCyle} />
+                {isMobile && <span className='devOn-Cycle' style={{ color: colors.greenAccent[400] }} >{devCyle}</span>}
 
               </Box>
             </Grid>
