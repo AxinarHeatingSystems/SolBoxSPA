@@ -8,7 +8,7 @@ router.post('/authenticate', authenticate);
 router.post('/register', register);
 router.post('/resetpasswordemail', resetPasswordEmail);
 router.post('/resetpassword', resetPassword);
-router.get('/existLogin', existLogin);
+router.post('/existLogin', existLogin);
 
 module.exports = router;
 

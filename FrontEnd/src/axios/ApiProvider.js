@@ -16,13 +16,14 @@ export const logoutApi = async () => {
   window.location.reload();
 
 }
-export const existLogin = async () => {
+export const existLogin = async (email) => {
   let resultState = {state: '', data: {}};
   const apiUrl = `${BASE_BACKEND_URL}user/existLogin`;
   const tokenData = getJWTToken();
   await axios({
-    method: 'get',
+    method: 'post',
     url: apiUrl,
+    data: {useremail: email},
     headers: {Authorization: tokenData}
   }).then(function(response){
     resultState.state = 'success';

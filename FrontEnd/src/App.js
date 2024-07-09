@@ -95,7 +95,7 @@ function App() {
     console.log('userDataCheck', userData, window.location);
     if(!authPath.includes(window.location.pathname)){
       if(userData){
-        const loginRes = await existLogin();
+        const loginRes = await existLogin(userData.email);
         if(loginRes.state !== 'success'){
           window.location.href = '/login';  
         }
