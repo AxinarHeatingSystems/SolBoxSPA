@@ -115,10 +115,11 @@ async function googleSignUp(authload){
                 firstName: authload.givenName,
                 lastName: authload.familyName,
                 // enabled required to be true in order to send actions email
-                emailVerified: true,
+                emailVerified: false,
                 enabled: true,
                 attributes: {
                     'googleId': [authload.googleId],
+                    'userType': [authload.usertype],
                 },
                 realm: config.keycloakRealm
               });

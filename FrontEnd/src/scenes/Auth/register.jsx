@@ -1,3 +1,4 @@
+import Swal from 'sweetalert2'
 import React, { useState, useContext } from 'react';
 import { Box } from "@mui/system"
 import iotBg from '../../assets/Backgroound/iotBg.jpg'
@@ -26,7 +27,7 @@ export const Register = () => {
   const [lastNameError, setLastNameError] = useState(false);
   const [userName, setUserName] = useState('');
   const [userNameError, setUserNameError] = useState(false);
-  const [userType, setUserType] = useState();
+  const [userType, setUserType] = useState('user');
   // const [userTypeError, setUserTypeError] = useState(false);
   // const [phone, setPhone] = useState('');
   // const [phoneError, setPhoneError] = useState(false);
@@ -121,19 +122,40 @@ export const Register = () => {
     console.log(response);
     if (response.profileObj) {
       const profileData = response.profileObj;
-      const googleRes = await googleSignUpApi(profileData);
-      if (googleRes.state === 'success') {
-        // setUserCreated(true);
-        setTimeout(() => { window.location.href = '/registerationsuccess'; }, 500)
-        // let tmpUser = googleRes.data.data;
-        // tmpUser.tokens = googleRes.data.token;
-        // localStorage.setItem('userData', JSON.stringify(tmpUser));
-        // dispatch(userData_Store(tmpUser));
-        // dispatch(isLoggedIn_Store(true));
-        // setTimeout(() => { window.location.href = '/'; }, 500)
-      } else {
-        setIsSignUp(false);
-      }
+      Swal.fire({
+        title: "Select User Type",
+        input: "select",
+        inputOptions: {
+          user: 'User',
+          technician: 'Technician',
+        },
+        inputValue: 'user',
+        inputPlaceholder: "Select a User Type",
+        showCancelButton: false,
+        confirmButtonText: 'Register',
+      }).then(async (result) => {
+        console.log(result);
+        if (result.isConfirmed) {
+          profileData.usertype = result.value;
+          const googleRes = await googleSignUpApi(profileData);
+          if (googleRes.state === 'success') {
+          // setUserCreated(true);
+            // setTimeout(() => { window.location.href = '/registerationsuccess'; }, 500)
+          } else {
+            setIsSignUp(false);
+          }
+        } else {
+          setIsSignUp(false);
+        }
+      });
+      // const profileData = response.profileObj;
+      // const googleRes = await googleSignUpApi(profileData);
+      // if (googleRes.state === 'success') {
+      //   // setUserCreated(true);
+      //   setTimeout(() => { window.location.href = '/registerationsuccess'; }, 500)
+      // } else {
+      //   setIsSignUp(false);
+      // }
     } else {
       setIsSignUp(false);
     }
