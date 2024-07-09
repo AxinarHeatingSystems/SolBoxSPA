@@ -130,13 +130,14 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
     // setMaxPower(parseInt((devData.maxPowerPer / devData.leastPowerThirty) * 100));
     // setMinPower(parseInt((devData.minPowerPer / devData.leastPowerThirty) * 100));
     // setNowPower(parseInt((devData.powerNeedlePer / devData.leastPowerThirty) * 100))
-    setMaxPower(parseFloat(devData.maxPowerPer));
-    setMinPower(parseFloat(devData.minPowerPer));
-    setNowPower(parseFloat(devData.powerNeedlePer))
+    setMaxPower(parseFloat((devData.maxPowerThirty / devData.ATHwattHours) * 100));
+    setMinPower(parseFloat((devData.leastPowerThirty / devData.ATHwattHours) * 100));
+    setNowPower(parseFloat((devData.WattHours / devData.ATHwattHours) * 100))
     setTodayKWH(parseFloat(devData.WattHours / 1000).toFixed(2));
     setSavePrice(parseFloat((devData.WattHours / 1000) * 0.1).toFixed(2));
-    setMaxVal(100);
-
+    // setMaxVal(parseFloat(devData.ATHwattHours));
+    setMaxVal(100)
+    // console.log(devData);
   }, [devData])
 
 
@@ -221,10 +222,10 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                   sx={{ margin: 'auto', width: '100%', justifyContent: 'center', alignItems: "center", color: theme.palette.mode === "dark" ? 'yellow' : 'gray', fontSize: '16px !important', fontWeight: '600' }}
                   onClick={() => onDevCtr()}
                   control={<DevOnOffSwitch sx={{ m: 1 }} checked={devOn} />}
-                  label={!isMobile ? `${devData.DutyCycle}  %` : ""}
+                  label={!isMobile ? `${parseInt(devData.PowerIn)}  W` : ""}
                 />
-                <SolarPanel isMobile={isMobile} isPortrait={isPortrait} isOn={devOn} cycleVal={devData.DutyCycle} />
-                {isMobile && <span className='devOn-Cycle' style={{ color: colors.greenAccent[400] }} >{devData.DutyCycle} %</span>}
+                <SolarPanel isMobile={isMobile} isPortrait={isPortrait} isOn={devOn} cycleVal={devData.PowerIn} />
+                {isMobile && <span className='devOn-Cycle' style={{ color: colors.greenAccent[400] }} >{devData.PowerIn} %</span>}
 
               </Box>
             </Grid>
