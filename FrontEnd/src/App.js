@@ -106,7 +106,7 @@ function App() {
         }
       }else{
         console.log('redirect check', userData);
-        //  window.location.href = '/login';
+        window.location.href = '/login';
       }
     }
     
