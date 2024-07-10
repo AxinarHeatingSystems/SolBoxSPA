@@ -1,8 +1,10 @@
 const config = require('config.json');
 const mqtt = require('mqtt');
 const tmpDev = require('tmpDev.json');
+const axios = require('axios');
 
 module.exports = {
+    mqttclients,
     mqttconnect,
     mqttmessage,
     mqttpublish
@@ -20,23 +22,32 @@ const options = {
     // for more options and details, please refer to https://github.com/mqttjs/MQTT.js#mqttclientstreambuilder-options
   }
 
-  const mqttPath = `${config.protocol}://${config.host}:${config.port}`
-  // const client = mqtt.connect(mqttPath, options);
-
-// let lastMessage = tmpDev;
+ const mqttPath = `${config.protocol}://${config.host}:${config.port}`
+ 
 let lastMessage = tmpDev;
 
-// client.on('connect', () => {
-//     console.log(`${config.protocol}: Connected`)
-// })
-// client.on('reconnect', (error) => {
-//   // console.log(`Reconnecting(${config.protocol}):`, error)
-// })
-
-// client.on('message', (topic, payload) => {
-//   console.log('Received Message:', topic, payload.toString())
-//   lastMessage = payload.toString();
-// })
+async function mqttclients(body) {
+    console.log('mqttClients');
+    const path = `${config.emqxhost}api/v5/clients`
+    let clientList;
+    await axios.get(path, {
+        auth: {
+          username: config.emqxuser,
+          password: config.emqxpassword,
+        },
+        headers: {
+          'Content-Type': 'application/json',
+        },}).then((response) => {
+            console.log(response.data);
+            clientList = response.data;
+            console.log('response');
+        }).catch(err => {
+            console.log(err)
+            clientList = null;
+            console.log('errored')
+        });
+    return clientList;
+}
 
 async function mqttconnect(input) {
     console.log(input);

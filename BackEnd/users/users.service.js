@@ -124,21 +124,15 @@ async function googleSignUp(authload){
                 realm: config.keycloakRealm
               });
               console.log(newUser, newUser.id);
-                // await kcAdminClient.users.sendVerifyEmail({id: newUser.id, clientId: config.keycloakClientId2, 
-                //     redirectUri: 'https://solbox-clients.axinars.uk/login', realm: config.keycloakRealm});    
-                await kcAdminClient.users.executeActionsEmail({
-                    id: newUser.id,
-                    clientId: config.keycloakClientId2,
-                    lifespan: 60,
-                    redirectUri: 'https://solbox-clients.axinars.uk/login',
-                    actions: [RequiredActionAlias.VERIFY_EMAIL], 
-                    realm: config.keycloakRealm
-                })   
-            
-            //   const loggedUser = await kcAdminClient.users.findOne({id: newUser.id, realm: config.keycloakRealm})
-            //   const token = jwt.sign({ sub: newUser.id }, config.secret, { expiresIn: '7d' });
-            //   resultData = {state: 'success', data: authload, token: token};;
-            resultData = {state: 'success', data: newUser};
+            await kcAdminClient.users.executeActionsEmail({
+                id: newUser.id,
+                clientId: config.keycloakClientId2,
+                lifespan: 60,
+                redirectUri: 'https://solbox-clients.axinars.uk/login',
+                actions: [RequiredActionAlias.VERIFY_EMAIL], 
+                realm: config.keycloakRealm
+            })   
+           resultData = {state: 'success', data: newUser};
         } else{
             resultData = {state: 'failed', message: 'User is exist'};
         }

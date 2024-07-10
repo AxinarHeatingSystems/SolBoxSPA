@@ -18,7 +18,7 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ClearIcon from '@mui/icons-material/Clear';
-import { logoutApi } from '../../axios/ApiProvider';
+import { getDevicesApi, logoutApi } from '../../axios/ApiProvider';
 import { useSelector } from 'react-redux';
 import { SetLang } from '../../components/Language/SetLang';
 import { useTranslation } from 'react-i18next';
@@ -34,6 +34,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
   const userData = useSelector(store => store.userData);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isAddDev, setIsAddDev] = useState(false);
+  const [devList, setDevList] = useState([]);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -45,6 +46,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
   };
 
   useEffect(() => {
+    loadDevlist();
     console.log('useData', userData);
     const handleResize = (e) => {
       if (e.target.innerWidth < 1024) {
@@ -64,6 +66,14 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
       window.removeEventListener('click', handlePointer);
     };
   }, []);
+
+  const loadDevlist = async () => {
+    const devListRes = await getDevicesApi();
+    if (devListRes.state !== 'success') return;
+    const devsArr = devListRes.data.data;
+    console.log('dddd', devsArr);
+    setDevList(devListRes.data.data);
+  }
 
   const desktopStyle = {
     "& .pro-sidebar": {
@@ -297,6 +307,18 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
             </ListItemIcon>
             {!isCollapsed && <ListItemText primary="Device 1" />}
           </ListItemButton>
+          {devList.map((devItem, key) => (
+            <ListItemButton
+              key={key}
+              selected={selected === 'dashboard'}
+              onClick={() => { setSelected('dashboard') }}
+            >
+              <ListItemIcon sx={{ justifyContent: 'center' }}>
+                <HomeOutlinedIcon />
+              </ListItemIcon>
+              {!isCollapsed && <ListItemText primary={devItem.clientid} />}
+            </ListItemButton>
+          ))}
         </List>
       </ProSidebar>}
       <AddDevModal isAddDev={isAddDev} onClose={handleAddDevClose} />
