@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 const languges = [
     { label: "English", code: "en" },
+    { label: "Greek", code: "gr" },
     { label: "Spanish", code: "es" },
     { label: "Italian", code: "it" },
 ];
