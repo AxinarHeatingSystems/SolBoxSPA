@@ -42,7 +42,8 @@ module.exports = {
     create,
     emailResetPassword,
     resetPassword,
-    existLogin
+    existLogin,
+    technicianVerfity
 }
 
 async function googleAuth(authload) {
@@ -177,6 +178,11 @@ async function authenticate({email, password}) {
     return resultData;
 }   
 
+async function technicianVerfity(userId) {
+    console.log(userId);
+    return 'Usered'
+}
+
 async function create(userParam) {
     await kcAdminAuth();
     let resultData = {};
@@ -222,7 +228,7 @@ async function create(userParam) {
                         id: createduserId.id,
                         clientId: config.keycloakClientId2,
                         lifespan: 60,
-                        redirectUri: 'https://solbox-back.axinars.uk/',
+                        redirectUri: `https://solbox-back.axinars.uk/user/technicianVerfity?userId=${createduserId.id}`,
                         actions: [], 
                         realm: config.keycloakRealm
                     })   

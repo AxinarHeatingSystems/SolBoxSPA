@@ -16,6 +16,7 @@ function jwtAuth() {
             '/user/resetpasswordemail',
             '/user/register',
             '/user/authenticate',
+            '/user/technicianverfity',
             '/mqtt/devConnect',
             '/mqtt/devMessage',
             '/mqtt/devControl'

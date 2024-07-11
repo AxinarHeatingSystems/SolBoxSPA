@@ -9,6 +9,7 @@ router.post('/register', register);
 router.post('/resetpasswordemail', resetPasswordEmail);
 router.post('/resetpassword', resetPassword);
 router.post('/existLogin', existLogin);
+router.get('/technicianverfity', technicianVerfity)
 
 module.exports = router;
 
@@ -56,6 +57,12 @@ function resetPasswordEmail(req, res, next){
 
 function resetPassword(req, res, next){
     userService.resetPassword(req.body)
+        .then((data) => data? data.state == 'success'? res.json(data) : res.status(400).json({ message: data.message }) : res.state(400).json({message: 'Reset Password is faild'}))
+        .catch(err => next(err))
+}
+
+function technicianVerfity(req, res, next){
+    userService.technicianVerfity(req.body)
         .then((data) => data? data.state == 'success'? res.json(data) : res.status(400).json({ message: data.message }) : res.state(400).json({message: 'Reset Password is faild'}))
         .catch(err => next(err))
 }
