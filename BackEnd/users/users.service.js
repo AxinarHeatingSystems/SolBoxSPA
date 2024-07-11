@@ -185,7 +185,16 @@ async function technicianVerfity(query) {
         id: query.userId,
         realm: config.keycloakRealm
     });
-    console.log(existUser);
+    try {
+        existUser.emailVerified = false;
+        existUser.attributes = {...existUser.attributes, ['verified']: true};
+        console.log(existUser);
+    
+        await kcAdminClient.users.update({id: selectedUser.id, realm: config.keycloakRealm}, existUser)    
+    } catch (error) {
+        console.log(error)
+    }
+    
     return 'Usered'
 }
 
