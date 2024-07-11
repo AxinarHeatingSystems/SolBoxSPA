@@ -181,21 +181,24 @@ async function authenticate({email, password}) {
 async function technicianVerfity(query) {
     console.log(query.userId);
     await kcAdminAuth();
-    const existUser = await kcAdminClient.users.findOne({
-        id: query.userId,
-        realm: config.keycloakRealm
-    });
+    let isVerified = false;
     try {
+        const existUser = await kcAdminClient.users.findOne({
+            id: query.userId,
+            realm: config.keycloakRealm
+        });
         existUser.emailVerified = false;
         existUser.attributes.verified = true;
         console.log(existUser);
     
         await kcAdminClient.users.update({id: existUser.id, realm: config.keycloakRealm}, existUser)    
+        isVerified = true;
     } catch (error) {
         console.log(error)
+        isVerified = false;
     }
     
-    return 'Usered'
+    return isVerified
 }
 
 async function create(userParam) {

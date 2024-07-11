@@ -63,7 +63,7 @@ function resetPassword(req, res, next){
 
 function technicianVerfity(req, res, next){
     userService.technicianVerfity(req.query)
-        .then((data) => data? data.state == 'success'? res.json(data) : res.status(400).json({ message: data.message }) : res.state(400).json({message: 'Reset Password is faild'}))
+        .then((data) => res.render('https://solbox-clients.axinars.uk/login'))
         .catch(err => next(err))
 }
 
