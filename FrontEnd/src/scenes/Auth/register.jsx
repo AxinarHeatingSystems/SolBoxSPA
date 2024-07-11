@@ -124,7 +124,7 @@ export const Register = () => {
       const profileData = response.profileObj;
       Swal.fire({
         title: t('select_user_type'),
-        input: t('select'),
+        input: 'select',
         inputOptions: {
           user: t('user'),
           technician: t('technician'),
@@ -139,8 +139,8 @@ export const Register = () => {
           profileData.usertype = result.value;
           const googleRes = await googleSignUpApi(profileData);
           if (googleRes.state === 'success') {
-          // setUserCreated(true);
-            // setTimeout(() => { window.location.href = '/registerationsuccess'; }, 500)
+            // setUserCreated(true);
+            setTimeout(() => { window.location.href = '/registerationsuccess'; }, 500)
           } else {
             setIsSignUp(false);
           }
