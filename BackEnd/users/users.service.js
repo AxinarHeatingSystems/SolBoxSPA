@@ -178,8 +178,14 @@ async function authenticate({email, password}) {
     return resultData;
 }   
 
-async function technicianVerfity(userId) {
-    console.log(userId);
+async function technicianVerfity(query) {
+    console.log(query.userId);
+    await kcAdminAuth();
+    const existUser = await kcAdminClient.users.find({
+        id: query.userId,
+        realm: config.keycloakRealm
+    });
+    console.log(existUser);
     return 'Usered'
 }
 
