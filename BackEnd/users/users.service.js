@@ -64,35 +64,19 @@ async function googleAuth(authload) {
                 const token = jwt.sign({ sub: loggedUser.id }, config.secret, { expiresIn: '7d' });
                 resultData = {state: 'success', data: loggedUser, token: token};;
             }else{
-                resultData = {state: 'failed', message: 'Please verify your email'};
+                if(loggedUser.attributes.userType === 'user'){
+                    resultData = {state: 'failed', message: 'Please verify your email'};
+                }else{
+                    if(loggedUser.attributes.verified === false){
+                        resultData = {state: 'failed', message: 'Please verify your email'};
+                    }else{
+                        resultData = {state: 'failed', message: 'Yet now, Your account is allowed. Please wait for a few time'};
+                    }
+                }
             }
             
         }else{
             resultData = {state: 'failed', message: 'User is not exist'};
-            // const newUser = await kcAdminClient.users.create({
-            //     username: authload.name,
-            //     email: authload.email,
-            //     firstName: authload.givenName,
-            //     lastName: authload.familyName,
-            //     // enabled required to be true in order to send actions email
-            //     emailVerified: true,
-            //     enabled: true,
-            //     attributes: {
-            //         'googleId': [authload.googleId],
-            //     },
-            //     realm: config.keycloakRealm
-            //   });
-            //   console.log(newUser, newUser.id);
-            //   try {
-            //     await kcAdminClient.users.sendVerifyEmail({id: newUser.id, clientId: config.keycloakClientId2, 
-            //         redirectUri: 'https://solbox-clients.axinars.uk/login', realm: config.keycloakRealm});    
-            //   } catch (error) {
-            //     console.log(error);
-            //   }
-            // //   const loggedUser = await kcAdminClient.users.findOne({id: newUser.id, realm: config.keycloakRealm})
-            // //   const token = jwt.sign({ sub: newUser.id }, config.secret, { expiresIn: '7d' });
-            // //   resultData = {state: 'success', data: authload, token: token};;
-            // resultData = {state: 'success', data: newUser};
         }
     } catch (error) {
         console.log(error);
@@ -110,6 +94,14 @@ async function googleSignUp(authload){
     try {
         const users = await kcAdminClient.users.findOne({email: authload.email, realm: config.keycloakRealm});
         if(users.length < 1){
+            const attrData =authload.usertype === 'user'?  {
+                'googleId': [authload.googleId],
+                'userType': [authload.usertype]
+            }: {
+                'googleId': [authload.googleId],
+                'userType': [authload.usertype],
+                'verified': false
+            };
             const newUser = await kcAdminClient.users.create({
                 username: authload.name,
                 email: authload.email,
@@ -118,21 +110,31 @@ async function googleSignUp(authload){
                 // enabled required to be true in order to send actions email
                 emailVerified: false,
                 enabled: true,
-                attributes: {
-                    'googleId': [authload.googleId],
-                    'userType': [authload.usertype],
-                },
+                attributes: attrData,
                 realm: config.keycloakRealm
               });
               console.log(newUser, newUser.id);
-            await kcAdminClient.users.executeActionsEmail({
-                id: newUser.id,
-                clientId: config.keycloakClientId2,
-                lifespan: 60,
-                redirectUri: 'https://solbox-clients.axinars.uk/login',
-                actions: [RequiredActionAlias.VERIFY_EMAIL], 
-                realm: config.keycloakRealm
-            })   
+
+            if(authload.usertype === 'user') {
+                await kcAdminClient.users.executeActionsEmail({
+                    id: newUser.id,
+                    clientId: config.keycloakClientId2,
+                    lifespan: 60,
+                    redirectUri: 'https://solbox-clients.axinars.uk/login',
+                    actions: [RequiredActionAlias.VERIFY_EMAIL], 
+                    realm: config.keycloakRealm
+                })  
+            }else{
+                await kcAdminClient.users.executeActionsEmail({
+                    id: newUser.id,
+                    clientId: config.keycloakClientId2,
+                    lifespan: 60,
+                    redirectUri: `https://solbox-back.axinars.uk/user/technicianverfity?userId=${newUser.id}`,
+                    actions: [], 
+                    realm: config.keycloakRealm
+                })   
+            }
+             
            resultData = {state: 'success', data: newUser};
         } else{
             resultData = {state: 'failed', message: 'User is exist'};
@@ -157,14 +159,28 @@ async function authenticate({email, password}) {
         if(users.length > 0){
             // console.log(users);
             const loggedUser = users[0];
-            const userHash = loggedUser.attributes.pass;
-            console.log(userHash, bcrypt.compareSync(password, userHash[0]));
-            if(bcrypt.compareSync(password, userHash[0])){
-                const token = jwt.sign({ sub: loggedUser.id }, config.secret, { expiresIn: '7d' });
-                resultData = {state: 'success', data: loggedUser, token: token};;
+            if(loggedUser.emailVerified){
+                const userHash = loggedUser.attributes.pass;
+                console.log(userHash, bcrypt.compareSync(password, userHash[0]));
+                if(bcrypt.compareSync(password, userHash[0])){
+                    const token = jwt.sign({ sub: loggedUser.id }, config.secret, { expiresIn: '7d' });
+                    resultData = {state: 'success', data: loggedUser, token: token};;
+                }else{
+                    resultData = {state: 'failed', message: 'Email or Password is not matched!'};
+                }
             }else{
-                resultData = {state: 'failed', message: 'Email or Password is not matched!'};
+                if(loggedUser.attributes.userType === 'user'){
+                    resultData = {state: 'failed', message: 'Please verify your email'};
+                }else{
+                    if(loggedUser.attributes.verified === false){
+                        resultData = {state: 'failed', message: 'Please verify your email'};
+                    }else{
+                        resultData = {state: 'failed', message: 'Yet now, Your account is allowed. Please wait for a few time'};
+                    }
+                }
+                
             }
+            
         }else{
             resultData = {state: 'failed', message: 'The user is not exist'};
         }
