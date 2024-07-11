@@ -181,7 +181,7 @@ async function authenticate({email, password}) {
 async function technicianVerfity(query) {
     console.log(query.userId);
     await kcAdminAuth();
-    const existUser = await kcAdminClient.users.find({
+    const existUser = await kcAdminClient.users.findOne({
         id: query.userId,
         realm: config.keycloakRealm
     });
