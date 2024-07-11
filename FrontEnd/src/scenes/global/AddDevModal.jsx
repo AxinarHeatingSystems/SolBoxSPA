@@ -258,7 +258,7 @@ export const AddDevModal = ({ isAddDev, onClose }) => {
             </Grid>
             <Grid xs={12} padding={1} display={'flex'} justifyContent={'end'}>
               <Button variant="contained" type="submit" color="success" sx={{ marginX: '5px', fontWeight: 'bold' }}>{t('add')}</Button>
-              <Button variant="contained" color="error" sx={{ marginX: '5px', fontWeight: 'bold' }}>{t('cancel')}</Button>
+              <Button variant="contained" color="error" onClick={onClose} sx={{ marginX: '5px', fontWeight: 'bold' }}>{t('cancel')}</Button>
             </Grid>
           </Grid>
         </Box>

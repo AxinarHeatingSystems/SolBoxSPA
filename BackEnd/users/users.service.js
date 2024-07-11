@@ -207,15 +207,27 @@ async function create(userParam) {
               console.log(createduserId);
             //   try {
                 // await kcAdminClient.users.sendVerifyEmail({id: createduserId.id, clientId: config.keycloakClientId2, 
-                //     redirectUri: 'https://solbox-clients.axinars.uk/login', realm: config.keycloakRealm});    
-                await kcAdminClient.users.executeActionsEmail({
-                    id: createduserId.id,
-                    clientId: config.keycloakClientId2,
-                    lifespan: 60,
-                    redirectUri: 'https://solbox-clients.axinars.uk/login',
-                    actions: [RequiredActionAlias.VERIFY_EMAIL], 
-                    realm: config.keycloakRealm
-                })   
+                //     redirectUri: 'https://solbox-clients.axinars.uk/login', realm: config.keycloakRealm});   
+                if(userParam.usertype === 'user') {
+                    await kcAdminClient.users.executeActionsEmail({
+                        id: createduserId.id,
+                        clientId: config.keycloakClientId2,
+                        lifespan: 60,
+                        redirectUri: 'https://solbox-clients.axinars.uk/login',
+                        actions: [RequiredActionAlias.VERIFY_EMAIL], 
+                        realm: config.keycloakRealm
+                    })   
+                }else{
+                    await kcAdminClient.users.executeActionsEmail({
+                        id: createduserId.id,
+                        clientId: config.keycloakClientId2,
+                        lifespan: 60,
+                        redirectUri: 'https://solbox-back.axinars.uk/',
+                        actions: [], 
+                        realm: config.keycloakRealm
+                    })   
+                }
+                
             //   } catch (error) {
             //     console.log(error);
             //   }
