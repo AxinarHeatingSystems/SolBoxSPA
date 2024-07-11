@@ -24,13 +24,13 @@ import { SetLang } from '../../components/Language/SetLang';
 import { useTranslation } from 'react-i18next';
 import { AddDevModal } from './AddDevModal';
 
-const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
+const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [selected, setSelected] = useState("dashboard");
+  const [selected, setSelected] = useState("");
   const userData = useSelector(store => store.userData);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isAddDev, setIsAddDev] = useState(false);
@@ -71,8 +71,15 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
     const devListRes = await getDevicesApi();
     if (devListRes.state !== 'success') return;
     const devsArr = devListRes.data.data;
+
+    const filteredArr = devsArr.filter(item => item.ip_address === '172.22.0.3' && item.clientid !== "node-red1")
     console.log('dddd', devsArr);
-    setDevList(devListRes.data.data);
+    setDevList(filteredArr);
+  }
+
+  const onSelectDevId = (devId) => {
+    onChangeDevId(devId)
+    setSelected(devId)
   }
 
   const desktopStyle = {
@@ -170,7 +177,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
             color={colors.grey[300]}
             sx={{ m: "15px 0 5px 20px" }}
           >
-            ${t("language")}
+            {t("language")}
           </Typography>
           <MenuItem >
             <div style={{ width: '100%', height: '30px' }} >
@@ -184,7 +191,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
             color={colors.grey[300]}
             sx={{ m: "15px 0 5px 20px" }}
           >
-            ${t("theme")}
+            {t("theme")}
           </Typography>
           <MenuItem onClick={() => { colorMode.toggleColorMode(); handleClose(); }} sx={{ width: '100vw' }}>
             <ListItemIcon>
@@ -195,20 +202,29 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
             </ListItemText>
           </MenuItem>
           <Divider />
-          <Typography
-            variant="h6"
-            color={colors.grey[300]}
-            sx={{ m: "15px 0 5px 20px" }}
-          >
-            ${t("devices")}
-          </Typography>
-          <MenuItem selected={selected === 'dashboard'} onClick={() => { setSelected('dashboard'); handleClose() }}
-            sx={{ width: '100vw' }}>
-            <ListItemIcon>
-              <HomeOutlinedIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>Device 1</ListItemText>
-          </MenuItem>
+          <ListItem sx={{ padding: '5px 0px' }}>
+            <Box width={'100%'} display={'flex'} justifyContent={'space-between'} alignItems={'baseline'}>
+              <Typography
+                variant="h6"
+                color={colors.grey[300]}
+                sx={{ m: "15px 0 5px 20px" }}
+              >
+                {t("devices")}
+              </Typography>
+              <Button size='small' color='success' onClick={() => { handelAddDevOpen() }}>
+                + {t("add")}
+              </Button>
+            </Box>
+          </ListItem>
+          {devList.map((devItem, key) => (
+            <MenuItem key={key} selected={selected === devItem.clientid} onClick={() => { onSelectDevId(devItem.clientid); handleClose() }}
+              sx={{ width: '100vw' }}>
+              <ListItemIcon>
+                <HomeOutlinedIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>{devItem.clientid}</ListItemText>
+            </MenuItem>
+          ))}
         </Menu>
       </>}
       {!isMobile && <ProSidebar collapsed={isCollapsed} style={{ minHeight: '100vh' }}>
@@ -284,7 +300,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
           </ListItemButton>
           <Divider />
           <ListItem sx={{ padding: '5px 0px' }}>
-            <Box width={'100%'} display={'flex'} justifyContent={'space-between'} alignItems={'baseline'}>
+            <Box width={'100%'} display={isCollapsed ? 'block' : 'flex'} justifyContent={'space-between'} alignItems={'baseline'}>
               <Typography
                 variant="h6"
                 color={colors.grey[300]}
@@ -293,25 +309,16 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId }) => {
                 {t("devices")}
               </Typography>
               <Button size='small' color='success' onClick={() => { handelAddDevOpen() }}>
-                + Add
+                + {t("add")} 
               </Button>
             </Box>
           </ListItem>
 
-          <ListItemButton
-            selected={selected === 'dashboard'}
-            onClick={() => { setSelected('dashboard') }}
-          >
-            <ListItemIcon sx={{ justifyContent: 'center' }}>
-              <HomeOutlinedIcon />
-            </ListItemIcon>
-            {!isCollapsed && <ListItemText primary="Device 1" />}
-          </ListItemButton>
           {devList.map((devItem, key) => (
             <ListItemButton
               key={key}
-              selected={selected === 'dashboard'}
-              onClick={() => { setSelected('dashboard') }}
+              selected={selected === devItem.clientid}
+              onClick={() => { onSelectDevId(devItem.clientid) }}
             >
               <ListItemIcon sx={{ justifyContent: 'center' }}>
                 <HomeOutlinedIcon />

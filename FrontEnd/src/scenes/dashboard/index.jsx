@@ -38,6 +38,7 @@ const Dashboard = () => {
   const [submenuId, setSubmenuId] = useState(1);
   const [deviceName, setDeviceName] = useState('');
   const [deviceId, setDeviceId] = useState('');
+  const [devTopic, setDevTopic] = useState('');
   const [devInfo, setDevInfo] = useState(null);
   // const devId = '08B61F971EAC'
   const devId = '08F9E0E18FF4'
@@ -64,8 +65,7 @@ const Dashboard = () => {
 
       console.log('DevSubscribed', message);
     });
-
-    socket.on('message', message => {
+    socket.on(devTopic, message => {
       console.log(message);
       const devInfoData = JSON.parse(message);
       if (devId == devInfoData.DeviceID) {
@@ -75,21 +75,45 @@ const Dashboard = () => {
         setDeviceName(devInfoData.DeviceName)
       }
     });
+    // socket.on('message', message => {
+    //   console.log(message);
+    //   const devInfoData = JSON.parse(message);
+    //   if (devId == devInfoData.DeviceID) {
+
+    //     setDevInfo(devInfoData)
+    //     setDeviceId(devInfoData.DeviceID)
+    //     setDeviceName(devInfoData.DeviceName)
+    //   }
+    // });
 
     socket.on('devControl', error => {
       console.log('Dev Controlled', error);
     })
 
     // loadDevData();
-  }, [])
+  }, [setDevTopic])
 
   const subMenuClicked = (menuId) => {
     setSubmenuId(menuId);
   }
+  const onChangeDevId = (devId) => {
 
+    socket.emit('leave', { deviceId }, (error) => {
+      if (error) {
+        alert(error);
+      }
+    });
+    setDevTopic(`axinar/solbox/${devId}/jsonTelemetry`);
+    socket.emit('join', { devId }, (error) => {
+      if (error) {
+        alert(error);
+      }
+    });
+    // setDeviceId(devId);
+  }
   return (
     <main className='content' style={{ display: isMobileDetect ? 'block' : 'flex' }}>
-      {isSidebar && <Sidebar isMobile={isMobileDetect} isPortrait={isPortrait} isSidebar={isSidebar} deviceName={deviceName} deviceId={deviceId} />}
+      {isSidebar && <Sidebar isMobile={isMobileDetect} isPortrait={isPortrait} isSidebar={isSidebar} deviceName={deviceName} deviceId={deviceId} onChangeDevId={onChangeDevId} />}
       <Box width={'100%'}>
         {!isPortrait &&
           <Box display={'flex'} flexGrow={1} >

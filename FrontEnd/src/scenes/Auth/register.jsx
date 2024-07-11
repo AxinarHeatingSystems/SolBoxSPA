@@ -123,16 +123,16 @@ export const Register = () => {
     if (response.profileObj) {
       const profileData = response.profileObj;
       Swal.fire({
-        title: "Select User Type",
-        input: "select",
+        title: t('select_user_type'),
+        input: t('select'),
         inputOptions: {
-          user: 'User',
-          technician: 'Technician',
+          user: t('user'),
+          technician: t('technician'),
         },
         inputValue: 'user',
-        inputPlaceholder: "Select a User Type",
+        inputPlaceholder: t('select_user_type'),
         showCancelButton: false,
-        confirmButtonText: 'Register',
+        confirmButtonText: t('register'),
       }).then(async (result) => {
         console.log(result);
         if (result.isConfirmed) {

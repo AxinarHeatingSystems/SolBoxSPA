@@ -31,5 +31,13 @@ export const It_Str = {
     schedule: "Programma",
     share_device: "Condividi dispositivo",
     today: "Oggi",
-    saved: "Salvato"
+    saved: "Salvato",
+    add: "Aggiungere",
+    select_user_type: "Seleziona Tipo utente",
+    select: 'Selezionare',
+    user: 'Utente',
+    technician: 'Tecnica',
+    select_a_user_type: 'Seleziona un tipo di utente',
+    register_was_successful: 'La registrazione è avvenuta con successo',
+    register_was_successful_msg: `L'utente viene creato. Un'e-mail è stata inviata al tuo indirizzo e-mail. Verifica la tua email.`
 }

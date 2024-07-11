@@ -73,6 +73,17 @@ io.on('connect', (socket) => {
       callback();
     });
 
+    socket.on('leave', ({devId}, callback) => {
+      const devTopic = `axinar/solbox/${devId}/jsonTelemetry`
+      client.unsubscribe(devTopic, (err) => {
+        if (!err) {
+          socket.emit('DevUnSubscribed', 'Device disconnected')
+        }
+      });
+  
+      callback();
+    })
+
     client.on('message', (topic, payload) => {
       // console.log('Received Message:', topic, payload.toString())
       const lastMessage = payload.toString();

@@ -31,5 +31,13 @@ export const Es_Str = {
     schedule: "Cronograma",
     share_device: "Compartir dispositivo",
     today: "Hoy",
-    saved: "Salvado"
+    saved: "Salvado",
+    add: "Agregar",
+    select_user_type: "Seleccionar tipo de usuario",
+    select: 'Seleccionar',
+    user: 'Usuaria',
+    technician: 'Técnica',
+    select_a_user_type: 'Seleccione un tipo de usuario',
+    register_was_successful: 'Registrarse fue exitosa',
+    register_was_successful_msg: 'Se crea el usuario. Se ha enviado un correo electrónico a su dirección de correo electrónico. Por favor verifique su correo electrónico.'
 }

@@ -31,5 +31,13 @@ export const Gr_Str = {
     schedule: "Πρόγραμμα",
     share_device: "Κοινή Χρήση",
     today: "Σήμερα",
-    saved: "Κέρδος"
+    saved: "Κέρδος",
+    add: "Προσθήκη",
+    select_user_type: "Επιλέξτε Τύπος χρήστη",
+    select: 'Επιλέγω',
+    user: 'Χρήστης',
+    technician: 'Τεχνικός',
+    select_a_user_type: 'Επιλέξτε έναν τύπο χρήστη',
+    register_was_successful: 'Η εγγραφή ήταν επιτυχής',
+    register_was_successful_msg: 'Ο χρήστης δημιουργείται. Ένα email έχει σταλεί στη διεύθυνση email σας. Επαληθεύστε το email σας.'
 }

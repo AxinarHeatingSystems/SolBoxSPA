@@ -31,5 +31,13 @@ export const En_Str = {
     schedule: "Schedule",
     share_device: "Share Device",
     today: "Today",
-    saved: "Saved"
+    saved: "Saved",
+    add: "Add",
+    select_user_type: "Select User Type",
+    select: 'Select',
+    user: 'User',
+    technician: 'Technician',
+    select_a_user_type: 'Select a User Type',
+    register_was_successful: 'Register was successful',
+    register_was_successful_msg: 'The user is created. An email has been sent to your email address. Please verify your email.'
 }
