@@ -24,10 +24,11 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
 const EndPoint = process.env.REACT_APP_BASE_BACKEND_URL;
-let socket;
-
+// let socket;
+const tmpSocket = io(EndPoint);
 const Dashboard = () => {
   const { t } = useTranslation();
+  const [socket, setSocket] = useState(tmpSocket)
   const isMobileDetect = useSelector(store => store.isMobileDetect);
   const isPortrait = useSelector(store => store.isPortrait);
   console.log('isPOOO', isPortrait);
@@ -36,11 +37,13 @@ const Dashboard = () => {
   const colors = tokens(theme.palette.mode);
   const [submenuId, setSubmenuId] = useState(1);
   const [deviceName, setDeviceName] = useState('');
-  const [deviceId, setDeviceId] = useState('');
+  const [deviceId, setDeviceId] = useState('08F9E0E1915C');
   const [devTopic, setDevTopic] = useState('');
   const [devInfo, setDevInfo] = useState(null);
+  const [socketEventCount, setSocketEventCount] = useState(0);
   // const devId = '08B61F971EAC'
   const devId = '08F9E0E18FF4'
+
 
   useEffect(() => {
 
@@ -51,52 +54,43 @@ const Dashboard = () => {
     console.log('isPortrait', isPortrait);
     window.scrollTo(0, 1);
 
-    socket = io(EndPoint);
-    setIsSidebar(true);
 
+    setIsSidebar(true);
     socket.emit('join', { devId }, (error) => {
       if (error) {
         alert(error);
       }
     });
+    setSocket(tmpSocket);
 
+  }, [])
+
+  useEffect(() => {
+    console.log('deviceData Changed', deviceId, devTopic);
     socket.on('DevSubscribed', message => {
 
       console.log('DevSubscribed', message);
     });
     socket.on(devTopic, message => {
-      console.log(devTopic, message);
-      const devInfoData = JSON.parse(message);
-      if (devId == devInfoData.DeviceID) {
-
-        setDevInfo(devInfoData)
-        setDeviceId(devInfoData.DeviceID)
-        setDeviceName(devInfoData.DeviceName)
-      }
-    });
-    socket.on('message', message => {
-      console.log('message', message);
-      const devInfoData = JSON.parse(message);
-      if (devId == devInfoData.DeviceID) {
-
-        setDevInfo(devInfoData)
-        setDeviceId(devInfoData.DeviceID)
-        setDeviceName(devInfoData.DeviceName)
-      }
+      loadDeviceInfo(message);
+      setSocketEventCount(prev => prev + 1);
     });
 
     socket.on('devControl', error => {
       console.log('Dev Controlled', error);
     })
 
-    // loadDevData();
-  }, [])
+    return () => {
+      socket.off('message');
+      socket.off(devTopic);
+    }
+  }, [deviceId, devTopic, socketEventCount])
 
   const subMenuClicked = (menuId) => {
     setSubmenuId(menuId);
   }
   const onChangeDevId = (devId) => {
-
+    console.log('devIdChanged', devId);
     socket.emit('leave', { deviceId }, (error) => {
       if (error) {
         alert(error);
@@ -108,7 +102,17 @@ const Dashboard = () => {
         alert(error);
       }
     });
-    // setDeviceId(devId);
+    setDevInfo(null)
+    setDeviceId(devId);
+  }
+  const loadDeviceInfo = (message) => {
+    const devInfoData = JSON.parse(message);
+    if (deviceId == devInfoData.DeviceID) {
+      console.log('Checkedmessage', devInfoData, deviceId);
+      setDevInfo(devInfoData)
+      // setDeviceId(devInfoData.DeviceID)
+      setDeviceName(devInfoData.DeviceName)
+    }
   }
   return (
     <main className='content' style={{ display: isMobileDetect ? 'block' : 'flex' }}>

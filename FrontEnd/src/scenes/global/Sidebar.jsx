@@ -8,7 +8,7 @@ import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import LogoutIcon from '@mui/icons-material/Logout';
-
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import "react-pro-sidebar/dist/css/styles.css";
 
 import iotLogo from '../../assets/iotLogo.svg'
@@ -29,7 +29,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState(deviceId);
   const userData = useSelector(store => store.userData);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isAddDev, setIsAddDev] = useState(false);
@@ -323,6 +323,8 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
                 <HomeOutlinedIcon />
               </ListItemIcon>
               {!isCollapsed && <ListItemText primary={devItem.clientid} />}
+              <LightbulbIcon color={devItem.connected ? 'success' : 'primary'} />
+
             </ListItemButton>
           ))}
         </List>

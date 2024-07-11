@@ -158,7 +158,11 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
       setMaxVal(100);
     } else {
       setDevCycle(`${parseInt(devData.PowerIn)} W`);
-      setMaxPower(parseFloat(devData.maxPowerThirty));
+      if (parseFloat(devData.ATHwattHours) < parseFloat(devData.maxPowerThirty)) {
+        setMaxPower(parseFloat(devData.ATHwattHours));
+      } else {
+        setMaxPower(parseFloat(devData.maxPowerThirty));
+      }
       setMinPower(parseFloat(devData.leastPowerThirty));
       setNowPower(parseFloat(devData.WattHours));
       setMaxVal(devData.ATHwattHours);
