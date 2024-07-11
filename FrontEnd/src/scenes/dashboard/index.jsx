@@ -34,7 +34,6 @@ const Dashboard = () => {
   const [isSidebar, setIsSidebar] = useState(false);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const colorMode = useContext(ColorModeContext);
   const [submenuId, setSubmenuId] = useState(1);
   const [deviceName, setDeviceName] = useState('');
   const [deviceId, setDeviceId] = useState('');

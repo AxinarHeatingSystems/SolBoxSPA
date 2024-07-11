@@ -9,7 +9,6 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import LogoutIcon from '@mui/icons-material/Logout';
 
-import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 
 import iotLogo from '../../assets/iotLogo.svg'

@@ -9,7 +9,6 @@ import sunSad from '../../assets/sumimg/sunsleep.svg'
 import { HeatDev } from '../DeviceComponents/heatDev';
 import { SolarPanel } from '../DeviceComponents/solarPanel';
 import { useTranslation } from 'react-i18next';
-import { yellow } from '@mui/material/colors';
 import { useSelector } from 'react-redux';
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
