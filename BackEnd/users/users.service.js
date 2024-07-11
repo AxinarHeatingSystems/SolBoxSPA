@@ -228,7 +228,7 @@ async function create(userParam) {
                         id: createduserId.id,
                         clientId: config.keycloakClientId2,
                         lifespan: 60,
-                        redirectUri: `https://solbox-back.axinars.uk/user/technicianVerfity?userId=${createduserId.id}`,
+                        redirectUri: `https://solbox-back.axinars.uk/user/technicianverfity?userId=${createduserId.id}`,
                         actions: [], 
                         realm: config.keycloakRealm
                     })   

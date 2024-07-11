@@ -62,6 +62,7 @@ function resetPassword(req, res, next){
 }
 
 function technicianVerfity(req, res, next){
+    console.log(req);
     userService.technicianVerfity(req.body)
         .then((data) => data? data.state == 'success'? res.json(data) : res.status(400).json({ message: data.message }) : res.state(400).json({message: 'Reset Password is faild'}))
         .catch(err => next(err))
