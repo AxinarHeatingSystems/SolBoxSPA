@@ -1,5 +1,4 @@
-﻿require('rootpath')();
-const express = require('express');
+﻿const express = require('express');
 var http = require('http');
 var https = require('https');
 var fs = require('fs');
