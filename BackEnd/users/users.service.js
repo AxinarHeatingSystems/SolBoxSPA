@@ -187,7 +187,7 @@ async function technicianVerfity(query) {
     });
     try {
         existUser.emailVerified = false;
-        existUser.attributes = {...existUser.attributes, ['verified']: true};
+        existUser.attributes.verified = true;
         console.log(existUser);
     
         await kcAdminClient.users.update({id: existUser.id, realm: config.keycloakRealm}, existUser)    
@@ -210,6 +210,14 @@ async function create(userParam) {
         });
         console.log(existUser);
         if(existUser.length < 1){
+            const attrData =userParam.usertype === 'user'?  {
+                'pass': [bcrypt.hashSync(userParam.password, 10)],
+                'userType': [userParam.usertype]
+            }: {
+                'pass': [bcrypt.hashSync(userParam.password, 10)],
+                'userType': [userParam.usertype],
+                'verified': false
+            };
             const createduserId = await kcAdminClient.users.create({
                 username: userParam.username,
                 email: userParam.email,
@@ -218,10 +226,7 @@ async function create(userParam) {
                 // enabled required to be true in order to send actions email
                 emailVerified: false,
                 enabled: true,
-                attributes: {
-                    'pass': [bcrypt.hashSync(userParam.password, 10)],
-                    'userType': [userParam.usertype],
-                },
+                attributes: attrData,
                 credentials: [{type: 'password', value: userParam.password}],
                 realm: config.keycloakRealm
               })
