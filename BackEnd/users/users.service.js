@@ -190,7 +190,7 @@ async function technicianVerfity(query) {
         existUser.attributes = {...existUser.attributes, ['verified']: true};
         console.log(existUser);
     
-        await kcAdminClient.users.update({id: selectedUser.id, realm: config.keycloakRealm}, existUser)    
+        await kcAdminClient.users.update({id: existUser.id, realm: config.keycloakRealm}, existUser)    
     } catch (error) {
         console.log(error)
     }
