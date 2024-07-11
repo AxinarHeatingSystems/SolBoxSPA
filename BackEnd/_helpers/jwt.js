@@ -1,5 +1,5 @@
 const expressJwt = require('express-jwt');
-const config = require('config.json');
+const config = require('./../config.json');
 const jwt = require('jsonwebtoken')
 // const userService = require('../users/user.service');
 

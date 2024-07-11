@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 COPY . .
-RUN npm install
+RUN npm install --force
 
 CMD ["npm", "run", "start"]
 

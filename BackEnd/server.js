@@ -4,11 +4,11 @@ var https = require('https');
 var fs = require('fs');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const jwtAuth = require('_helpers/jwt');
-const errorHandler = require('_helpers/error-handler');
+const jwtAuth = require('./_helpers/jwt');
+const errorHandler = require('./_helpers/error-handler');
 const { default: mqtt } = require('mqtt');
 const socketio = require('socket.io');
-const config = require('config.json');
+const config = require('./config.json');
 
 const app = express();
 

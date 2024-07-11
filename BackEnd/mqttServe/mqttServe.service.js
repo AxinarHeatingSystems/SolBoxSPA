@@ -1,6 +1,6 @@
-const config = require('config.json');
+const config = require('./../config.json');
 const mqtt = require('mqtt');
-const tmpDev = require('tmpDev.json');
+const tmpDev = require('./../tmpDev.json');
 const axios = require('axios');
 
 module.exports = {
