@@ -2,7 +2,6 @@
 var http = require('http');
 var https = require('https');
 var fs = require('fs');
-const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const jwtAuth = require('_helpers/jwt');
@@ -11,6 +10,7 @@ const { default: mqtt } = require('mqtt');
 const socketio = require('socket.io');
 const config = require('config.json');
 
+const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
