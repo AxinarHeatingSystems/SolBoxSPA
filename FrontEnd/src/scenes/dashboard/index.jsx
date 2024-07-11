@@ -66,7 +66,7 @@ const Dashboard = () => {
       console.log('DevSubscribed', message);
     });
     socket.on(devTopic, message => {
-      console.log(message);
+      console.log(devTopic, message);
       const devInfoData = JSON.parse(message);
       if (devId == devInfoData.DeviceID) {
 
@@ -75,23 +75,23 @@ const Dashboard = () => {
         setDeviceName(devInfoData.DeviceName)
       }
     });
-    // socket.on('message', message => {
-    //   console.log(message);
-    //   const devInfoData = JSON.parse(message);
-    //   if (devId == devInfoData.DeviceID) {
+    socket.on('message', message => {
+      console.log('message', message);
+      const devInfoData = JSON.parse(message);
+      if (devId == devInfoData.DeviceID) {
 
-    //     setDevInfo(devInfoData)
-    //     setDeviceId(devInfoData.DeviceID)
-    //     setDeviceName(devInfoData.DeviceName)
-    //   }
-    // });
+        setDevInfo(devInfoData)
+        setDeviceId(devInfoData.DeviceID)
+        setDeviceName(devInfoData.DeviceName)
+      }
+    });
 
     socket.on('devControl', error => {
       console.log('Dev Controlled', error);
     })
 
     // loadDevData();
-  }, [setDevTopic])
+  }, [])
 
   const subMenuClicked = (menuId) => {
     setSubmenuId(menuId);
