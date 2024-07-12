@@ -16,6 +16,28 @@ export const logoutApi = async () => {
   window.location.href = '/login';
 
 }
+
+export const getAllUsers = async () => {
+  let resultState = {state: '', data: {}};
+  const apiUrl = `${BASE_BACKEND_URL}user/getAllUsers`;
+  const tokenData = getJWTToken();
+  await axios({
+    method: 'post',
+    url: apiUrl,
+    headers: {Authorization: tokenData}
+  }).then(function(response){
+    resultState.state = 'success';
+    resultState.data = response.data.data;
+  }).catch(function(err) {
+    console.log('err', err);
+    resultState.state = 'error';
+    resultState.data = err.message;
+    window.toastr.error('Users Gettting Api is wrong');
+  })
+
+  return resultState;
+}
+
 export const existLogin = async (email) => {
   let resultState = {state: '', data: {}};
   const apiUrl = `${BASE_BACKEND_URL}user/existLogin`;

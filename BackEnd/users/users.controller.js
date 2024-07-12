@@ -9,9 +9,16 @@ router.post('/register', register);
 router.post('/resetpasswordemail', resetPasswordEmail);
 router.post('/resetpassword', resetPassword);
 router.post('/existLogin', existLogin);
+router.post('/getAllUsers', getAllUsers);
 router.get('/technicianverfity', technicianVerfity)
 
 module.exports = router;
+
+function getAllUsers(req, res, next) {
+    userService.getAllUsers()
+        .then((data) => data? data.state == 'success'? res.json({data}) : res.status(400).json({ message: data.message }) : res.state(400).json({message: 'Reset Password Emailing is faild'}))
+        .catch(err => next(err));
+}
 
 function googleauth (req, res, next) {
     userService.googleAuth(req.body)

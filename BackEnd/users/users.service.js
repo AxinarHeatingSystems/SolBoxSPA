@@ -43,7 +43,25 @@ module.exports = {
     emailResetPassword,
     resetPassword,
     existLogin,
-    technicianVerfity
+    technicianVerfity,
+    getAllUsers
+}
+
+async function getAllUsers() {
+    let resultData = {};
+    await kcAdminAuth();
+    try {
+        const allUsers = await kcAdminClient.users.find({realm: config.keycloakRealm});
+        if(allUsers.length > 0){
+            resultData = {state: 'success', data: allUsers};
+        }else{
+            resultData = {state: 'failed', message: 'There is not users'};
+        }
+    } catch (error) {
+        resultData = {state: 'failed', message: 'There is not users'};
+    }
+
+    return resultData;
 }
 
 async function googleAuth(authload) {
@@ -62,7 +80,7 @@ async function googleAuth(authload) {
                     await kcAdminClient.users.update({id: loggedUser.id, realm: config.keycloakRealm}, loggedUser);
                 }
                 const token = jwt.sign({ sub: loggedUser.id }, config.secret, { expiresIn: '7d' });
-                resultData = {state: 'success', data: loggedUser, token: token};;
+                resultData = {state: 'success', data: loggedUser, token: token};
             }else{
                 if(loggedUser.attributes.userType === 'user'){
                     resultData = {state: 'failed', message: 'Please verify your email'};
