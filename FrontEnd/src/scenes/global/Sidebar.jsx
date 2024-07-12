@@ -9,6 +9,7 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import "react-pro-sidebar/dist/css/styles.css";
 
 import iotLogo from '../../assets/iotLogo.svg'
@@ -16,7 +17,6 @@ import { ColorModeContext, tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import ClearIcon from '@mui/icons-material/Clear';
 import { getDevicesApi, logoutApi } from '../../axios/ApiProvider';
 import { useSelector } from 'react-redux';
 import { SetLang } from '../../components/Language/SetLang';
@@ -183,6 +183,22 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
               <SetLang />
             </div>
 
+          </MenuItem>
+          <Divider />
+          <Typography color={colors.grey[300]} sx={{ m: "15px 0 5px 10px" }} variant='h5' fontWeight={700} textAlign={'start'} display={'flex'} justifyContent={'start'} alignItems={'center'}>
+            <AccountCircleIcon marginX={2} /> {userData.firstName} {userData.lastName}
+          </Typography>
+          <MenuItem >
+            <ListItemIcon>
+              <ManageAccountsIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>{t("setting")}</ListItemText>
+          </MenuItem>
+          <MenuItem onClick={() => { onLogOut(); handleClose(); }}>
+            <ListItemIcon>
+              <LogoutIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>{t("logout")}</ListItemText>
           </MenuItem>
           <Divider />
           <Typography

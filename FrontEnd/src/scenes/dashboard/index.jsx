@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Box, Grid, useTheme } from "@mui/material";
 
-import { ColorModeContext, tokens } from "../../theme";
+import { tokens } from "../../theme";
 import './dashboard.css'
 import './loading.css'
 
@@ -31,7 +31,6 @@ const Dashboard = () => {
   const [socket, setSocket] = useState(tmpSocket)
   const isMobileDetect = useSelector(store => store.isMobileDetect);
   const isPortrait = useSelector(store => store.isPortrait);
-  console.log('isPOOO', isPortrait);
   const [isSidebar, setIsSidebar] = useState(false);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -51,7 +50,6 @@ const Dashboard = () => {
   }, [isMobileDetect])
 
   useEffect(() => {
-    console.log('isPortrait', isPortrait);
     window.scrollTo(0, 1);
 
 
@@ -66,9 +64,7 @@ const Dashboard = () => {
   }, [])
 
   useEffect(() => {
-    console.log('deviceData Changed', deviceId, devTopic);
     socket.on('DevSubscribed', message => {
-
       console.log('DevSubscribed', message);
     });
     socket.on(devTopic, message => {
@@ -90,7 +86,6 @@ const Dashboard = () => {
     setSubmenuId(menuId);
   }
   const onChangeDevId = (devId) => {
-    console.log('devIdChanged', devId);
     socket.emit('leave', { deviceId }, (error) => {
       if (error) {
         alert(error);
@@ -108,9 +103,7 @@ const Dashboard = () => {
   const loadDeviceInfo = (message) => {
     const devInfoData = JSON.parse(message);
     if (deviceId == devInfoData.DeviceID) {
-      console.log('Checkedmessage', devInfoData, deviceId);
       setDevInfo(devInfoData)
-      // setDeviceId(devInfoData.DeviceID)
       setDeviceName(devInfoData.DeviceName)
     }
   }
