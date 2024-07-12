@@ -2,6 +2,7 @@ import { createContext, useState, useMemo } from "react";
 import { createTheme } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { colorMode_Store } from "./store/actions/mainAction";
+import { border } from "@mui/system";
 
 // color design tokens export
 export const tokens = (mode) => ({
@@ -145,6 +146,9 @@ export const themeSettings = (mode) => {
             background: {
               default: colors.primary[500],
             },
+            border: {
+              default: '#0ff'
+            }
           }
         : {
             // palette values for light mode
@@ -162,6 +166,9 @@ export const themeSettings = (mode) => {
             background: {
               default: "#fcfcfc",
             },
+            border: {
+              default: colors.greenAccent[500]
+            }
           }),
     },
     typography: {
@@ -192,6 +199,31 @@ export const themeSettings = (mode) => {
         fontSize: 14,
       },
     },
+    components: (mode == 'dark')? {
+      MuiTextField: {
+        styleOverrides: {
+          root: {
+            '& .Mui-focused fieldset':{
+              borderColor:"#fff !important"},
+            '& .MuiInputLabel-outlined':{
+              color:"#fff !important"
+            }
+          },
+        },
+      },
+    }:{
+      MuiTextField: {
+        styleOverrides: {
+          root: {
+            '& .Mui-focused fieldset':{
+              borderColor:"#6F7E8C !important"},
+            '& .MuiInputLabel-outlined':{
+              color:"#6F7E8C !important"
+            }
+          },
+        },
+      },
+    }
   };
 };
 

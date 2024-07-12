@@ -1,8 +1,15 @@
 import React, { useEffect } from 'react';
-import { Box, Typography } from "@mui/material";
+import { useTheme, Box, Button, Grid, Typography, TextField } from "@mui/material";
+import LanIcon from '@mui/icons-material/Lan';
 import { getAllUsers } from '../../axios/ApiProvider';
+import { useTranslation } from 'react-i18next';
+import { tokens } from '../../theme';
 
 export const ShareBoards = () => {
+  const theme = useTheme();
+  const { t } = useTranslation();
+  const colors = tokens(theme.palette.mode);
+
   useEffect(() => {
     loadAllUsers();
   }, [])
@@ -11,10 +18,29 @@ export const ShareBoards = () => {
     console.log('getAllUsers', allUsers);
   }
   return (
-    <Box>
-      <Typography variant='h1'>
-        Here is the ShareBoard Content
-      </Typography>
+    <Box width={"100%"} padding={3}>
+      <Box
+        width={'100%'}
+        height={'auto'}
+        position={'relative'}
+        backgroundColor={colors.primary[400]}
+        padding={4}
+        zIndex={0}
+      >
+        <Grid container spacing={3}>
+          <Grid item xs={12} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
+            <LanIcon fontSize="large" color='success' />
+
+            <Button variant='contained' sx={{ paddingX: '30px', fontWeight: 'bold' }} color='success'>{'Share'}</Button>
+          </Grid>
+          <Grid item xs={12} >
+            <TextField type="email" fullWidth id="outlined-basic" label={t('email')}
+              variant="outlined"
+            />
+          </Grid>
+        </Grid>
+      </Box>
+
     </Box>
   )
 }
