@@ -156,7 +156,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
             {t("title")} {isMobile && !isPortrait && <Typography variant='body1' marginX={1}>( <b>{deviceName}</b> - {deviceId})</Typography>}
           </Typography>
           <IconButton onClick={handleClick}>
-            {isCollapsed && <ClearIcon />}
+            {isCollapsed && <MenuOutlinedIcon />}
             {!isCollapsed && <MenuOutlinedIcon />}
           </IconButton>
         </Box>
