@@ -65,4 +65,10 @@ export const It_Str = {
     the_installation_technician: "Il tecnico installatore",
     gps_location: "Posizione GPS",
     cancel: "Annulla",
+    save: 'Salva',
+    max_water_temperature_allowed: "Temperatura massima dell'acqua consentita dall'energia solare",
+    max_water_temperature_alternative: "Temperatura massima dell'acqua da fonte di calore alternativa",
+    price_per: "Prezzo per",
+    vacation_period_start: "Inizio periodo ferie",
+    vacation_period_end: "Fine del periodo di vacanza",
 }

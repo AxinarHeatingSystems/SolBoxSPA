@@ -65,4 +65,10 @@ export const Gr_Str = {
     the_installation_technician: "Ο τεχνικός εγκατάστασης",
     gps_location: "Τοποθεσία GPS",
     cancel: "Ματαίωση",
+    save: 'Αποθηκεύσετε',
+    max_water_temperature_allowed: "Μέγιστη θερμοκρασία νερού που επιτρέπεται από ηλιακή ενέργεια",
+    max_water_temperature_alternative: "Μέγιστη θερμοκρασία νερού από εναλλακτική πηγή θερμότητας",
+    price_per: "Τιμή ανά",
+    vacation_period_start: "Έναρξη περιόδου διακοπών",
+    vacation_period_end: "Τέλος περιόδου διακοπών",
 }

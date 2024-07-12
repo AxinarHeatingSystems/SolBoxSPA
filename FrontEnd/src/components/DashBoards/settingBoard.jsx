@@ -17,8 +17,7 @@ export const SettingBoards = () => {
   const [startDayOpen, setStartDayOpen] = useState(false);
   const [endDate, setEndDate] = useState();
   const [endDayOpen, setEndDayOpen] = useState(false);
-  const [openPicker, setOpenPicker] = useState(false);
-  const togglePicker = () => setOpenPicker(!openPicker);
+
   return (
     <>
       <Box width={"100%"} padding={3}>
@@ -33,29 +32,29 @@ export const SettingBoards = () => {
           <Grid container spacing={2}>
             <Grid item xs={12} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
               <SettingsSuggestIcon fontSize="large" color='success' />
-              <Button variant='contained' sx={{ paddingX: '30px', fontWeight: 'bold' }} color='success'>Save</Button>
+              <Button variant='contained' sx={{ paddingX: '30px', fontWeight: 'bold' }} color='success'>{t('save')}</Button>
             </Grid>
             <Grid item xs={12}>
-              <TextField type="number" fullWidth id="outlined-basic" label={'Max water temperature allowed from solar power'}
+              <TextField type="number" fullWidth id="outlined-basic" label={t('max_water_temperature_allowed')}
                 variant="outlined"
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField type="number" fullWidth id="outlined-basic" label={'Max water temperature from alternative heat source'}
+              <TextField type="number" fullWidth id="outlined-basic" label={t('max_water_temperature_alternative')}
                 variant="outlined"
               />
             </Grid>
-            <Grid item xs={6}>
-              <TextField type="number" fullWidth id="outlined-basic" label={'Price per kW/h'}
+            <Grid item md={6} xs={6}>
+              <TextField type="number" fullWidth id="outlined-basic" label={`${t('price_per')} kW/h`}
                 variant="outlined"
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item md={6} xs={6}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Stack direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
                   <DatePicker
                     sx={{ width: '100%' }}
-                    label="Vacation period start"
+                    label={t("vacation_period_start")}
                     value={startDate}
                     maxDate={endDate}
                     open={startDayOpen}
@@ -73,7 +72,7 @@ export const SettingBoards = () => {
                   </Typography>
                   <DatePicker
                     sx={{ width: '100%' }}
-                    label="Vacation period start"
+                    label={t("vacation_period_end")}
                     value={endDate}
                     minDate={startDate}
                     open={endDayOpen}
@@ -92,9 +91,7 @@ export const SettingBoards = () => {
               </LocalizationProvider>
             </Grid>
           </Grid>
-
         </Box>
-
       </Box>
     </>
   )
