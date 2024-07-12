@@ -210,7 +210,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
           </Typography>
           <MenuItem onClick={() => { colorMode.toggleColorMode(); handleClose(); }} sx={{ width: '100vw' }}>
             <ListItemIcon>
-              {theme.palette.mode === "dark" ? <DarkModeOutlinedIcon fontSize="small" /> : <LightModeOutlinedIcon fontSize="small" />}
+              {theme.palette.mode === "dark" ? <LightModeOutlinedIcon fontSize="small" /> : <DarkModeOutlinedIcon fontSize="small" />}
             </ListItemIcon>
             <ListItemText>
               {theme.palette.mode === "dark" ? t("dark_mode") : t("light_mode")}
@@ -309,7 +309,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
           </Typography>
           <ListItemButton onClick={() => { colorMode.toggleColorMode() }}>
             <ListItemIcon sx={{ justifyContent: 'center' }}>
-              {theme.palette.mode === "dark" ? <DarkModeOutlinedIcon /> : <LightModeOutlinedIcon />}
+              {theme.palette.mode === "dark" ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
             </ListItemIcon>
             {!isCollapsed && <ListItemText primary={theme.palette.mode === "dark" ? t("dark_mode") : t("light_mode")} />}
           </ListItemButton>

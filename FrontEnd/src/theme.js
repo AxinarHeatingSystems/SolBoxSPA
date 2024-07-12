@@ -2,7 +2,6 @@ import { createContext, useState, useMemo } from "react";
 import { createTheme } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { colorMode_Store } from "./store/actions/mainAction";
-import { border } from "@mui/system";
 
 // color design tokens export
 export const tokens = (mode) => ({
@@ -169,7 +168,7 @@ export const themeSettings = (mode) => {
             border: {
               default: colors.greenAccent[500]
             }
-          }),
+        }),
     },
     typography: {
       fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
@@ -199,7 +198,7 @@ export const themeSettings = (mode) => {
         fontSize: 14,
       },
     },
-    components: (mode == 'dark')? {
+    components: (mode === 'dark')? {
       MuiTextField: {
         styleOverrides: {
           root: {
