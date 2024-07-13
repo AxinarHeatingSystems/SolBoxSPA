@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Grid, useTheme } from "@mui/material";
 
 import { tokens } from "../../theme";
@@ -102,7 +102,7 @@ const Dashboard = () => {
   }
   const loadDeviceInfo = (message) => {
     const devInfoData = JSON.parse(message);
-    if (deviceId == devInfoData.DeviceID) {
+    if (deviceId === devInfoData.DeviceID) {
       setDevInfo(devInfoData)
       setDeviceName(devInfoData.DeviceName)
     }
