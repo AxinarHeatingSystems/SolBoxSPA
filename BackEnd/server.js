@@ -62,13 +62,13 @@ io.on('connect', (socket) => {
       // socket.emit('message', { user: 'admin', text: `${user.name}, welcome to room ${user.room}.`});
       const devTopic = `axinar/solbox/${devId}/jsonTelemetry`
       console.log('devTopic', devTopic);
-      const clientsTopic = `$SYS/brokers`;
       client.subscribe(devTopic, (err) => {
         if (!err) {
           socket.emit('DevSubscribed', 'Device connected')
         }else{
           callback(err);
-          socket.emit('devdiscon', err);
+          socket.emit('devdiscon', 'devDiscon');
+          console.log(err);
         }
       });
   
