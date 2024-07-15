@@ -6,10 +6,17 @@ router.post('/devConnect', mqttConnection)
 router.get('/devMessage', mqttMessage)
 router.post('/devControl', mqttPublish);
 router.post('/getClients', mqttClients);
+router.post('/createDev', mqttCreateDev);
 module.exports = router;
 
 function mqttClients(req, res, next) {
   mqttServeService.mqttclients(req.body).then(
+    resData => resData? res.json(resData) : res.status(400).json({ message: 'connection is failed' })
+  ).catch(err => next(err));
+}
+
+function mqttCreateDev(req, res, next){
+  mqttServeService.mqttcreatedev(req.body).then(
     resData => resData? res.json(resData) : res.status(400).json({ message: 'connection is failed' })
   ).catch(err => next(err));
 }

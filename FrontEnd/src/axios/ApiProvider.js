@@ -188,6 +188,26 @@ export const resetPasswordApi = async (newPasswordData) => {
   return resultState;
 }
 
+export const createDeviceApi = async (deveInfo) => {
+  let resultState = {state: '', data: {}};
+  const tokenData = getJWTToken();
+  const apiUrl = `${BASE_BACKEND_URL}mqtt/createDev`;
+  await axios({
+    method: 'post',
+    url: apiUrl,
+    data: deveInfo,
+    headers: {Authorization: tokenData}
+  }).then(function(response) {
+    resultState.state = 'success';
+    resultState.data = response.data;
+    console.log('getDevicess', response);
+  }).catch(function (err){
+    resultState.state = 'error';
+    resultState.data = err.message;
+  })
+  return resultState;
+}
+
 export const getDevicesApi = async () => {
   let resultState = {state: '', data: {}};
   const tokenData = getJWTToken();

@@ -5,6 +5,7 @@ const axios = require('axios');
 
 module.exports = {
     mqttclients,
+    mqttcreatedev,
     mqttconnect,
     mqttmessage,
     mqttpublish
@@ -63,6 +64,10 @@ async function mqttconnect(input) {
     //     }
     //   });
     return 'mqTTConnect';
+}
+
+async function mqttcreatedev(devInfo) {
+    console.log(devInfo);
 }
 
 async function mqttmessage(res) {
