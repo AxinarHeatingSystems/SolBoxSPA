@@ -122,7 +122,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const [nowPower, setNowPower] = useState(0);
   const [todayKWH, setTodayKWH] = useState(0);
   const [savePrice, setSavePrice] = useState(0);
-  const [isUser, setIsUser] = useState(false);
+  const [isUser, setIsUser] = useState(null);
   const [devCyle, setDevCycle] = useState('');
   // console.log(userData);
   useEffect(() => {
@@ -130,45 +130,44 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
       const attrArr = Object.keys(userData.attributes);
       const isUserTypeKey = attrArr.find(item => item === 'userType');
       if (isUserTypeKey && userData.attributes[isUserTypeKey][0] == 'user') {
-        setIsUser(true);
+        setIsUser('user');
+      } else {
+        setIsUser('technician');
       }
-
-      // if()
-
     }
 
   }, [])
   useEffect(() => {
-    setDeviceId(devData.DeviceID)
-    setDeviceName(devData.DeviceName)
-    setDevOn(devData.DeviceEnabled);
-    setHeatOn(devData.RelayEnabled);
-    // setMaxPower(parseInt((devData.maxPowerPer / devData.leastPowerThirty) * 100));
-    // setMinPower(parseInt((devData.minPowerPer / devData.leastPowerThirty) * 100));
-    // setNowPower(parseInt((devData.powerNeedlePer / devData.leastPowerThirty) * 100))
-
-    setTodayKWH(parseFloat(devData.WattHours / 1000).toFixed(2));
-    setSavePrice(parseFloat((devData.WattHours / 1000) * 0.1).toFixed(2));
-    // setMaxVal(parseFloat(devData.ATHwattHours));
     if (isUser) {
-      setDevCycle(`${parseInt(devData.DutyCycle)} %`);
-      setMaxPower(parseInt(devData.maxPowerPer));
-      setMinPower(parseInt(devData.minPowerPer));
-      setNowPower(parseInt(devData.powerNeedlePer));
-      setMaxVal(100);
-    } else {
-      setDevCycle(`${parseInt(devData.PowerIn)} W`);
-      if (parseFloat(devData.ATHwattHours) < parseFloat(devData.maxPowerThirty)) {
-        setMaxPower(parseFloat(devData.ATHwattHours));
+      setDeviceId(devData.DeviceID)
+      setDeviceName(devData.DeviceName)
+      setDevOn(devData.DeviceEnabled);
+      setHeatOn(devData.RelayEnabled);
+      // setMaxPower(parseInt((devData.maxPowerPer / devData.leastPowerThirty) * 100));
+      // setMinPower(parseInt((devData.minPowerPer / devData.leastPowerThirty) * 100));
+      // setNowPower(parseInt((devData.powerNeedlePer / devData.leastPowerThirty) * 100))
+
+      setTodayKWH(parseFloat(devData.WattHours / 1000).toFixed(2));
+      setSavePrice(parseFloat((devData.WattHours / 1000) * 0.1).toFixed(2));
+      // setMaxVal(parseFloat(devData.ATHwattHours));
+      if (isUser === 'user') {
+        setDevCycle(`${parseInt(devData.DutyCycle)} %`);
+        setMaxPower(parseInt(devData.maxPowerPer));
+        setMinPower(parseInt(devData.minPowerPer));
+        setNowPower(parseInt(devData.powerNeedlePer));
+        setMaxVal(100);
       } else {
-        setMaxPower(parseFloat(devData.maxPowerThirty));
+        setDevCycle(`${parseInt(devData.PowerIn)} W`);
+        if (parseFloat(devData.ATHwattHours) < parseFloat(devData.maxPowerThirty)) {
+          setMaxPower(parseFloat(devData.ATHwattHours));
+        } else {
+          setMaxPower(parseFloat(devData.maxPowerThirty));
+        }
+        setMinPower(parseFloat(devData.leastPowerThirty));
+        setNowPower(parseFloat(devData.WattHours));
+        setMaxVal(devData.ATHwattHours);
       }
-      setMinPower(parseFloat(devData.leastPowerThirty));
-      setNowPower(parseFloat(devData.WattHours));
-      setMaxVal(devData.ATHwattHours);
     }
-    // setMaxVal(100)
-    // console.log(devData);
   }, [devData])
 
 

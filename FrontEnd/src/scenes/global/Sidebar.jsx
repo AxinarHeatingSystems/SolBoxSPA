@@ -210,7 +210,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
           </Typography>
           <MenuItem onClick={() => { colorMode.toggleColorMode(); handleClose(); }} sx={{ width: '100vw' }}>
             <ListItemIcon>
-              {theme.palette.mode === "dark" ? <LightModeOutlinedIcon fontSize="small" /> : <DarkModeOutlinedIcon fontSize="small" />}
+              {theme.palette.mode === "dark" ? <DarkModeOutlinedIcon fontSize="small" /> : <LightModeOutlinedIcon fontSize="small" />}
             </ListItemIcon>
             <ListItemText>
               {theme.palette.mode === "dark" ? t("dark_mode") : t("light_mode")}
@@ -307,12 +307,21 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
           >
             {t("theme")}
           </Typography>
-          <ListItemButton onClick={() => { colorMode.toggleColorMode() }}>
-            <ListItemIcon sx={{ justifyContent: 'center' }}>
-              {theme.palette.mode === "dark" ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
-            </ListItemIcon>
-            {!isCollapsed && <ListItemText primary={theme.palette.mode === "dark" ? t("dark_mode") : t("light_mode")} />}
-          </ListItemButton>
+          {!isCollapsed &&
+            <ListItemButton onClick={() => { colorMode.toggleColorMode() }}>
+              <ListItemIcon sx={{ justifyContent: 'center' }}>
+                {theme.palette.mode === "dark" ? <DarkModeOutlinedIcon /> : <LightModeOutlinedIcon />}
+              </ListItemIcon>
+              <ListItemText primary={theme.palette.mode === "dark" ? t("dark_mode") : t("light_mode")} />
+            </ListItemButton>
+          }
+          {isCollapsed &&
+            <ListItemButton onClick={() => { colorMode.toggleColorMode() }}>
+              <ListItemIcon sx={{ justifyContent: 'center' }}>
+                {theme.palette.mode === "dark" ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
+              </ListItemIcon>
+            </ListItemButton>
+          }
           <Divider />
           <ListItem sx={{ padding: '5px 0px' }}>
             <Box width={'100%'} display={isCollapsed ? 'block' : 'flex'} justifyContent={'space-between'} alignItems={'baseline'}>
