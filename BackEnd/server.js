@@ -67,6 +67,7 @@ io.on('connect', (socket) => {
         if (!err) {
           socket.emit('DevSubscribed', 'Device connected')
         }else{
+          callback(err);
           socket.emit('devdiscon', err);
         }
       });
