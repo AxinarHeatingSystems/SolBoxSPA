@@ -25,7 +25,7 @@ function mqttCreateDev(req, res, next){
   ).catch(err => next(err));
 }
 
-function mqttUserDevs(res, res, next){
+function mqttUserDevs(req, res, next){
   mqttServeService.mqttDevicelist(req.body).then(
     resData => resData? 
         resData.state == 'success'? 
