@@ -129,7 +129,7 @@ async function mqttDevicelist(userData) {
     await kcAdminAuth();
     try {
         const grouplist = await kcAdminClient.users.listGroups({id: userData.userId, realm: config.keycloakRealm});
-        resultData = {state: 'success', data: createdGroup};
+        resultData = {state: 'success', data: grouplist};
     } catch (error) {
         resultData = {state: 'failed', message: 'Device list loading is failed'};
     }
