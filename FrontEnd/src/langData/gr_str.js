@@ -71,5 +71,8 @@ export const Gr_Str = {
     price_per: "Τιμή ανά",
     vacation_period_start: "Έναρξη περιόδου διακοπών",
     vacation_period_end: "Τέλος περιόδου διακοπών",
-    device_info: "Πληροφορίες συσκευής"
+    device_info: "Πληροφορίες συσκευής",
+    searching_your_device: "Αναζήτηση στη συσκευή σας",
+    device_id: "Αναγνωριστικό συσκευής",
+    pairing_code: "Κωδικός ζεύξης",
 }

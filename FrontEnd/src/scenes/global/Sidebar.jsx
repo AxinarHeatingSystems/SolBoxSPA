@@ -157,14 +157,14 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
         container: 'devParingContainer',
         popup: 'devParingPopup',
       },
-      title: "Searching Device",
+      title: t('searching_your_device'),
       html: `
         <div class="swal2-formControl">
-          <label class="swal2-label">Device Id</label>
+          <label class="swal2-label">${t('device_id')}</label>
           <input type="text" name="deviceId" id="swal-input1" class="swal2-input" >
         </div>
         <div class="swal2-formControl">
-          <label class="swal2-label">Pairing Code</label>
+          <label class="swal2-label">${t('pairing_code')}</label>
           <input type="text" name="pairingCode" id="swal-input2" class="swal2-input">
         </div>
       `,

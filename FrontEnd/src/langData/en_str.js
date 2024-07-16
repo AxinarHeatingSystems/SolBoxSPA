@@ -71,5 +71,8 @@ export const En_Str = {
     price_per: "Price per",
     vacation_period_start: "Vacation period start",
     vacation_period_end: "Vacation period end",
-    device_info: "Device Information"
+    device_info: "Device Information",
+    searching_your_device: "Searching Your Device",
+    device_id: "Device Id",
+    pairing_code: "Pairing Code",
 }
