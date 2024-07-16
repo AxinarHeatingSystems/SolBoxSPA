@@ -108,10 +108,10 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
       // Perform actions on window resize
       console.log('screen Resizing', e);
     };
-    const handlePointer = (e) => {
-      console.log('eventClick', e);
-      // setIsCollapsed(false)
-    }
+    // const handlePointer = (e) => {
+    //   console.log('eventClick', e);
+    //   // setIsCollapsed(false)
+    // }
     window.addEventListener('resize', handleResize);
     // window.addEventListener('click', handlePointer);
     return () => {
@@ -184,7 +184,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
             if (allDevs.state === 'success') {
               let loadedDevInfo = null;
               const devsArr = allDevs.data.data;
-              const existDev = devsArr.find(item => item.clientid == devId);
+              const existDev = devsArr.find(item => item.clientid === devId);
               console.log('existDev', existDev);
               if (existDev) {
                 const searchTopic = `axinar/solbox/${devId}/jsonTelemetry`;
@@ -199,7 +199,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
                   loadedDevInfo = JSON.parse(message);
                   console.log(loadedDevInfo);
                   searchSocket.off(searchTopic);
-                  if (loadedDevInfo.pairing[1] == pairCode) {
+                  if (loadedDevInfo.pairing[1] === pairCode) {
                     console.log('confirmed')
 
                     isChecked = true;

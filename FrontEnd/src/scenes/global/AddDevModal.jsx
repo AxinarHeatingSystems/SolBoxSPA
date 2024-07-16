@@ -1,26 +1,13 @@
 import React, { useRef, useState } from "react";
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardMedia, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Modal, Select, TextField, Typography } from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardMedia, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useTranslation } from "react-i18next";
 import uploadIco from "../../assets/uploadIco.png"
 import { createDeviceApi } from "../../axios/ApiProvider";
-import Swal from "sweetalert2";
 
 import "./addDevModal.css"
 import { useSelector } from "react-redux";
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  maxWidth: '100vw',
-  width: '80vw',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
 export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
   const userData = useSelector(store => store.userData);
   const picuploader = useRef();
@@ -241,7 +228,7 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
                       </Card>
                       <input type="file" hidden ref={picuploader} />
                     </Grid>
-                    <Grid item xs={useDevType == 'private' ? 6 : 12} padding={1}>
+                    <Grid item xs={useDevType === 'private' ? 6 : 12} padding={1}>
                       <FormControl fullWidth size="small">
                         <InputLabel id="demo-simple-select-helper-label">{t('intended_use_of_device')}</InputLabel>
                         <Select
@@ -256,7 +243,7 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
                         </Select>
                       </FormControl>
                     </Grid>
-                    {useDevType == 'private' && <Grid item xs={6} padding={1}>
+                    {useDevType === 'private' && <Grid item xs={6} padding={1}>
                       <TextField type="number" fullWidth id="outlined-basic" label={t('number_of_occupants')}
                         variant="outlined" size="small" value={occupants} onChange={(e) => { setOccupants(e.target.value) }}
                       />

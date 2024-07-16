@@ -129,7 +129,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
     if (userData.attributes) {
       const attrArr = Object.keys(userData.attributes);
       const isUserTypeKey = attrArr.find(item => item === 'userType');
-      if (isUserTypeKey && userData.attributes[isUserTypeKey][0] == 'user') {
+      if (isUserTypeKey && userData.attributes[isUserTypeKey][0] === 'user') {
         setIsUser('user');
       } else {
         setIsUser('technician');

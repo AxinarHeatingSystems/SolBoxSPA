@@ -41,7 +41,7 @@ const Dashboard = () => {
   const [deviceId, setDeviceId] = useState('08F9E0E1915C');
   const [devTopic, setDevTopic] = useState('');
   const [devInfo, setDevInfo] = useState(null);
-  const [devMetaData, setDevMetaDat] = useState();
+  const [devMetaData, setDevMetaData] = useState();
   const [socketEventCount, setSocketEventCount] = useState(0);
   // const devId = '08B61F971EAC'
   // const devId = '08F9E0E18FF4'
@@ -55,10 +55,6 @@ const Dashboard = () => {
   useEffect(() => {
     window.scrollTo(0, 1);
 
-    console.log('checkisLooged', isLogged);
-    if (isLogged) {
-
-    }
     setIsSidebar(true);
     // socket.emit('join', { devId }, (error) => {
     //   if (error) {
@@ -99,7 +95,8 @@ const Dashboard = () => {
     });
     const devId = devData.name;
     const devMeta = await getDevInfoApi(devData.id);
-    console.log('ssssss', devMeta);
+    console.log('ssssss', devMeta, devMetaData);
+    setDevMetaData(devMeta);
     setDevTopic(`axinar/solbox/${devId}/jsonTelemetry`);
     socket.emit('join', { devId }, (error) => {
       if (error) {
