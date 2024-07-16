@@ -141,6 +141,7 @@ async function mqttDevicelist(userData) {
         })
         resultData = {state: 'success', data: ctGroupList};
     } catch (error) {
+        console.log(error);
         resultData = {state: 'failed', message: 'Device list loading is failed'};
     }
 
