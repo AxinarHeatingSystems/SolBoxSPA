@@ -102,13 +102,14 @@ async function mqttcreatedev(devData) {
         
         const newGroupData = {
             name: devData.pairingData.deviceId,
-            // attributes: groupAttrs,
+            attributes: groupAttrs,
             realm: config.keycloakRealm
         };
+        console.log(newGroupData)
         const createdGroup = await kcAdminClient.groups.create(newGroupData);
         resultData = {state: 'success', data: createdGroup};
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         resultData = {state: 'failed', message: 'Google login is failed'};
     }
 
