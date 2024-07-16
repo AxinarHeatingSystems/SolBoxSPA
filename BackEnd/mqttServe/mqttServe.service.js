@@ -91,7 +91,7 @@ async function mqttcreatedev(devData) {
     try {
         let groupAttrs = [];
         groupAttrs.push({
-            pairingCode: devData.pairingData.pairingCode
+            pairingCode: [devData.pairingData.pairingCode]
         });
         const devInfoKeys = Object.keys(devData.devInfo);
         devInfoKeys.map(keyItem => {
