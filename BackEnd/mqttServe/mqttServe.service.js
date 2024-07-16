@@ -46,7 +46,7 @@ async function kcAdminAuth () {
       
 }
 
-async function mqttclients(body) {
+async function mqttclients() {
     console.log('mqttClients');
     const path = `${config.emqxhost}api/v5/clients`
     let clientList;
@@ -129,7 +129,16 @@ async function mqttDevicelist(userData) {
     await kcAdminAuth();
     try {
         const grouplist = await kcAdminClient.users.listGroups({id: userData.userId, realm: config.keycloakRealm});
-        resultData = {state: 'success', data: grouplist};
+        const emqxClients = await mqttclients();
+        const ctGroupList = grouplist.map(groupItem => {
+            const clientData = emqxClients.find(clientItem => clientItem.clientid == groupItem.name);
+            if(clientData){
+                groupItem.connected = clientData.connected;
+            }else{
+                groupItem.connected = false;
+            }
+        })
+        resultData = {state: 'success', data: ctGroupList};
     } catch (error) {
         resultData = {state: 'failed', message: 'Device list loading is failed'};
     }
