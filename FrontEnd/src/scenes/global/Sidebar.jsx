@@ -3,7 +3,7 @@ import { ProSidebar } from "react-pro-sidebar";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Swal from "sweetalert2";
-import io from "socket.io-client";
+// import io from "socket.io-client";
 
 import { Box, Button, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, useTheme } from "@mui/material";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
@@ -25,7 +25,7 @@ import { SetLang } from '../../components/Language/SetLang';
 import { useTranslation } from 'react-i18next';
 import { AddDevModal } from './AddDevModal';
 
-const EndPoint = process.env.REACT_APP_BASE_BACKEND_URL;
+// const EndPoint = process.env.REACT_APP_BASE_BACKEND_URL;
 const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) => {
   const { t } = useTranslation();
   const theme = useTheme();

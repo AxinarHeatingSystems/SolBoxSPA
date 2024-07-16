@@ -1,9 +1,7 @@
 import React, { useRef, useState } from "react";
 import {
-  CitySelect,
   CountrySelect,
   StateSelect,
-  LanguageSelect,
 } from "react-country-state-city";
 import "react-country-state-city/dist/react-country-state-city.css";
 import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardMedia, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
@@ -128,6 +126,8 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
       return
     }
     setUploadImg(e.target.files[0])
+    setPreviewImg(uploadIco)
+    console.log(uploadImg);
   }
 
   const onAccodionChange = (e, expanded) => {

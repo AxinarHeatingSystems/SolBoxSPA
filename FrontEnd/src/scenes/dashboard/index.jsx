@@ -29,7 +29,7 @@ const EndPoint = process.env.REACT_APP_BASE_BACKEND_URL;
 const tmpSocket = io(EndPoint);
 const Dashboard = () => {
   const { t } = useTranslation();
-  const isLogged = useSelector(store => store.isLoggedIn);
+  // const isLogged = useSelector(store => store.isLoggedIn);
   const [socket, setSocket] = useState(tmpSocket)
   const isMobileDetect = useSelector(store => store.isMobileDetect);
   const isPortrait = useSelector(store => store.isPortrait);
