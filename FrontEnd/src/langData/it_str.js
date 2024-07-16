@@ -73,6 +73,8 @@ export const It_Str = {
     vacation_period_end: "Fine del periodo di vacanza",
     device_info: "Informazioni sul dispositivo",
     searching_your_device: "Ricerca sul tuo dispositivo",
-    device_id: "ID del dispositivo",
-    pairing_code: "Codice di associazione",
+    search: "Ricerca",
+    feel_devid_paircode: "Inserisci l'ID del tuo dispositivo o il codice di associazione",
+    please_feel_input: "Per favore senti l'input",
+    pairing_failed: "Associazione non riuscita"
 }

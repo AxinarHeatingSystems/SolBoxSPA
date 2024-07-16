@@ -73,6 +73,8 @@ export const En_Str = {
     vacation_period_end: "Vacation period end",
     device_info: "Device Information",
     searching_your_device: "Searching Your Device",
-    device_id: "Device Id",
-    pairing_code: "Pairing Code",
+    search: "Search",
+    feel_devid_paircode: "Please input your device Id or pairing code",
+    please_feel_input: "Please feel the input",
+    pairing_failed: "Pairing Failed"
 }

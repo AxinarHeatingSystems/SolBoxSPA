@@ -73,6 +73,8 @@ export const Es_Str = {
     vacation_period_end: "Fin del periodo de vacaciones",
     device_info: "Información del dispositivo",
     searching_your_device: "Buscando en su dispositivo",
-    device_id: "ID del dispositivo",
-    pairing_code: "Código de emparejamiento",
+    search: "Buscar",
+    feel_devid_paircode: "Ingrese el ID de su dispositivo o el código de emparejamiento",
+    please_feel_input: "Por favor, siente la entrada",
+    pairing_failed: "Emparejamiento fallido"
 }

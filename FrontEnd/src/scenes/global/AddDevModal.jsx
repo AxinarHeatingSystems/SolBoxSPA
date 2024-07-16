@@ -1,4 +1,11 @@
 import React, { useRef, useState } from "react";
+import {
+  CitySelect,
+  CountrySelect,
+  StateSelect,
+  LanguageSelect,
+} from "react-country-state-city";
+import "react-country-state-city/dist/react-country-state-city.css";
 import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardMedia, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useTranslation } from "react-i18next";
@@ -22,6 +29,8 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
   const [solopanelPower, setSolopanelPower] = useState()
   const [installName, setInstalName] = useState()
 
+  const [uploadImg, setUploadImg] = useState(null);
+  const [previewImg, setPreviewImg] = useState(uploadIco);
   const [installEmail, setInstallEmail] = useState('');
   const [installPhone, setInstallPhone] = useState();
   const [useDevType, setUseDevType] = useState('professional');
@@ -29,12 +38,15 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
   const [boilerContact, setBoilerContact] = useState('owner')
   const [gpsLoc, setGPSLoc] = useState()
 
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const onCountryChange = (e) => {
-    setCountry(e.target.value);
+    console.log('country Change', e);
+    setCountry(e);
   }
   const onCityChange = (e) => {
-    setCity(e.target.value);
+    console.log(e);
+    setCity(e);
   }
 
   const onHeatValueChange = (e) => {
@@ -71,8 +83,8 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
     e.preventDefault();
     if (e.target.checkValidity()) {
       const devInfo = {
-        country: country,
-        city: city,
+        country: country.name,
+        city: city.name,
         watterLimit: watterLimit,
         isHeatSource: isHeatSource,
         solopanelPower: solopanelPower,
@@ -83,6 +95,13 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
         if (heatType === 1) {
           devInfo.heatValue = heatValue;
         }
+      }
+      if (isExpanded) {
+        devInfo.useDevType = useDevType;
+        devInfo.installEmail = installEmail;
+        devInfo.installPhone = installPhone;
+        devInfo.boilerContact = boilerContact;
+        devInfo.gpsLoc = gpsLoc;
       }
       const newDevData = {
         userId: userData.id,
@@ -101,7 +120,19 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
 
   const uploaderPicker = () => {
     picuploader.current.click();
+  }
 
+  const chooseUploadfile = (e) => {
+    if (!e || !e.target || !e.target.files[0]) {
+      // window.toastr.warning('file select error')
+      return
+    }
+    setUploadImg(e.target.files[0])
+  }
+
+  const onAccodionChange = (e, expanded) => {
+    console.log(e, expanded);
+    setIsExpanded(expanded);
   }
 
   return (
@@ -121,15 +152,17 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
           </Typography>
           <Grid component={'form'} onSubmit={onNewDevSubmit} container direction={'row'} >
             <Grid xs={6} padding={1}>
-              <TextField fullWidth id="outlined-basic" label={t('country')}
-                value={country} variant="outlined" size="small" required
+              <CountrySelect
                 onChange={(e) => { onCountryChange(e) }}
+                value={country.id}
+                placeHolder={t('country')}
               />
             </Grid>
             <Grid xs={6} padding={1}>
-              <TextField fullWidth id="outlined-basic" label={t('city')}
-                value={city} variant="outlined" size="small" required
+              <StateSelect
+                countryid={country.id}
                 onChange={(e) => { onCityChange(e) }}
+                placeHolder="Select State"
               />
             </Grid>
             <Grid xs={12} padding={1}>
@@ -204,7 +237,7 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
               <Divider />
             </Grid>
             <Grid xs={12}>
-              <Accordion >
+              <Accordion expanded={isExpanded} onChange={(e, expanded) => onAccodionChange(e, expanded)}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1-content"
@@ -222,11 +255,11 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
                           height="130"
                           width={'fit-content'}
                           sx={{ margin: 'auto', width: 'fit-content !important' }}
-                          image={uploadIco}
+                          image={previewImg}
                           alt="uploader"
                         />
                       </Card>
-                      <input type="file" hidden ref={picuploader} />
+                      <input type="file" hidden ref={picuploader} onChange={chooseUploadfile} accept=".jpg, .png" />
                     </Grid>
                     <Grid item xs={useDevType === 'private' ? 6 : 12} padding={1}>
                       <FormControl fullWidth size="small">

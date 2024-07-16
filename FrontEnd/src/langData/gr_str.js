@@ -73,6 +73,8 @@ export const Gr_Str = {
     vacation_period_end: "Τέλος περιόδου διακοπών",
     device_info: "Πληροφορίες συσκευής",
     searching_your_device: "Αναζήτηση στη συσκευή σας",
-    device_id: "Αναγνωριστικό συσκευής",
-    pairing_code: "Κωδικός ζεύξης",
+    search: "Αναζήτηση",
+    feel_devid_paircode: "Εισαγάγετε το αναγνωριστικό της συσκευής σας ή τον κωδικό σύζευξης",
+    please_feel_input: "Παρακαλώ αισθανθείτε τη συμβολή",
+    pairing_failed: "Η σύζευξη απέτυχε"
 }

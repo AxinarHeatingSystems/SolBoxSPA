@@ -73,6 +73,10 @@ const Dashboard = () => {
       loadDeviceInfo(message);
       setSocketEventCount(prev => prev + 1);
     });
+    // socket.on("message", message => {
+    //   console.log(message);
+    //   // setSocketEventCount(prev => prev + 1);
+    // });
 
     socket.on('devControl', error => {
       console.log('Dev Controlled', error);
