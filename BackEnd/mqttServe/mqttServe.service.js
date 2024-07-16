@@ -108,6 +108,7 @@ async function mqttcreatedev(devData) {
         const createdGroup = await kcAdminClient.groups.create(newGroupData);
         resultData = {state: 'success', data: createdGroup};
     } catch (error) {
+        console.log(error);
         resultData = {state: 'failed', message: 'Google login is failed'};
     }
 
