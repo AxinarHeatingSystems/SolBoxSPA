@@ -96,13 +96,13 @@ async function mqttcreatedev(devData) {
         const devInfoKeys = Object.keys(devData.devInfo);
         devInfoKeys.map(keyItem => {
             groupAttrs.push({
-                [keyItem]: devData.devInfo[keyItem]
+                [keyItem]: [devData.devInfo[keyItem]]
             });    
         });
         
         const newGroupData = {
             name: devData.pairingData.deviceId,
-            attributes: groupAttrs,
+            // attributes: groupAttrs,
             realm: config.keycloakRealm
         };
         const createdGroup = await kcAdminClient.groups.create(newGroupData);
