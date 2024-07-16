@@ -131,7 +131,7 @@ async function mqttDevicelist(userData) {
         const grouplist = await kcAdminClient.users.listGroups({id: userData.userId, realm: config.keycloakRealm});
         const emqxClients = await mqttclients();
         const ctGroupList = grouplist.map(groupItem => {
-            const clientData = emqxClients.find(clientItem => clientItem.clientid == groupItem.name);
+            const clientData = emqxClients.data.find(clientItem => clientItem.clientid == groupItem.name);
             if(clientData){
                 groupItem.connected = clientData.connected;
             }else{
