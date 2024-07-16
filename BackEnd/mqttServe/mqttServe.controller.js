@@ -8,6 +8,7 @@ router.post('/devControl', mqttPublish);
 router.post('/getClients', mqttClients);
 router.post('/createDev', mqttCreateDev);
 router.post('/userDevs', mqttUserDevs);
+router.post('/getDevInfo', mqttDeviceInfo);
 
 module.exports = router;
 
@@ -30,6 +31,14 @@ function mqttUserDevs(req, res, next){
     resData => resData? 
         resData.state == 'success'? 
             res.json(resData) : res.status(400).json({ message: resData.message }) : res.status(400).json({ message: 'Device list loading is failed' })
+  ).catch(err => next(err));
+}
+
+function mqttDeviceInfo(req, res, next){
+  mqttServeService.mqttDeviceInfo(req.body).then(
+    resData => resData? 
+        resData.state == 'success'? 
+            res.json(resData) : res.status(400).json({ message: resData.message }) : res.status(400).json({ message: 'Device info is failed' })
   ).catch(err => next(err));
 }
 

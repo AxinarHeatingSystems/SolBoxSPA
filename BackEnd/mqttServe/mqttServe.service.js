@@ -8,6 +8,7 @@ module.exports = {
     mqttclients,
     mqttcreatedev,
     mqttDevicelist,
+    mqttDeviceInfo,
     mqttconnect,
     mqttmessage,
     mqttpublish
@@ -148,6 +149,19 @@ async function mqttDevicelist(userData) {
     return resultData;
 
 }   
+
+async function mqttDeviceInfo(devData){
+    let resultData = {};
+    console.log(devData);
+    await kcAdminAuth();
+    try {
+        const devMeta = await kcAdminClient.groups.findOne({id: devData.id, realm: config.keycloakRealm});
+        resultData = {state: 'success', data: devMeta};
+    } catch (error) {
+        resultData = {state: 'failed', message: 'Dev info is failed'};
+    }
+    return resultData
+}
 
 async function mqttmessage(res) {
     console.log(lastMessage);
