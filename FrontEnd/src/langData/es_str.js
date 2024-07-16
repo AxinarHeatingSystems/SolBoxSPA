@@ -71,4 +71,5 @@ export const Es_Str = {
     price_per: "Precio por",
     vacation_period_start: "Inicio del periodo de vacaciones",
     vacation_period_end: "Fin del periodo de vacaciones",
+    device_info: "Información del dispositivo"
 }

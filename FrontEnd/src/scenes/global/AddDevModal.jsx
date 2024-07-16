@@ -1,21 +1,28 @@
 import React, { useRef, useState } from "react";
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardMedia, Checkbox, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Modal, Select, TextField, Typography } from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardMedia, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Modal, Select, TextField, Typography } from "@mui/material"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useTranslation } from "react-i18next";
 import uploadIco from "../../assets/uploadIco.png"
+import { createDeviceApi } from "../../axios/ApiProvider";
+import Swal from "sweetalert2";
+
+import "./addDevModal.css"
+import { useSelector } from "react-redux";
 
 const style = {
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  maxWidth: 800,
+  maxWidth: '100vw',
+  width: '80vw',
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
 };
-export const AddDevModal = ({ isAddDev, onClose }) => {
+export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
+  const userData = useSelector(store => store.userData);
   const picuploader = useRef();
   const { t } = useTranslation();
   const [country, setCountry] = useState('');
@@ -73,27 +80,59 @@ export const AddDevModal = ({ isAddDev, onClose }) => {
     setSolopanelPower(e.target.value);
   }
 
-  const onNewDevSubmit = () => {
-    console.log('submitting');
+  const onNewDevSubmit = async (e) => {
+    e.preventDefault();
+    if (e.target.checkValidity()) {
+      const devInfo = {
+        country: country,
+        city: city,
+        watterLimit: watterLimit,
+        isHeatSource: isHeatSource,
+        solopanelPower: solopanelPower,
+        installName: installName
+      }
+      if (isHeatSource) {
+        devInfo.heatType = heatType;
+        if (heatType === 1) {
+          devInfo.heatValue = heatValue;
+        }
+      }
+      const newDevData = {
+        userId: userData.id,
+        pairingData: pairingData,
+        devInfo: devInfo
+      }
+      const createdRes = await createDeviceApi(newDevData);
+      console.log(createdRes);
+      if (createdRes.state === 'success') {
+        onClose();
+      }
+
+    }
+    e.preventDefault();
   }
 
   const uploaderPicker = () => {
     picuploader.current.click();
+
   }
 
   return (
-    <Modal
+    <Dialog
       open={isAddDev}
       onClose={onClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
     >
-      <Box sx={style}>
+      <DialogTitle id="alert-dialog-title">
+        {"Use Google's location service?"}
+      </DialogTitle>
+      <DialogContent>
         <Box sx={{ width: '100%' }}>
           <Typography id="modal-modal-title" variant="h2" component="h2">
-            {t('add_new_device')}
+            {t('device_info')}
           </Typography>
-          <Grid component={'form'} onSubmit={() => { onNewDevSubmit() }} container direction={'row'} >
+          <Grid component={'form'} onSubmit={onNewDevSubmit} container direction={'row'} >
             <Grid xs={6} padding={1}>
               <TextField fullWidth id="outlined-basic" label={t('country')}
                 value={country} variant="outlined" size="small" required
@@ -195,7 +234,7 @@ export const AddDevModal = ({ isAddDev, onClose }) => {
                           component="img"
                           height="130"
                           width={'fit-content'}
-                          sx={{ margin: 'auto' }}
+                          sx={{ margin: 'auto', width: 'fit-content !important' }}
                           image={uploadIco}
                           alt="uploader"
                         />
@@ -262,7 +301,10 @@ export const AddDevModal = ({ isAddDev, onClose }) => {
             </Grid>
           </Grid>
         </Box>
-      </Box>
-    </Modal>
+      </DialogContent>
+      <DialogActions>
+      </DialogActions>
+    </Dialog>
+
   )
 }

@@ -22,6 +22,7 @@ import Sidebar from '../global/Sidebar';
 import io from "socket.io-client";
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { getDevInfoApi } from '../../axios/ApiProvider';
 
 const EndPoint = process.env.REACT_APP_BASE_BACKEND_URL;
 // let socket;
@@ -40,9 +41,10 @@ const Dashboard = () => {
   const [deviceId, setDeviceId] = useState('08F9E0E1915C');
   const [devTopic, setDevTopic] = useState('');
   const [devInfo, setDevInfo] = useState(null);
+  const [devMetaData, setDevMetaDat] = useState();
   const [socketEventCount, setSocketEventCount] = useState(0);
   // const devId = '08B61F971EAC'
-  const devId = '08F9E0E18FF4'
+  // const devId = '08F9E0E18FF4'
 
 
   useEffect(() => {
@@ -58,11 +60,11 @@ const Dashboard = () => {
 
     }
     setIsSidebar(true);
-    socket.emit('join', { devId }, (error) => {
-      if (error) {
-        alert(error);
-      }
-    });
+    // socket.emit('join', { devId }, (error) => {
+    //   if (error) {
+    //     alert(error);
+    //   }
+    // });
     setSocket(tmpSocket);
 
   }, [])
@@ -89,12 +91,15 @@ const Dashboard = () => {
   const subMenuClicked = (menuId) => {
     setSubmenuId(menuId);
   }
-  const onChangeDevId = (devId) => {
+  const onChangeDevId = async (devData) => {
     socket.emit('leave', { deviceId }, (error) => {
       if (error) {
         alert(error);
       }
     });
+    const devId = devData.name;
+    const devMeta = await getDevInfoApi(devData.id);
+    console.log('ssssss', devMeta);
     setDevTopic(`axinar/solbox/${devId}/jsonTelemetry`);
     socket.emit('join', { devId }, (error) => {
       if (error) {

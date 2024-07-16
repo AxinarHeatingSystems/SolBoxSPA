@@ -2,6 +2,8 @@ import React, { useState, useContext, useEffect } from 'react';
 import { ProSidebar } from "react-pro-sidebar";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Swal from "sweetalert2";
+import io from "socket.io-client";
 
 import { Box, Button, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, useTheme } from "@mui/material";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
@@ -17,89 +19,46 @@ import { ColorModeContext, tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import { getDevicesApi, logoutApi } from '../../axios/ApiProvider';
+import { getUserDeviceListApi, getDevicesApi, logoutApi } from '../../axios/ApiProvider';
 import { useSelector } from 'react-redux';
 import { SetLang } from '../../components/Language/SetLang';
 import { useTranslation } from 'react-i18next';
 import { AddDevModal } from './AddDevModal';
 
+const EndPoint = process.env.REACT_APP_BASE_BACKEND_URL;
 const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [selected, setSelected] = useState(deviceId);
+  const [selected, setSelected] = useState();
   const userData = useSelector(store => store.userData);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isAddDev, setIsAddDev] = useState(false);
+  const [pairingData, setPairingData] = useState();
   const [devList, setDevList] = useState([]);
   const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-    setIsCollapsed(!isCollapsed);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-    setIsCollapsed(!isCollapsed);
-  };
-
-  useEffect(() => {
-    loadDevlist();
-    console.log('useData', userData);
-    const handleResize = (e) => {
-      if (e.target.innerWidth < 1024) {
-        setIsCollapsed(true);
-      }
-      // Perform actions on window resize
-      console.log('screen Resizing', e);
-    };
-    const handlePointer = (e) => {
-      console.log('eventClick', e);
-      // setIsCollapsed(false)
-    }
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('click', handlePointer);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('click', handlePointer);
-    };
-  }, []);
-
-  const loadDevlist = async () => {
-    const devListRes = await getDevicesApi();
-    if (devListRes.state !== 'success') return;
-    const devsArr = devListRes.data.data;
-
-    const filteredArr = devsArr.filter(item => item.ip_address === '172.22.0.3' && item.clientid !== "node-red1")
-    console.log('dddd', devsArr);
-    setDevList(filteredArr);
-  }
-
-  const onSelectDevId = (devId) => {
-    onChangeDevId(devId)
-    setSelected(devId)
-  }
 
   const desktopStyle = {
     "& .pro-sidebar": {
       position: 'relative'
     },
-        "& .pro-sidebar-inner": {
-          background: `${colors.primary[400]} !important`,
-        },
-        "& .pro-icon-wrapper": {
-          backgroundColor: "transparent !important",
-        },
-        "& .pro-inner-item": {
-          padding: "5px 35px 5px 20px !important",
-        },
-        "& .pro-inner-item:hover": {
-          color: "#868dfb !important",
-        },
-        "& .pro-menu-item.active": {
-          color: "#6870fa !important",
-        },
+    "& .pro-sidebar-inner": {
+      background: `${colors.primary[400]} !important`,
+    },
+    "& .pro-icon-wrapper": {
+      backgroundColor: "transparent !important",
+    },
+    "& .pro-inner-item": {
+      padding: "5px 35px 5px 20px !important",
+    },
+    "& .pro-inner-item:hover": {
+      color: "#868dfb !important",
+    },
+    "& .pro-menu-item.active": {
+      color: "#6870fa !important",
+    },
   }
 
   const mobileStyle = {
@@ -129,15 +88,170 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
       color: "#6870fa !important",
     },
   }
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    setIsCollapsed(!isCollapsed);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+    setIsCollapsed(!isCollapsed);
+  };
+
+  useEffect(() => {
+    loadDevlist();
+    console.log('useData', userData);
+    const handleResize = (e) => {
+      if (e.target.innerWidth < 1024) {
+        setIsCollapsed(true);
+      }
+      // Perform actions on window resize
+      console.log('screen Resizing', e);
+    };
+    const handlePointer = (e) => {
+      console.log('eventClick', e);
+      // setIsCollapsed(false)
+    }
+    window.addEventListener('resize', handleResize);
+    // window.addEventListener('click', handlePointer);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      // window.removeEventListener('click', handlePointer);
+    };
+  }, []);
+
+  const loadDevlist = async () => {
+    const userDevs = await getUserDeviceListApi();
+    console.log(userDevs);
+    if (userDevs.state !== 'success') return;
+    if (userDevs.data.length > 0) {
+      if (!selected) {
+        onSelectDevId(userDevs.data[0]);
+      }
+      setDevList(userDevs.data);
+
+    } else {
+      handelAddDevOpen();
+    }
+
+  }
+
+  const onSelectDevId = (devData) => {
+    onChangeDevId(devData)
+    setSelected(devData)
+  }
+
+
   const onLogOut = () => {
     logoutApi()
   }
 
   const handleAddDevClose = () => {
     setIsAddDev(false);
+    loadDevlist();
   }
-  const handelAddDevOpen = () => {
-    setIsAddDev(true);
+  const handelAddDevOpen = async () => {
+    let isChecked = false
+    await Swal.fire({
+      customClass: {
+        container: 'devParingContainer',
+        popup: 'devParingPopup',
+      },
+      title: "Searching Device",
+      html: `
+        <div class="swal2-formControl">
+          <label class="swal2-label">Device Id</label>
+          <input type="text" name="deviceId" id="swal-input1" class="swal2-input" >
+        </div>
+        <div class="swal2-formControl">
+          <label class="swal2-label">Pairing Code</label>
+          <input type="text" name="pairingCode" id="swal-input2" class="swal2-input">
+        </div>
+      `,
+      preConfirm: async () => {
+        const devId = document.getElementById("swal-input1").value;
+        const pairCode = document.getElementById("swal-input2").value;
+
+        if (devId && pairCode) {
+          const searchSocket = io(EndPoint);
+          const allDevs = await getDevicesApi();
+          if (isChecked) {
+            return {
+              deviceId: devId,
+              pairingCode: pairCode
+            };
+          } else {
+            if (allDevs.state === 'success') {
+              let loadedDevInfo = null;
+              const devsArr = allDevs.data.data;
+              const existDev = devsArr.find(item => item.clientid == devId);
+              console.log('existDev', existDev);
+              if (existDev) {
+                const searchTopic = `axinar/solbox/${devId}/jsonTelemetry`;
+
+                searchSocket.emit('join', { devId }, (error) => {
+                  if (error) {
+                    alert(error);
+                  }
+                });
+                await searchSocket.on(searchTopic, message => {
+                  console.log(message);
+                  loadedDevInfo = JSON.parse(message);
+                  console.log(loadedDevInfo);
+                  searchSocket.off(searchTopic);
+                  if (loadedDevInfo.pairing[1] == pairCode) {
+                    console.log('confirmed')
+
+                    isChecked = true;
+                    Swal.clickConfirm();
+                    return {
+                      deviceId: devId,
+                      pairingCode: pairCode
+                    };
+                  } else {
+                    console.log('PLPLPLPLPL')
+                    Swal.showValidationMessage(`
+                      Paring Failed
+                    `);
+                  }
+
+                });
+                console.log('checking');
+                Swal.showValidationMessage(`
+                  Please wait
+                `);
+                Swal.showLoading();
+                setTimeout(() => {
+                  Swal.showValidationMessage(`
+                    Paring Failed
+                  `);
+                }, 1000)
+              } else {
+                Swal.showValidationMessage(`
+                  There is not the device
+                `);
+              }
+            } else {
+              Swal.showValidationMessage(`
+                There is not the device
+              `);
+            }
+          }
+
+        } else {
+          Swal.showValidationMessage(`
+            Please feel the Device Id and Pairing Code fields
+          `);
+        }
+      }
+    }).then(result => {
+      console.log('checking result', result);
+      if (result.isConfirmed) {
+        setPairingData(result.value);
+        setIsAddDev(true);
+      }
+    });
+
   }
 
   return (
@@ -153,7 +267,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
           mt={'10px'}
         >
           <Typography variant="h3" display={'flex'} alignItems={'baseline'} color={colors.grey[100]}>
-            {t("title")} {isMobile && !isPortrait && <Typography variant='body1' marginX={1}>( <b>{deviceName}</b> - {deviceId})</Typography>}
+            {t("title")} {isMobile && !isPortrait && <Typography variant='body1' marginX={1}>( <b>{deviceName}</b> - {selected.name})</Typography>}
           </Typography>
           <IconButton onClick={handleClick}>
             {isCollapsed && <MenuOutlinedIcon />}
@@ -232,12 +346,12 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
             </Box>
           </ListItem>
           {devList.map((devItem, key) => (
-            <MenuItem key={key} selected={selected === devItem.clientid} onClick={() => { onSelectDevId(devItem.clientid); handleClose() }}
+            <MenuItem key={key} selected={selected.id === devItem.id} onClick={() => { onSelectDevId(devItem); handleClose() }}
               sx={{ width: '100vw' }}>
               <ListItemIcon>
                 <HomeOutlinedIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText>{devItem.clientid}</ListItemText>
+              <ListItemText>{devItem.name}</ListItemText>
             </MenuItem>
           ))}
         </Menu>
@@ -253,7 +367,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
               width={'100%'}
             >
               {!isCollapsed && <Typography variant="h4" display={'flex'} alignItems={'baseline'} color={colors.grey[100]}>
-                {t("title")} {isMobile && !isPortrait && <Typography variant='body1' marginX={1}>( <b>{deviceName}</b> - {deviceId})</Typography>}
+                {t("title")} {isMobile && !isPortrait && <Typography variant='body1' marginX={1}>( <b>{deviceName}</b> - {selected.name})</Typography>}
               </Typography>}
               <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                 {isCollapsed && <MenuOutlinedIcon />}
@@ -341,20 +455,20 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
           {devList.map((devItem, key) => (
             <ListItemButton
               key={key}
-              selected={selected === devItem.clientid}
-              onClick={() => { onSelectDevId(devItem.clientid) }}
+              selected={selected.id === devItem.id}
+              onClick={() => { onSelectDevId(devItem) }}
             >
               <ListItemIcon sx={{ justifyContent: 'center' }}>
                 <HomeOutlinedIcon />
               </ListItemIcon>
-              {!isCollapsed && <ListItemText primary={devItem.clientid} />}
+              {!isCollapsed && <ListItemText primary={devItem.name} />}
               <LightbulbIcon color={devItem.connected ? 'success' : 'primary'} />
 
             </ListItemButton>
           ))}
         </List>
       </ProSidebar>}
-      <AddDevModal isAddDev={isAddDev} onClose={handleAddDevClose} />
+      <AddDevModal isAddDev={isAddDev} onClose={handleAddDevClose} pairingData={pairingData} />
 
     </Box>
   );

@@ -10,6 +10,11 @@ const getJWTToken = () => {
   console.log('using Data', userData);
   return `Bearer ${userData.tokens}`;
 }
+const getUserData = () => {
+  const strUser = localStorage.getItem('userData');
+  const userData = JSON.parse(strUser);
+  return userData;
+}
 export const logoutApi = async () => {
   
   localStorage.removeItem("userData");
@@ -38,6 +43,49 @@ export const getAllUsers = async () => {
   return resultState;
 }
 
+export const getDevInfoApi = async (id) => {
+  let resultState = {state: '', data: {}};
+  const apiUrl = `${BASE_BACKEND_URL}mqtt/getDevInfo`;
+  const tokenData = getJWTToken();
+  await axios({
+    method: 'post',
+    url: apiUrl,
+    data: {id: id},
+    headers: {Authorization: tokenData}
+  }).then(function(response){
+    resultState.state = 'success';
+    resultState.data = response.data.data;
+  }).catch(function(err) {
+    console.log('err', err);
+    resultState.state = 'error';
+    resultState.data = err.message;
+    window.toastr.error('Users Gettting Api is wrong');
+  })
+  return resultState;
+}
+
+export const getUserDeviceListApi = async () => {
+  let resultState = {state: '', data: {}};
+  const apiUrl = `${BASE_BACKEND_URL}mqtt/userDevs`;
+  const tokenData = getJWTToken();
+  const userData = getUserData();
+  await axios({
+    method: 'post',
+    url: apiUrl,
+    data: {userId: userData.id},
+    headers: {Authorization: tokenData}
+  }).then(function(response){
+    resultState.state = 'success';
+    resultState.data = response.data.data;
+  }).catch(function(err) {
+    console.log('err', err);
+    resultState.state = 'error';
+    resultState.data = err.message;
+    window.toastr.error('Users Gettting Api is wrong');
+  })
+
+  return resultState;
+}
 export const existLogin = async (email) => {
   let resultState = {state: '', data: {}};
   const apiUrl = `${BASE_BACKEND_URL}user/existLogin`;
@@ -204,6 +252,7 @@ export const createDeviceApi = async (deveInfo) => {
   }).catch(function (err){
     resultState.state = 'error';
     resultState.data = err.message;
+    window.toastr.error(resultState.data);
   })
   return resultState;
 }
@@ -224,6 +273,7 @@ export const getDevicesApi = async () => {
   }).catch(function (err){
     resultState.state = 'error';
     resultState.data = err.message;
+    window.toastr.error(resultState.data);
   })
   return resultState;
 }
@@ -245,6 +295,7 @@ export const devConnection = async (devId) => {
     }).catch(function (err){
       resultState.state = 'error';
       resultState.data = err.message;
+      window.toastr.error(resultState.data);
     })
     return resultState;
 }

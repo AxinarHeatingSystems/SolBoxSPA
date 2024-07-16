@@ -1,0 +1,17 @@
+.devParingContainer {
+    z-index: 99999 !important;
+}
+
+.swal2-formControl {
+    width: fit-content;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: flex-start;
+}
+
+.swal2-label {
+    margin-left: 2em;
+    margin-right: 2em;
+}
