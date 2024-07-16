@@ -89,15 +89,12 @@ async function mqttcreatedev(devData) {
     console.log(devData);
     await kcAdminAuth();
     try {
-        let groupAttrs = [];
-        groupAttrs.push({
-            pairingCode: [devData.pairingData.pairingCode]
-        });
+        let groupAttrs = {};
+        groupAttrs = {pairingCode: [devData.pairingData.pairingCode]};
+        
         const devInfoKeys = Object.keys(devData.devInfo);
         devInfoKeys.map(keyItem => {
-            groupAttrs.push({
-                [keyItem]: [devData.devInfo[keyItem]]
-            });    
+            groupAttrs = {...groupAttrs, [keyItem]: [devData.devInfo[keyItem]]}
         });
         
         const newGroupData = {
