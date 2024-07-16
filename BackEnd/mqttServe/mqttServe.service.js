@@ -137,6 +137,7 @@ async function mqttDevicelist(userData) {
             }else{
                 groupItem.connected = false;
             }
+            return groupItem;
         })
         resultData = {state: 'success', data: ctGroupList};
     } catch (error) {
