@@ -2,6 +2,7 @@ const config = require('./../config.json');
 const mqtt = require('mqtt');
 const tmpDev = require('./../tmpDev.json');
 const axios = require('axios');
+const KcAdminClient = require('keycloak-admin').default;
 
 module.exports = {
     mqttclients,
@@ -10,6 +11,12 @@ module.exports = {
     mqttmessage,
     mqttpublish
 }
+
+const kcAdminClient = new KcAdminClient( {
+    baseUrl: config.keycloakPath,
+    realmName: 'master',
+  });
+
 const clientId = 'emqx_nodejs_' + Math.random().toString(16).substring(2, 8)
 
 const options = {
@@ -26,6 +33,17 @@ const options = {
  const mqttPath = `${config.protocol}://${config.host}:${config.port}`
  
 let lastMessage = tmpDev;
+
+async function kcAdminAuth () {
+    await kcAdminClient.auth({
+        username: config.keycloakUser,
+        password: config.keycloakPassword,
+        grantType: 'password',
+        clientId: config.keycloakClientId,
+        // totp: '123456', // optional Time-based One-time Password if OTP is required in authentication flow
+      });
+      
+}
 
 async function mqttclients(body) {
     console.log('mqttClients');
@@ -66,8 +84,34 @@ async function mqttconnect(input) {
     return 'mqTTConnect';
 }
 
-async function mqttcreatedev(devInfo) {
-    console.log(devInfo);
+async function mqttcreatedev(devData) {
+    let resultData = {};
+    console.log(devData);
+    await kcAdminAuth();
+    try {
+        let groupAttrs = [];
+        groupAttrs.push({
+            pairingCode: devData.pairingData.pairingCode
+        });
+        const devInfoKeys = Object.keys(devData.devInfo);
+        devInfoKeys.map(keyItem => {
+            groupAttrs.push({
+                [keyItem]: devData.devInfo[keyItem]
+            });    
+        });
+        
+        const newGroupData = {
+            name: devData.pairingData.deviceId,
+            attributes: groupAttrs,
+            realm: config.keycloakRealm
+        };
+        const createdGroup = await kcAdminClient.groups.create(newGroupData);
+        resultData = {state: 'success', data: createdGroup};
+    } catch (error) {
+        resultData = {state: 'failed', message: 'Google login is failed'};
+    }
+
+    return resultData;
 }
 
 async function mqttmessage(res) {
