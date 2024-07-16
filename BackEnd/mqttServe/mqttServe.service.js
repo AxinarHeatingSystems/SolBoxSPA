@@ -104,6 +104,8 @@ async function mqttcreatedev(devData) {
         };
         console.log(newGroupData)
         const createdGroup = await kcAdminClient.groups.create(newGroupData);
+        console.log(createdGroup);
+        const addGoupeMembre =  await kcAdminClient.users.addToGroup({id: devData.userId, groupId:createdGroup.id, realm: config.keycloakRealm});
         resultData = {state: 'success', data: createdGroup};
     } catch (error) {
         // console.log(error);
@@ -111,6 +113,11 @@ async function mqttcreatedev(devData) {
     }
 
     return resultData;
+}
+
+async function mqttDevicelist() {
+    kcAdminAuth();
+
 }
 
 async function mqttmessage(res) {
