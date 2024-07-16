@@ -17,7 +17,9 @@ function mqttClients(req, res, next) {
 
 function mqttCreateDev(req, res, next){
   mqttServeService.mqttcreatedev(req.body).then(
-    resData => resData? res.json(resData) : res.status(400).json({ message: 'connection is failed' })
+    resData => resData? 
+        resData.state == 'success'? 
+            res.json(resData) : res.status(400).json({ message: resData.message }) : res.status(400).json({ message: 'Google Auth is failed' })
   ).catch(err => next(err));
 }
 
