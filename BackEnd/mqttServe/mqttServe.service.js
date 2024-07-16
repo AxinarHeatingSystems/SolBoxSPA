@@ -88,28 +88,35 @@ async function mqttcreatedev(devData) {
     let resultData = {};
     console.log(devData);
     await kcAdminAuth();
+    
     try {
-        let groupAttrs = {};
-        groupAttrs = {pairingCode: [devData.pairingData.pairingCode]};
+        const existGroup = await kcAdminClient.groups.find({search: devData.pairingData.deviceId, realm: config.keycloakRealm});
+        if(existGroup.length < 1){
+            let groupAttrs = {};
+            groupAttrs = {pairingCode: [devData.pairingData.pairingCode]};
+            
+            const devInfoKeys = Object.keys(devData.devInfo);
+            devInfoKeys.map(keyItem => {
+                groupAttrs = {...groupAttrs, [keyItem]: [devData.devInfo[keyItem]]}
+            });
+            
+            const newGroupData = {
+                name: devData.pairingData.deviceId,
+                attributes: groupAttrs,
+                realm: config.keycloakRealm
+            };
+            console.log(newGroupData)
+            const createdGroup = await kcAdminClient.groups.create(newGroupData);
+            console.log(createdGroup);
+            const addGoupeMembre =  await kcAdminClient.users.addToGroup({id: devData.userId, groupId:createdGroup.id, realm: config.keycloakRealm});
+            resultData = {state: 'success', data: createdGroup};
+        }else{
+            resultData = {state: 'failed', message: 'The device is already exist'};    
+        }
         
-        const devInfoKeys = Object.keys(devData.devInfo);
-        devInfoKeys.map(keyItem => {
-            groupAttrs = {...groupAttrs, [keyItem]: [devData.devInfo[keyItem]]}
-        });
-        
-        const newGroupData = {
-            name: devData.pairingData.deviceId,
-            attributes: groupAttrs,
-            realm: config.keycloakRealm
-        };
-        console.log(newGroupData)
-        const createdGroup = await kcAdminClient.groups.create(newGroupData);
-        console.log(createdGroup);
-        const addGoupeMembre =  await kcAdminClient.users.addToGroup({id: devData.userId, groupId:createdGroup.id, realm: config.keycloakRealm});
-        resultData = {state: 'success', data: createdGroup};
     } catch (error) {
         // console.log(error);
-        resultData = {state: 'failed', message: 'Google login is failed'};
+        resultData = {state: 'failed', message: 'New Device is failed'};
     }
 
     return resultData;
