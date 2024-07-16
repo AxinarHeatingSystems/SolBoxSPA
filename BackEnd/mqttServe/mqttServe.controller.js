@@ -7,6 +7,8 @@ router.get('/devMessage', mqttMessage)
 router.post('/devControl', mqttPublish);
 router.post('/getClients', mqttClients);
 router.post('/createDev', mqttCreateDev);
+router.post('/userDevs', mqttUserDevs);
+
 module.exports = router;
 
 function mqttClients(req, res, next) {
@@ -19,7 +21,15 @@ function mqttCreateDev(req, res, next){
   mqttServeService.mqttcreatedev(req.body).then(
     resData => resData? 
         resData.state == 'success'? 
-            res.json(resData) : res.status(400).json({ message: resData.message }) : res.status(400).json({ message: 'Google Auth is failed' })
+            res.json(resData) : res.status(400).json({ message: resData.message }) : res.status(400).json({ message: 'New Device creating is failed' })
+  ).catch(err => next(err));
+}
+
+function mqttUserDevs(res, res, next){
+  mqttServeService.mqttDevicelist(req.body).then(
+    resData => resData? 
+        resData.state == 'success'? 
+            res.json(resData) : res.status(400).json({ message: resData.message }) : res.status(400).json({ message: 'Device list loading is failed' })
   ).catch(err => next(err));
 }
 

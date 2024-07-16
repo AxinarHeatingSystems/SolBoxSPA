@@ -7,6 +7,7 @@ const KcAdminClient = require('keycloak-admin').default;
 module.exports = {
     mqttclients,
     mqttcreatedev,
+    mqttDevicelist,
     mqttconnect,
     mqttmessage,
     mqttpublish
@@ -122,10 +123,20 @@ async function mqttcreatedev(devData) {
     return resultData;
 }
 
-async function mqttDevicelist() {
-    kcAdminAuth();
+async function mqttDevicelist(userData) {
+    let resultData = {};
+    console.log(userData)
+    await kcAdminAuth();
+    try {
+        const grouplist = await kcAdminClient.users.listGroups({id: userData.userId, realm: config.keycloakRealm});
+        resultData = {state: 'success', data: createdGroup};
+    } catch (error) {
+        resultData = {state: 'failed', message: 'Device list loading is failed'};
+    }
 
-}
+    return resultData;
+
+}   
 
 async function mqttmessage(res) {
     console.log(lastMessage);
