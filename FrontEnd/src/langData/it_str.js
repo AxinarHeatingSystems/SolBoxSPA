@@ -77,5 +77,9 @@ export const It_Str = {
     feel_devid_paircode: "Inserisci l'ID del tuo dispositivo o il codice di associazione",
     please_feel_input: "Per favore senti l'input",
     pairing_failed: "Associazione non riuscita",
-    user_not_exist: "L'utente non esiste"
+    user_not_exist: "L'utente non esiste",
+    delete: "Eliminare",
+    action: "Azione",
+    shared_users: "Utenti condivisi",
+    already_added: "È già stato aggiunto",
 }

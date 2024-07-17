@@ -7,10 +7,14 @@ import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Box, Butto
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useTranslation } from "react-i18next";
 import uploadIco from "../../assets/uploadIco.png"
+import loadingGif from "../../assets/loading.gif"
 import { createDeviceApi, uploadDevImgApi } from "../../axios/ApiProvider";
-
+import io from "socket.io-client";
 import "./addDevModal.css"
 import { useSelector } from "react-redux";
+
+const EndPoint = process.env.REACT_APP_BASE_BACKEND_URL;
+const tmpSocket = io(EndPoint);
 
 export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
   const allCountries = getAllCountriesName('en');
@@ -21,6 +25,7 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
   const { t } = useTranslation();
   const [country, setCountry] = useState('');
   const [city, setCity] = useState('');
+  const [deviceName, setDeviceName] = useState('');
   const [watterLimit, setWatterLimit] = useState(100);
   const [watterLimitError, setWatterLimitError] = useState(false);
   const [isHeatSource, setIsHeatSource] = useState(false);
@@ -40,11 +45,36 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
 
   const [isExpanded, setIsExpanded] = useState(false);
 
+  const [isSubmiting, setIsSubmiting] = useState(false);
+
+
   useEffect(() => {
     const tmpList = [];
     allCountries.map(ctItem => { tmpList.push({ label: ctItem.name, iso: ctItem.iso }) });
     setCountryList(tmpList);
-  }, [])
+    console.log(pairingData);
+    if (pairingData) {
+      const devId = pairingData?.deviceId
+      tmpSocket.emit('join', { devId }, (error) => {
+        if (error) {
+          alert(error);
+        }
+      });
+      const messagePath = `devname/axinar/solbox/${devId}/jsonTelemetry`
+      tmpSocket.on(messagePath, message => {
+        console.log(messagePath, message);
+        parsingDevName(message);
+        tmpSocket.off(messagePath);
+      });
+    }
+
+  }, [pairingData])
+
+  const parsingDevName = (deviceMessage) => {
+    const devData = JSON.parse(deviceMessage);
+    console.log(devData);
+    setDeviceName(devData.DeviceName)
+  }
 
   const onCountryChange = (e, value) => {
     console.log('country Change', e, value);
@@ -94,6 +124,7 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
 
   const onNewDevSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmiting(true);
     if (e.target.checkValidity()) {
       const devInfo = {
         country: country.label,
@@ -102,6 +133,9 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
         isHeatSource: isHeatSource,
         solopanelPower: solopanelPower,
         installName: installName
+      }
+      if (deviceName) {
+        devInfo.DeviceName = deviceName;
       }
       if (isHeatSource) {
         devInfo.heatType = heatType;
@@ -130,8 +164,11 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
       console.log(createdRes);
       if (createdRes.state === 'success') {
         onClose();
+      } else {
+        setIsSubmiting(false);
       }
-
+    } else {
+      setIsSubmiting(false);
     }
     e.preventDefault();
   }
@@ -171,11 +208,8 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">
-        {"Use Google's location service?"}
-      </DialogTitle>
       <DialogContent>
-        <Box sx={{ width: '100%' }}>
+        <Box sx={{ position: "relative", width: '100%' }}>
           <Typography id="modal-modal-title" variant="h2" component="h2">
             {t('device_info')}
           </Typography>
@@ -353,10 +387,13 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
               </Accordion>
             </Grid>
             <Grid xs={12} padding={1} display={'flex'} justifyContent={'end'}>
-              <Button variant="contained" type="submit" color="success" sx={{ marginX: '5px', fontWeight: 'bold' }}>{t('add')}</Button>
-              <Button variant="contained" color="error" onClick={onClose} sx={{ marginX: '5px', fontWeight: 'bold' }}>{t('cancel')}</Button>
+              <Button disabled={isSubmiting} variant="contained" type="submit" color="success" sx={{ marginX: '5px', fontWeight: 'bold' }}>{t('add')}</Button>
+              <Button disabled={isSubmiting} variant="contained" color="error" onClick={onClose} sx={{ marginX: '5px', fontWeight: 'bold' }}>{t('cancel')}</Button>
             </Grid>
           </Grid>
+          {isSubmiting && <Box className='submit-loading'>
+            <img src={loadingGif} alt="loading" width={150} height={150} />
+          </Box>}
         </Box>
       </DialogContent>
       <DialogActions>

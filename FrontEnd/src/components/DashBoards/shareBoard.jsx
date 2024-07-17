@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useTheme, Box, Button, Grid, TextField, Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Typography } from "@mui/material";
+import { useTheme, Box, Button, Grid, TextField, Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Typography, CircularProgress } from "@mui/material";
 import LanIcon from '@mui/icons-material/Lan';
 import { getAllUsers, loadSharedUsersApi, removeSharedUserApi } from '../../axios/ApiProvider';
 import { useTranslation } from 'react-i18next';
@@ -14,13 +14,14 @@ export const ShareBoards = ({ devMetaData }) => {
   const { t } = useTranslation();
   const colors = tokens(theme.palette.mode);
   const userData = useSelector(store => store.userData)
+  const [shareTabloading, setShareTabloading] = useState(true);
   const [availableEmails, setAvailableEmails] = useState([]);
   const [shareEmail, setShareEmail] = useState();
   const [shareEmailErr, setShareEmailErr] = useState(false); 
   const [errorTxt, setErrorTxt] = useState('');
   const [sharedUsers, setSharedUsers] = useState([]);
-
-
+  const [isSharing, setIsSharing] = useState(false);
+  const [isDeleteId, setDeleteId] = useState();
   useEffect(() => {
     loadAllUsers();
     loadSharedUsers()
@@ -30,6 +31,7 @@ export const ShareBoards = ({ devMetaData }) => {
     console.log(resData);
     if (resData.state !== 'success') return;
     settingSharedUser(resData.data)
+    setShareTabloading(false);
   }
   const settingSharedUser = (arrData) => {
     const tmpArr = [];
@@ -62,6 +64,7 @@ export const ShareBoards = ({ devMetaData }) => {
   }
 
   const onShareSubmit = async (e) => {
+    setIsSharing(true);
     e.preventDefault();
     console.log('shareSubmit', e);
     const emailAble = availableEmails.find(emailItem => emailItem.email === shareEmail);
@@ -79,28 +82,33 @@ export const ShareBoards = ({ devMetaData }) => {
           })
           console.log('sharedlist', sharedlist);
           setSharedUsers(sharedlist);
+          setIsSharing(false);
         } else {
           setErrorTxt(t('Email is wrong'))
           setShareEmailErr(true);
+          setIsSharing(false);
         }
       } else {
         setErrorTxt(t('You can not reshare it'))
         setShareEmailErr(true);
+        setIsSharing(false);
       }
 
     } else {
       setErrorTxt(t('user_not_exist'))
       setShareEmailErr(true);
-
+      setIsSharing(false);
     }
   }
 
   const onRemoveSharedUser = async (userData) => {
+    setDeleteId(userData.id);
     const removedRes = await removeSharedUserApi({ userId: userData.id, devId: devMetaData.id });
     console.log(removedRes);
-    if (removedRes.state !== 'success') return;
+    if (removedRes.state !== 'success') { setDeleteId(''); return; }
 
     settingSharedUser(removedRes.data);
+    setDeleteId('');
   }
 
   return (
@@ -118,7 +126,9 @@ export const ShareBoards = ({ devMetaData }) => {
           <Grid item xs={12} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
             <LanIcon fontSize="large" color='success' />
 
-              <Button type='submit' variant='contained' sx={{ paddingX: '30px', fontWeight: 'bold' }} color='success'>{t('share_device')}</Button>
+              <Button disabled={isSharing} type='submit' variant='contained' sx={{ paddingX: '30px', fontWeight: 'bold' }} color='success'>
+                {isSharing ? <CircularProgress size={20} /> : t('share_device')}
+              </Button>
           </Grid>
           <Grid item xs={12} >
             <TextField type="email" fullWidth id="outlined-basic" label={t('email')}
@@ -128,16 +138,16 @@ export const ShareBoards = ({ devMetaData }) => {
           </Grid>
         </Grid>
         </Box>
-        <Box paddingTop={2}>
-          <Typography variant='h4' marginBottom={2}>Shared Users</Typography>
-          <TableContainer component={Paper} sx={{ backgroundColor: 'transparent' }}>
+        <Box sx={{ position: 'relative' }} paddingTop={2}>
+          <Typography variant='h4' marginBottom={2}>{t('shared_users')}</Typography>
+          <TableContainer component={Paper} sx={{ position: 'relative', backgroundColor: 'transparent' }}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell>Email</TableCell>
-                  <TableCell>First Name</TableCell>
-                  <TableCell>Last Name</TableCell>
-                  <TableCell align="right">Action</TableCell>
+                  <TableCell>{t('email')}</TableCell>
+                  <TableCell>{t('first_name')}</TableCell>
+                  <TableCell>{t('first_name')}</TableCell>
+                  <TableCell align="right">{t('action')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -156,14 +166,20 @@ export const ShareBoards = ({ devMetaData }) => {
                       {userItem.lastName}
                     </TableCell>
                     <TableCell align="right">
-                      <Button variant='contained' onClick={() => onRemoveSharedUser(userItem)} size='small'>Delete</Button>
+                      <Button disabled={isDeleteId == userItem.id} variant='contained' onClick={() => onRemoveSharedUser(userItem)} size='small'>
+                        {isDeleteId == userItem.id ? <CircularProgress size={20} /> : t('delete')}
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
 
               </TableBody>
             </Table>
+            {shareTabloading && <Box sx={{ position: 'absolute', top: 0, width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <CircularProgress size={30} color='success' />
+            </Box>}
           </TableContainer>
+
         </Box>
 
       </Box>

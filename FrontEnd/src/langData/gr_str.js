@@ -77,5 +77,9 @@ export const Gr_Str = {
     feel_devid_paircode: "Εισαγάγετε το αναγνωριστικό της συσκευής σας ή τον κωδικό σύζευξης",
     please_feel_input: "Παρακαλώ αισθανθείτε τη συμβολή",
     pairing_failed: "Η σύζευξη απέτυχε",
-    user_not_exist: "Ο χρήστης δεν υπάρχει"
+    user_not_exist: "Ο χρήστης δεν υπάρχει",
+    delete: "Διαγράφω",
+    action: "Δράση",
+    shared_users: "Κοινόχρηστοι χρήστες",
+    already_added: "Έχει ήδη προστεθεί",
 }

@@ -77,5 +77,9 @@ export const Es_Str = {
     feel_devid_paircode: "Ingrese el ID de su dispositivo o el código de emparejamiento",
     please_feel_input: "Por favor, siente la entrada",
     pairing_failed: "Emparejamiento fallido",
-    user_not_exist: "La usuario no existe"
+    user_not_exist: "La usuario no existe",
+    delete: "Borrar",
+    action: "Acción",
+    shared_users: "Usuarios compartidas",
+    already_added: "ya esta agregado",
 }

@@ -84,10 +84,10 @@ const Dashboard = () => {
       console.log('Dev Controlled', error);
     })
 
-    // return () => {
-    //   socket.off('message');
-    //   socket.off(devTopic);
-    // }
+    return () => {
+      socket.off('message');
+      socket.off(devTopic);
+    }
   }, [deviceId, devTopic, socketEventCount])
 
   const subMenuClicked = (menuId) => {

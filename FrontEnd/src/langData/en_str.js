@@ -77,5 +77,9 @@ export const En_Str = {
     feel_devid_paircode: "Please input your device Id or pairing code",
     please_feel_input: "Please feel the input",
     pairing_failed: "Pairing Failed",
-    user_not_exist: "User is not exist"
+    user_not_exist: "User is not exist",
+    delete: "Delete",
+    action: "Action",
+    shared_users: "Shared Users",
+    already_added: "It is already added",
 }

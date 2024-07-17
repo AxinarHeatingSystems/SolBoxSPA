@@ -125,15 +125,30 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
     console.log(userDevs);
     if (userDevs.state !== 'success') return;
     if (userDevs.data.length > 0) {
+      const devArr = parsingDeviceData(userDevs.data);
       if (!selected) {
-        onSelectDevId(userDevs.data[0]);
+        onSelectDevId(devArr[0]);
       }
-      setDevList(userDevs.data);
+      setDevList(devArr);
+      console.log(devArr);
 
     } else {
       handelAddDevOpen();
     }
+  }
 
+  const parsingDeviceData = (devList) => {
+    let devArr = [];
+    devList.map(devItem => {
+      const attrKeys = Object.keys(devItem.attributes);
+      if (attrKeys.find(keyItem => keyItem === 'DeviceName')) {
+        devItem.DeviceName = devItem.attributes['DeviceName'][0];
+      } else {
+        devItem.DeviceName = devItem.name
+      }
+      devArr.push(devItem);
+    })
+    return devArr;
   }
 
   const onSelectDevId = (devData) => {
@@ -163,8 +178,9 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
       confirmButtonText: t('search'),
       showLoaderOnConfirm: true,
       preConfirm: async (inputVal) => {
+        let errorTxt = 'pairing_failed';
         if (inputVal) {
-          console.log(inputVal);
+          console.log(inputVal, devList);
           const allDevs = await getDevicesApi();
           console.log(allDevs);
           const devsArr = allDevs.data.data;
@@ -175,30 +191,35 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
             const hexVal = parseInt(devItem.clientid, 16);
             const hexStr = hexVal.toString();
             const pairingNum = hexStr.slice(hexStr.length - 6, hexStr.length);
-            if (devItem.clientid === inputVal) {
-              isPaired = true;
-              paringData = {
-                deviceId: devItem.clientid,
-                pairingCode: pairingNum
-              }
-              return;
-            } else if (pairingNum === inputVal) {
-              // if (pairingNum === inputVal) {
-              isPaired = true;
-              paringData = {
-                deviceId: devItem.clientid,
-                pairingCode: pairingNum
-              }
-              return;
+            const existDev = devList.find(dev => dev.name === devItem.clientid);
+            console.log(existDev);
+            if (!existDev) {
+              if (devItem.clientid === inputVal) {
+                isPaired = true;
+                paringData = {
+                  deviceId: devItem.clientid,
+                  pairingCode: pairingNum
+                }
+                return;
+              } else if (pairingNum === inputVal) {
+                // if (pairingNum === inputVal) {
+                isPaired = true;
+                paringData = {
+                  deviceId: devItem.clientid,
+                  pairingCode: pairingNum
+                }
+                return;
               // }
+              }
+            } else {
+              errorTxt = 'already_added'
             }
-
           })
           if (isPaired) {
             return paringData;
           } else {
             Swal.showValidationMessage(`
-              ${t('pairing_failed')}
+              ${t(errorTxt)}
             `);
           }
         } else {
@@ -315,7 +336,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
               <ListItemIcon>
                 <HomeOutlinedIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText>{devItem.name}</ListItemText>
+              <ListItemText>{devItem.DeviceName}</ListItemText>
             </MenuItem>
           ))}
         </Menu>
@@ -425,7 +446,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
               <ListItemIcon sx={{ justifyContent: 'center' }}>
                 <HomeOutlinedIcon />
               </ListItemIcon>
-              {!isCollapsed && <ListItemText primary={devItem.name} />}
+              {!isCollapsed && <ListItemText primary={devItem.DeviceName} />}
               <LightbulbIcon color={devItem.connected ? 'success' : 'primary'} />
 
             </ListItemButton>
