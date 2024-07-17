@@ -13,6 +13,7 @@ module.exports = {
     mqttcreatedev,
     mqttsharedev,
     mqttloadsharedUsers,
+    mqttremoveshareduser,
     mqttDevicelist,
     mqttDeviceInfo,
     mqttdevFileupload,
@@ -75,6 +76,10 @@ async function mqttclients() {
             console.log('errored')
         });
     return clientList;
+}
+
+async function mqttremoveshareduser(devData){
+    console.log(devData);
 }
 
 async function mqttloadsharedUsers(devData) {
