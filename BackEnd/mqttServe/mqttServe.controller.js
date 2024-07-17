@@ -10,6 +10,7 @@ router.get('/devMessage', mqttMessage)
 router.post('/devControl', mqttPublish);
 router.post('/getClients', mqttClients);
 router.post('/createDev', mqttCreateDev);
+router.post('/shareDev', mqttShareDev);
 router.post('/userDevs', mqttUserDevs);
 router.post('/getDevInfo', mqttDeviceInfo);
 router.post('/uploadDevImage', mqttDevFileUpload);
@@ -19,6 +20,14 @@ module.exports = router;
 function mqttClients(req, res, next) {
   mqttServeService.mqttclients(req.body).then(
     resData => resData? res.json(resData) : res.status(400).json({ message: 'connection is failed' })
+  ).catch(err => next(err));
+}
+
+function mqttShareDev(req, res, next){
+  mqttServeService.mqttsharedev(req.body).then(
+    resData => resData? 
+        resData.state == 'success'? 
+            res.json(resData) : res.status(400).json({ message: resData.message }) : res.status(400).json({ message: 'New Device creating is failed' })
   ).catch(err => next(err));
 }
 

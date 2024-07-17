@@ -11,6 +11,7 @@ const KcAdminClient = require('keycloak-admin').default;
 module.exports = {
     mqttclients,
     mqttcreatedev,
+    mqttsharedev,
     mqttDevicelist,
     mqttDeviceInfo,
     mqttdevFileupload,
@@ -75,6 +76,10 @@ async function mqttclients() {
     return clientList;
 }
 
+async function mqttsharedev(userData) {
+    console.log(userData);
+}
+
 async function mqttcreatedev(devData) {
     let resultData = {};
     console.log(devData);
@@ -84,6 +89,7 @@ async function mqttcreatedev(devData) {
         const existGroup = await kcAdminClient.groups.find({search: devData.pairingData.deviceId, realm: config.keycloakRealm});
         if(existGroup.length < 1){
             let groupAttrs = {};
+            groupAttrs = {devOwner: devData.userId}
             groupAttrs = {pairingCode: [devData.pairingData.pairingCode]};
             
             const devInfoKeys = Object.keys(devData.devInfo);
