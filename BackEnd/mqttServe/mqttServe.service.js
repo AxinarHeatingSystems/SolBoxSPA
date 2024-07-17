@@ -215,8 +215,9 @@ async function mqttDevicelist(userData) {
             }else{
                 groupItem.connected = false;
             }
-            // const groupData = await kcAdminClient.groups.findOne({id: groupItem.id, realm: config.keycloakRealm})
-            console.log(groupItem.attributes);
+            const groupData = await kcAdminClient.groups.findOne({id: groupItem.id, realm: config.keycloakRealm})
+            groupItem.attributes = groupData.attributes;
+            // console.log(groupItem.attributes);
             // return groupItem;
             ctGroupList.push(groupItem)
         }
