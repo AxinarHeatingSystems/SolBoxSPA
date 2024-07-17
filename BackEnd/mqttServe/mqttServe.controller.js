@@ -27,7 +27,7 @@ function mqttShareDev(req, res, next){
   mqttServeService.mqttsharedev(req.body).then(
     resData => resData? 
         resData.state == 'success'? 
-            res.json(resData) : res.status(400).json({ message: resData.message }) : res.status(400).json({ message: 'New Device creating is failed' })
+            res.json(resData.data) : res.status(400).json({ message: resData.message }) : res.status(400).json({ message: 'New Device creating is failed' })
   ).catch(err => next(err));
 }
 

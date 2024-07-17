@@ -76,8 +76,18 @@ async function mqttclients() {
     return clientList;
 }
 
-async function mqttsharedev(userData) {
-    console.log(userData);
+async function mqttsharedev(shareData) {
+    let resultData = {};
+    console.log(shareData);
+    await kcAdminAuth();
+    try {
+        const addGoupeMembre =  await kcAdminClient.users.addToGroup({id: shareData.userId, groupId: shareData.devId, realm: config.keycloakRealm}); 
+        const shareduserlist = await kcAdminClient.groups.listMembers({id: shareData.devId, realm: config.keycloakRealm});
+        resultData = {state: 'success', data: shareduserlist};
+    } catch (error) {
+        resultData = {state: 'failed', message: 'Device Sharing is failed'};  
+    }
+    return resultData;
 }
 
 async function mqttcreatedev(devData) {
