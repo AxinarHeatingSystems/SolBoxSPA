@@ -151,6 +151,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
     loadDevlist();
   }
   const handelAddDevOpen = async () => {
+    // setIsAddDev(true);
     Swal.fire({
       title: t('searching_your_device'),
       input: "text",
@@ -214,105 +215,6 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
         setIsAddDev(true);
       }
     });
-    // await Swal.fire({
-    //   customClass: {
-    //     container: 'devParingContainer',
-    //     popup: 'devParingPopup',
-    //   },
-    //   title: t('searching_your_device'),
-    //   html: `
-    //     <div class="swal2-formControl">
-    //       <label class="swal2-label">${t('device_id')}</label>
-    //       <input type="text" name="deviceId" id="swal-input1" class="swal2-input" >
-    //     </div>
-    //     <div class="swal2-formControl">
-    //       <label class="swal2-label">${t('pairing_code')}</label>
-    //       <input type="text" name="pairingCode" id="swal-input2" class="swal2-input">
-    //     </div>
-    //   `,
-    //   preConfirm: async () => {
-    //     const devId = document.getElementById("swal-input1").value;
-    //     const pairCode = document.getElementById("swal-input2").value;
-
-    //     if (devId && pairCode) {
-    //       const searchSocket = io(EndPoint);
-    //       const allDevs = await getDevicesApi();
-    //       if (isChecked) {
-    //         return {
-    //           deviceId: devId,
-    //           pairingCode: pairCode
-    //         };
-    //       } else {
-    //         if (allDevs.state === 'success') {
-    //           let loadedDevInfo = null;
-    //           const devsArr = allDevs.data.data;
-    //           const existDev = devsArr.find(item => item.clientid === devId);
-    //           console.log('existDev', existDev);
-    //           if (existDev) {
-    //             const searchTopic = `axinar/solbox/${devId}/jsonTelemetry`;
-
-    //             searchSocket.emit('join', { devId }, (error) => {
-    //               if (error) {
-    //                 alert(error);
-    //               }
-    //             });
-    //             await searchSocket.on(searchTopic, message => {
-    //               console.log(message);
-    //               loadedDevInfo = JSON.parse(message);
-    //               console.log(loadedDevInfo);
-    //               searchSocket.off(searchTopic);
-    //               if (loadedDevInfo.pairing[1] === pairCode) {
-    //                 console.log('confirmed')
-
-    //                 isChecked = true;
-    //                 Swal.clickConfirm();
-    //                 return {
-    //                   deviceId: devId,
-    //                   pairingCode: pairCode
-    //                 };
-    //               } else {
-    //                 console.log('PLPLPLPLPL')
-    //                 Swal.showValidationMessage(`
-    //                   Paring Failed
-    //                 `);
-    //               }
-
-    //             });
-    //             console.log('checking');
-    //             Swal.showValidationMessage(`
-    //               Please wait
-    //             `);
-    //             Swal.showLoading();
-    //             setTimeout(() => {
-    //               Swal.showValidationMessage(`
-    //                 Paring Failed
-    //               `);
-    //             }, 1000)
-    //           } else {
-    //             Swal.showValidationMessage(`
-    //               There is not the device
-    //             `);
-    //           }
-    //         } else {
-    //           Swal.showValidationMessage(`
-    //             There is not the device
-    //           `);
-    //         }
-    //       }
-
-    //     } else {
-    //       Swal.showValidationMessage(`
-    //         Please feel the Device Id and Pairing Code fields
-    //       `);
-    //     }
-    //   }
-    // }).then(result => {
-    //   console.log('checking result', result);
-    //   if (result.isConfirmed) {
-    //     setPairingData(result.value);
-    //     setIsAddDev(true);
-    //   }
-    // });
 
   }
 

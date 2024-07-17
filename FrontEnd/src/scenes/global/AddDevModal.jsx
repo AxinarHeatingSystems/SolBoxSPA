@@ -8,7 +8,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardM
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useTranslation } from "react-i18next";
 import uploadIco from "../../assets/uploadIco.png"
-import { createDeviceApi } from "../../axios/ApiProvider";
+import { createDeviceApi, uploadDevImgApi } from "../../axios/ApiProvider";
 
 import "./addDevModal.css"
 import { useSelector } from "react-redux";
@@ -95,11 +95,16 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
         }
       }
       if (isExpanded) {
+
         devInfo.useDevType = useDevType;
         devInfo.installEmail = installEmail;
         devInfo.installPhone = installPhone;
         devInfo.boilerContact = boilerContact;
         devInfo.gpsLoc = gpsLoc;
+        if (uploadImg) {
+          devInfo.devImage = uploadImg;
+        }
+
       }
       const newDevData = {
         userId: userData.id,
@@ -120,14 +125,23 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
     picuploader.current.click();
   }
 
-  const chooseUploadfile = (e) => {
+  const chooseUploadfile = async (e) => {
     if (!e || !e.target || !e.target.files[0]) {
       // window.toastr.warning('file select error')
       return
     }
-    setUploadImg(e.target.files[0])
-    setPreviewImg(uploadIco)
-    console.log(uploadImg);
+    // setUploadImg(e.target.files[0])
+    let imgFile = e.target.files[0];
+    const newImgUrl = URL.createObjectURL(imgFile);
+    setPreviewImg(newImgUrl)
+    const formData = new FormData()
+    formData.append('image', imgFile);
+    const uploadRes = await uploadDevImgApi(formData);
+    console.log(uploadRes);
+    if (uploadRes.status !== 200) return;
+
+    setUploadImg(uploadRes.data);
+    // console.log(uploadImg);
   }
 
   const onAccodionChange = (e, expanded) => {

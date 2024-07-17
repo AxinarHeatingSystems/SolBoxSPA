@@ -64,6 +64,26 @@ export const getDevInfoApi = async (id) => {
   return resultState;
 }
 
+export const uploadDevImgApi = async (imageForm) => {
+  let resultState;
+  const tokenData = getJWTToken();
+  const apiUrl = `${BASE_BACKEND_URL}mqtt/uploadDevImage`;
+  // axios.post(`${BASE_BACKEND_URL}mqtt/uploadDevImage`, formData, {
+  await axios({
+    method: 'post',
+    url: apiUrl,
+    data: imageForm,
+    headers: {Authorization: tokenData}
+  }).then(res => {
+    console.log(res)
+    resultState = res;
+  }).catch(err => {
+    console.log(err)
+    resultState = err;
+  })
+  return resultState;
+}
+
 export const getUserDeviceListApi = async () => {
   let resultState = {state: '', data: {}};
   const apiUrl = `${BASE_BACKEND_URL}mqtt/userDevs`;

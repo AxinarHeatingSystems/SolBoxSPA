@@ -69,7 +69,9 @@ const Dashboard = () => {
     socket.on('DevSubscribed', message => {
       console.log('DevSubscribed', message);
     });
+    console.log(devTopic);
     socket.on(devTopic, message => {
+      console.log(devTopic, message);
       loadDeviceInfo(message);
       setSocketEventCount(prev => prev + 1);
     });
@@ -82,21 +84,21 @@ const Dashboard = () => {
       console.log('Dev Controlled', error);
     })
 
-    return () => {
-      socket.off('message');
-      socket.off(devTopic);
-    }
+    // return () => {
+    //   socket.off('message');
+    //   socket.off(devTopic);
+    // }
   }, [deviceId, devTopic, socketEventCount])
 
   const subMenuClicked = (menuId) => {
     setSubmenuId(menuId);
   }
   const onChangeDevId = async (devData) => {
-    socket.emit('leave', { deviceId }, (error) => {
-      if (error) {
-        alert(error);
-      }
-    });
+    // socket.emit('leave', { deviceId }, (error) => {
+    //   if (error) {
+    //     alert(error);
+    //   }
+    // });
     const devId = devData.name;
     const devMeta = await getDevInfoApi(devData.id);
     console.log('ssssss', devMeta, devMetaData);
