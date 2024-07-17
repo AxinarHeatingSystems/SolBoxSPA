@@ -166,8 +166,8 @@ export const ShareBoards = ({ devMetaData }) => {
                       {userItem.lastName}
                     </TableCell>
                     <TableCell align="right">
-                      <Button disabled={isDeleteId == userItem.id} variant='contained' onClick={() => onRemoveSharedUser(userItem)} size='small'>
-                        {isDeleteId == userItem.id ? <CircularProgress size={20} /> : t('delete')}
+                      <Button disabled={isDeleteId === userItem.id} variant='contained' onClick={() => onRemoveSharedUser(userItem)} size='small'>
+                        {isDeleteId === userItem.id ? <CircularProgress size={20} /> : t('delete')}
                       </Button>
                     </TableCell>
                   </TableRow>
