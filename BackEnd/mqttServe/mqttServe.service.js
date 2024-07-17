@@ -79,7 +79,15 @@ async function mqttclients() {
 
 async function mqttloadsharedUsers(devData) {
     let resultData = {};
+    await kcAdminAuth();
     console.log(devData);
+    try {
+        const shareduserlist = await kcAdminClient.groups.listMembers({id: devData.id, realm: config.keycloakRealm});
+        resultData = {state: 'success', data: shareduserlist};
+    } catch (error) {
+        resultData = {state: 'failed', message: 'Shared users loading failed'};  
+    }
+    return resultData;
 }
 
 async function mqttsharedev(shareData) {
