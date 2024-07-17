@@ -1,7 +1,11 @@
 const config = require('./../config.json');
 const mqtt = require('mqtt');
+const process = require('process');
 const tmpDev = require('./../tmpDev.json');
 const axios = require('axios');
+const fs = require('fs');
+const multiparty = require('multiparty');
+
 const KcAdminClient = require('keycloak-admin').default;
 
 module.exports = {
@@ -9,6 +13,7 @@ module.exports = {
     mqttcreatedev,
     mqttDevicelist,
     mqttDeviceInfo,
+    mqttdevFileupload,
     mqttconnect,
     mqttmessage,
     mqttpublish
@@ -70,22 +75,6 @@ async function mqttclients() {
     return clientList;
 }
 
-async function mqttconnect(input) {
-    console.log(input);
-    // const devId = input.devId;
-    // // const devId = '08B61F971EAC';
-    // const devTopic = `axinar/solbox/${devId}/jsonTelemetry`
-    // console.log('devTopic', devTopic);
-    // const clientsTopic = `$SYS/brokers`;
-    // client.subscribe(devTopic, (err) => {
-    //     if (!err) {
-    //     //   client.publish("presence", "Hello mqtt");
-    //         console.log('subscribed');
-    //     }
-    //   });
-    return 'mqTTConnect';
-}
-
 async function mqttcreatedev(devData) {
     let resultData = {};
     console.log(devData);
@@ -122,6 +111,47 @@ async function mqttcreatedev(devData) {
     }
 
     return resultData;
+}
+
+async function mqttdevFileupload(imageData) {
+    // console.log(req.files);
+    var form = new multiparty.Form();
+    let imgPath = '';
+    form.parse(imageData, function(err, fields, files) {
+        // fields fields fields
+        console.log(files.image);
+        // console.log("Current directory:", __dirname, process.cwd());
+        const rootPath = process.cwd();
+        // const {error, e} = await fs.readFile(files.image[0].path);
+        // if(error) return;
+        // imgPath = `${rootPath}/images/${files.image[0].originalFilename}`;
+        // await fs.writeFileSync(imgPath,e);
+        fs.readFile(files.image[0].path,(err,e)=>{
+            if(err) console.log(err);
+            imgPath = `${rootPath}/images/${files.image[0].originalFilename}`;
+            fs.writeFile(imgPath,e,(err)=>{
+                console.log(err)
+            });
+
+        });    
+    });
+    return imgPath;
+}
+
+async function mqttconnect(input) {
+    console.log(input);
+    // const devId = input.devId;
+    // // const devId = '08B61F971EAC';
+    // const devTopic = `axinar/solbox/${devId}/jsonTelemetry`
+    // console.log('devTopic', devTopic);
+    // const clientsTopic = `$SYS/brokers`;
+    // client.subscribe(devTopic, (err) => {
+    //     if (!err) {
+    //     //   client.publish("presence", "Hello mqtt");
+    //         console.log('subscribed');
+    //     }
+    //   });
+    return 'mqTTConnect';
 }
 
 async function mqttDevicelist(userData) {

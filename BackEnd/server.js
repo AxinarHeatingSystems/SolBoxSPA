@@ -9,6 +9,7 @@ const errorHandler = require('./_helpers/error-handler');
 const { default: mqtt } = require('mqtt');
 const socketio = require('socket.io');
 const config = require('./config.json');
+const path = require('path');
 
 const app = express();
 
@@ -26,6 +27,7 @@ const io = socketio(httServer, {cors: {
 }});
 
 // api routes
+app.use('/images', express.static(path.join(__dirname, '/images')));
 app.use('/mqtt', require('./mqttServe/mqttServe.controller'));
 app.use('/user', require('./users/users.controller'));
 
@@ -68,7 +70,7 @@ io.on('connect', (socket) => {
         }else{
           callback(err);
           socket.emit('devdiscon', 'devDiscon');
-          console.log(err);
+          console.log('eeee', err);
         }
       });
   
@@ -87,7 +89,7 @@ io.on('connect', (socket) => {
     })
 
     client.on('message', (topic, payload) => {
-      // console.log('Received Message:', topic, payload.toString())
+      console.log('Received Message:', topic, payload.toString())
       const lastMessage = payload.toString();
       socket.emit(topic, lastMessage);
       socket.emit('message', lastMessage);

@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const mqttServeService = require('./mqttServe.service');
+const multiparty = require('multiparty');
+const process = require('process');
+const fs = require('fs');
 
 router.post('/devConnect', mqttConnection)
 router.get('/devMessage', mqttMessage)
@@ -9,6 +12,7 @@ router.post('/getClients', mqttClients);
 router.post('/createDev', mqttCreateDev);
 router.post('/userDevs', mqttUserDevs);
 router.post('/getDevInfo', mqttDeviceInfo);
+router.post('/uploadDevImage', mqttDevFileUpload);
 
 module.exports = router;
 
@@ -47,6 +51,43 @@ function mqttConnection(req, res, next) {
   mqttServeService.mqttconnect(req.body).then(
     resData => resData? res.json(resData) : res.status(400).json({ message: 'connection is failed' })
   ).catch(err => next(err));
+}
+
+function mqttDevFileUpload(req, res, next){
+  var form = new multiparty.Form();
+    let imgPath = '';
+    try {
+      form.parse(req, function(err, fields, files) {
+        // fields fields fields
+        console.log(files.image);
+        // console.log("Current directory:", __dirname, process.cwd());
+        const rootPath = process.cwd();
+        // const {error, e} = await fs.readFile(files.image[0].path);
+        // if(error) return;
+        // imgPath = `${rootPath}/images/${files.image[0].originalFilename}`;
+        // await fs.writeFileSync(imgPath,e);
+        fs.readFile(files.image[0].path,(err,e)=>{
+            if(err) console.log(err);
+            imgPath = `/images/${files.image[0].originalFilename}`;
+            const wrPath = `${rootPath}/images/${files.image[0].originalFilename}`;
+            fs.writeFile(wrPath,e,(err)=>{
+                console.log(err)
+                if(!err){
+                  res.json(imgPath);
+                }else{
+                  res.status(400).json({ message: 'image upload is failed' })
+                }
+            });
+
+        });    
+    });
+    } catch (error) {
+      next(err)
+    }
+    
+  // mqttServeService.mqttdevFileupload(req).then(
+  //   resData => resData? res.json(resData) : res.status(400).json({ message: 'image upload is failed' })
+  // ).catch(err => next(err));
 }
 
 function mqttMessage(req, res, next) {

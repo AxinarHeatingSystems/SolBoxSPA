@@ -10,6 +10,7 @@ function jwtAuth() {
     return expressJwt({ secret, algorithms: ['HS256'], isRevoked }).unless({
         path: [
             // public routes that don't require authentication
+            '/images/*',
             '/user/googleauth',
             '/user/googleregister',
             '/user/resetPassword',
