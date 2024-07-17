@@ -84,9 +84,7 @@ async function mqttremoveshareduser(devData){
     await kcAdminAuth();
     try {
         await kcAdminClient.users.delFromGroup({id: devData.userId, groupId: devData.devId, realm: config.keycloakRealm});
-        const sharedlist = await kcAdminClient.groups.listMembers({id: devData.id, realm: config.keycloakRealm});
-        console.log(sharedlist);
-        console.log('devList')
+        const sharedlist = await kcAdminClient.groups.listMembers({id: devData.devId, realm: config.keycloakRealm});
         resultData = {state: 'success', data: sharedlist};
     } catch (error) {
         resultData = {state: 'failed', message: 'Removing shared user is failed'};  
