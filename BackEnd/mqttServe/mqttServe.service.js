@@ -99,9 +99,8 @@ async function mqttcreatedev(devData) {
         const existGroup = await kcAdminClient.groups.find({search: devData.pairingData.deviceId, realm: config.keycloakRealm});
         if(existGroup.length < 1){
             let groupAttrs = {};
-            groupAttrs = {devOwner: [devData.userId]}
             groupAttrs = {pairingCode: [devData.pairingData.pairingCode]};
-            
+            groupAttrs = {...groupAttrs, devOwner: [devData.userId]}
             const devInfoKeys = Object.keys(devData.devInfo);
             devInfoKeys.map(keyItem => {
                 groupAttrs = {...groupAttrs, [keyItem]: [devData.devInfo[keyItem]]}
