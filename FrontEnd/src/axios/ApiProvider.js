@@ -31,8 +31,8 @@ export const getAllUsers = async () => {
     url: apiUrl,
     headers: {Authorization: tokenData}
   }).then(function(response){
-    resultState.state = 'success';
-    resultState.data = response.data.data;
+    // resultState.state = 'success';
+    resultState = response.data.data;
   }).catch(function(err) {
     console.log('err', err);
     resultState.state = 'error';
@@ -251,6 +251,67 @@ export const resetPasswordApi = async (newPasswordData) => {
     console.log('err', err);
     resultState.state = 'error';
     resultState.data = err.response.data? err.response.data.message : err.message;
+    window.toastr.error(resultState.data);
+  })
+  return resultState;
+}
+
+export const removeSharedUserApi = async (devData) => {
+  let resultState = {state: '', data: {}};
+  const tokenData = getJWTToken();
+  const apiUrl = `${BASE_BACKEND_URL}mqtt/removeSharedUser`;
+  await axios({
+    method: 'post',
+    url: apiUrl,
+    data: devData,
+    headers: {Authorization: tokenData}
+  }).then(function(response) {
+    resultState.state = 'success';
+    resultState.data = response.data;
+  }).catch(function (err){
+    resultState.state = 'error';
+    resultState.data = err.message;
+    window.toastr.error(resultState.data);
+  })
+  return resultState;
+}
+
+export const loadSharedUsersApi = async (devData) => {
+  let resultState = {state: '', data: {}};
+  const tokenData = getJWTToken();
+  const apiUrl = `${BASE_BACKEND_URL}mqtt/loadDevSharedUsers`;
+  await axios({
+    method: 'post',
+    url: apiUrl,
+    data: devData,
+    headers: {Authorization: tokenData}
+  }).then(function(response) {
+    resultState.state = 'success';
+    resultState.data = response.data;
+  }).catch(function (err){
+    resultState.state = 'error';
+    resultState.data = err.message;
+    window.toastr.error(resultState.data);
+  })
+  return resultState;
+}
+
+export const shareDeviceApi =async (shareInfo) => {
+  let resultState = {state: '', data: {}};
+  const tokenData = getJWTToken();
+  const apiUrl = `${BASE_BACKEND_URL}mqtt/shareDev`;
+  await axios({
+    method: 'post',
+    url: apiUrl,
+    data: shareInfo,
+    headers: {Authorization: tokenData}
+  }).then(function(response) {
+    resultState.state = 'success';
+    resultState.data = response.data;
+    console.log('getDevicess', response);
+  }).catch(function (err){
+    resultState.state = 'error';
+    resultState.data = err.message;
     window.toastr.error(resultState.data);
   })
   return resultState;

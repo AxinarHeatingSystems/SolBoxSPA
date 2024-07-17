@@ -1,10 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
-  CountrySelect,
-  StateSelect,
-} from "react-country-state-city";
-import "react-country-state-city/dist/react-country-state-city.css";
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardMedia, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
+  getAllCountriesName,
+  getRegionsByCountryCode,
+} from 'i18n-iso-countries-regions';
+import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Box, Button, Card, CardMedia, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useTranslation } from "react-i18next";
 import uploadIco from "../../assets/uploadIco.png"
@@ -14,6 +13,9 @@ import "./addDevModal.css"
 import { useSelector } from "react-redux";
 
 export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
+  const allCountries = getAllCountriesName('en');
+  const [countryList, setCountryList] = useState([]);
+  const [regionList, setRegionList] = useState([]);
   const userData = useSelector(store => store.userData);
   const picuploader = useRef();
   const { t } = useTranslation();
@@ -38,13 +40,26 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
 
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const onCountryChange = (e) => {
-    console.log('country Change', e);
-    setCountry(e);
+  useEffect(() => {
+    const tmpList = [];
+    allCountries.map(ctItem => { tmpList.push({ label: ctItem.name, iso: ctItem.iso }) });
+    setCountryList(tmpList);
+  }, [])
+
+  const onCountryChange = (e, value) => {
+    console.log('country Change', e, value);
+    const regions = getRegionsByCountryCode('en', value.iso);
+    // console.log(regions);
+    let tmpList = [];
+    regions.map(resItem => {
+      tmpList.push({ label: resItem.name, iso: resItem.iso })
+    })
+    setRegionList(tmpList)
+    setCountry(value);
   }
-  const onCityChange = (e) => {
+  const onCityChange = (e, value) => {
     console.log(e);
-    setCity(e);
+    setCity(value);
   }
 
   const onHeatValueChange = (e) => {
@@ -81,8 +96,8 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
     e.preventDefault();
     if (e.target.checkValidity()) {
       const devInfo = {
-        country: country.name,
-        city: city.name,
+        country: country.label,
+        city: city.label,
         watterLimit: watterLimit,
         isHeatSource: isHeatSource,
         solopanelPower: solopanelPower,
@@ -166,18 +181,26 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
           </Typography>
           <Grid component={'form'} onSubmit={onNewDevSubmit} container direction={'row'} >
             <Grid xs={6} padding={1}>
-              <CountrySelect
-                onChange={(e) => { onCountryChange(e) }}
-                value={country.id}
-                placeHolder={t('country')}
+              <Autocomplete
+                options={countryList}
+                onChange={onCountryChange}
+                renderInput={(params) => <TextField {...params} label="Country" />}
+                size="small"
               />
             </Grid>
             <Grid xs={6} padding={1}>
-              <StateSelect
+              <Autocomplete
+                options={regionList}
+                onChange={onCityChange}
+                renderInput={(params) => <TextField {...params} label="City" />}
+                size="small"
+              />
+              {/* <RegionDropdown
+                prepareStyles={{ width: '100%' }}
                 countryid={country.id}
                 onChange={(e) => { onCityChange(e) }}
                 placeHolder="Select State"
-              />
+              /> */}
             </Grid>
             <Grid xs={12} padding={1}>
               <TextField fullWidth id="outlined-basic" label={`${t('water_tank_limit')} (100 - 500)`}

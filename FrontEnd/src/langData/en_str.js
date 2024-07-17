@@ -76,5 +76,6 @@ export const En_Str = {
     search: "Search",
     feel_devid_paircode: "Please input your device Id or pairing code",
     please_feel_input: "Please feel the input",
-    pairing_failed: "Pairing Failed"
+    pairing_failed: "Pairing Failed",
+    user_not_exist: "User is not exist"
 }

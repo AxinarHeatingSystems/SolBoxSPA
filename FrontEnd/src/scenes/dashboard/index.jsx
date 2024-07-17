@@ -71,7 +71,7 @@ const Dashboard = () => {
     });
     console.log(devTopic);
     socket.on(devTopic, message => {
-      console.log(devTopic, message);
+      // console.log(devTopic, message);
       loadDeviceInfo(message);
       setSocketEventCount(prev => prev + 1);
     });
@@ -102,7 +102,7 @@ const Dashboard = () => {
     const devId = devData.name;
     const devMeta = await getDevInfoApi(devData.id);
     console.log('ssssss', devMeta, devMetaData);
-    setDevMetaData(devMeta);
+    setDevMetaData(devMeta.data);
     setDevTopic(`axinar/solbox/${devId}/jsonTelemetry`);
     socket.emit('join', { devId }, (error) => {
       if (error) {
@@ -237,7 +237,7 @@ const Dashboard = () => {
                 {submenuId === 1 && <StatusBoards isMobile={isMobileDetect} isPortrait={isPortrait} devData={devInfo} socketIo={socket} />}
                 {submenuId === 2 && <SettingBoards />}
                 {submenuId === 3 && <ScheduleBoards />}
-                {submenuId === 4 && <ShareBoards />}
+                {submenuId === 4 && <ShareBoards devMetaData={devMetaData} />}
               </Box>
             </>}
 
@@ -371,7 +371,7 @@ const Dashboard = () => {
               {submenuId === 1 && <StatusBoards isMobile={isMobileDetect} isPortrait={isPortrait} devData={devInfo} socketIo={socket} />}
               {submenuId === 2 && <SettingBoards />}
               {submenuId === 3 && <ScheduleBoards />}
-              {submenuId === 4 && <ShareBoards />}
+              {submenuId === 4 && <ShareBoards devMetaData={devMetaData} />}
             </Box>}
 
           </Box>

@@ -76,5 +76,6 @@ export const Es_Str = {
     search: "Buscar",
     feel_devid_paircode: "Ingrese el ID de su dispositivo o el código de emparejamiento",
     please_feel_input: "Por favor, siente la entrada",
-    pairing_failed: "Emparejamiento fallido"
+    pairing_failed: "Emparejamiento fallido",
+    user_not_exist: "La usuario no existe"
 }

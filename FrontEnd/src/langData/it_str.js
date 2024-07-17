@@ -76,5 +76,6 @@ export const It_Str = {
     search: "Ricerca",
     feel_devid_paircode: "Inserisci l'ID del tuo dispositivo o il codice di associazione",
     please_feel_input: "Per favore senti l'input",
-    pairing_failed: "Associazione non riuscita"
+    pairing_failed: "Associazione non riuscita",
+    user_not_exist: "L'utente non esiste"
 }
