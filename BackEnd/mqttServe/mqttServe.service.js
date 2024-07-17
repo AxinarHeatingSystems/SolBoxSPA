@@ -67,7 +67,6 @@ async function mqttclients() {
         headers: {
           'Content-Type': 'application/json',
         },}).then((response) => {
-            console.log(response.data);
             clientList = response.data;
             console.log('response');
         }).catch(err => {
@@ -205,16 +204,31 @@ async function mqttDevicelist(userData) {
     await kcAdminAuth();
     try {
         const grouplist = await kcAdminClient.users.listGroups({id: userData.userId, realm: config.keycloakRealm});
+        
         const emqxClients = await mqttclients();
-        const ctGroupList = grouplist.map(groupItem => {
+        let ctGroupList = []
+        for (let index = 0; index < grouplist.length; index++) {
+            const groupItem = grouplist[index];
             const clientData = emqxClients.data.find(clientItem => clientItem.clientid == groupItem.name);
             if(clientData){
                 groupItem.connected = clientData.connected;
             }else{
                 groupItem.connected = false;
             }
-            return groupItem;
-        })
+            // const groupData = await kcAdminClient.groups.findOne({id: groupItem.id, realm: config.keycloakRealm})
+            console.log(groupItem.attributes);
+            // return groupItem;
+            ctGroupList.push(groupItem)
+        }
+        // const ctGroupList = grouplist.map(groupItem => {
+        //     const clientData = emqxClients.data.find(clientItem => clientItem.clientid == groupItem.name);
+        //     if(clientData){
+        //         groupItem.connected = clientData.connected;
+        //     }else{
+        //         groupItem.connected = false;
+        //     }
+        //     return groupItem;
+        // })
         resultData = {state: 'success', data: ctGroupList};
     } catch (error) {
         console.log(error);
