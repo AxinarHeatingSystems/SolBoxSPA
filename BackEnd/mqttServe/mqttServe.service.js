@@ -76,6 +76,11 @@ async function mqttclients() {
     return clientList;
 }
 
+async function mqttloadsharedUsers(devData) {
+    let resultData = {};
+    console.log(devData);
+}
+
 async function mqttsharedev(shareData) {
     let resultData = {};
     console.log(shareData);
