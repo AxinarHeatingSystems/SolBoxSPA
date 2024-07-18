@@ -146,6 +146,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
       } else {
         devItem.DeviceName = devItem.name
       }
+      attrKeys.map(keyItem => devItem.attributes[keyItem] = devItem.attributes[keyItem][0])
       devArr.push(devItem);
     })
     return devArr;

@@ -22,11 +22,17 @@ export const ShareBoards = ({ devMetaData }) => {
   const [sharedUsers, setSharedUsers] = useState([]);
   const [isSharing, setIsSharing] = useState(false);
   const [isDeleteId, setDeleteId] = useState();
+  const [isOwner, setIsOwner] = useState(false);
   useEffect(() => {
     loadAllUsers();
     loadSharedUsers()
   }, [])
   const loadSharedUsers = async () => {
+    if (devMetaData.attributes.devOwner === userData.id) {
+      setIsOwner(true);
+    } else {
+      setIsOwner(false);
+    }
     const resData = await loadSharedUsersApi({ id: devMetaData.id });
     console.log(resData);
     if (resData.state !== 'success') return;
@@ -121,23 +127,23 @@ export const ShareBoards = ({ devMetaData }) => {
         padding={4}
         zIndex={0}
       >
-        <Box>
-        <Grid component={'form'} onSubmit={onShareSubmit} container spacing={3}>
-          <Grid item xs={12} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
-            <LanIcon fontSize="large" color='success' />
+        {isOwner && <Box>
+          <Grid component={'form'} onSubmit={onShareSubmit} container spacing={3}>
+            <Grid item xs={12} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
+              <LanIcon fontSize="large" color='success' />
 
               <Button disabled={isSharing} type='submit' variant='contained' sx={{ paddingX: '30px', fontWeight: 'bold' }} color='success'>
                 {isSharing ? <CircularProgress size={20} /> : t('share_device')}
               </Button>
-          </Grid>
-          <Grid item xs={12} >
-            <TextField type="email" fullWidth id="outlined-basic" label={t('email')}
-              variant="outlined" required onChange={onShareEmailChange} value={shareEmail}
+            </Grid>
+            <Grid item xs={12} >
+              <TextField type="email" fullWidth id="outlined-basic" label={t('email')}
+                variant="outlined" required onChange={onShareEmailChange} value={shareEmail}
                 error={shareEmailErr} helperText={shareEmailErr ? errorTxt : ""}
-            />
+              />
+            </Grid>
           </Grid>
-        </Grid>
-        </Box>
+        </Box>}
         <Box sx={{ position: 'relative' }} paddingTop={2}>
           <Typography variant='h4' marginBottom={2}>{t('shared_users')}</Typography>
           <TableContainer component={Paper} sx={{ position: 'relative', backgroundColor: 'transparent' }}>
@@ -157,7 +163,7 @@ export const ShareBoards = ({ devMetaData }) => {
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
                     <TableCell component="th" scope="row" sx={tableCellStyle}>
-                      {userItem.email}
+                      {userItem.email} {userItem.id === devMetaData.attributes.devOwner && <span>(Owner)</span>}
                     </TableCell>
                     <TableCell component="th" scope="row" sx={tableCellStyle}>
                       {userItem.firstName}

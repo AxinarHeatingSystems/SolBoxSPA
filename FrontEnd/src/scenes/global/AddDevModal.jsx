@@ -47,12 +47,14 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
 
   const [isSubmiting, setIsSubmiting] = useState(false);
 
-
   useEffect(() => {
     const tmpList = [];
     allCountries.map(ctItem => { tmpList.push({ label: ctItem.name, iso: ctItem.iso }) });
     setCountryList(tmpList);
     console.log(pairingData);
+    if (isAddDev) {
+      setDeviceName('');
+    }
     if (pairingData) {
       const devId = pairingData?.deviceId
       tmpSocket.emit('join', { devId }, (error) => {
@@ -68,7 +70,7 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
       });
     }
 
-  }, [pairingData])
+  }, [pairingData, isAddDev])
 
   const parsingDevName = (deviceMessage) => {
     const devData = JSON.parse(deviceMessage);
