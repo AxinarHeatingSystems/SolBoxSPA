@@ -121,8 +121,24 @@ async function mqttsharedev(shareData) {
 }
 
 async function mqttupdatedev(devData) {
+    let resultData = {};
     console.log(devData);
-
+    await kcAdminAuth();
+    try {
+        const groupData = await kcAdminClient.groups.findOne({id: devData.devId, realm: config.keycloakRealm});
+        let groupAttrs = {};
+        const devInfoKeys = Object.keys(devData.devInfo);
+        devInfoKeys.map(keyItem => {
+            groupAttrs = {...groupAttrs, [keyItem]: [devData.devInfo[keyItem]]}
+        });
+        groupData.attributes = groupAttrs;
+        const updatedGroup = await kcAdminClient.groups.update({id: devData.devId, realm: config.keycloakRealm}, groupData);
+        console.log(updatedGroup);
+        resultData = {state: 'success', data: groupData};
+    } catch (error) {
+        resultData = {state: 'failed', message: 'New Device is failed'};
+    }
+    return resultData
 }
 
 async function mqttcreatedev(devData) {
