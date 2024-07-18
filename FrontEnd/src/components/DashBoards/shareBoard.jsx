@@ -153,7 +153,7 @@ export const ShareBoards = ({ devMetaData }) => {
                   <TableCell>{t('email')}</TableCell>
                   <TableCell>{t('first_name')}</TableCell>
                   <TableCell>{t('first_name')}</TableCell>
-                  <TableCell align="right">{t('action')}</TableCell>
+                  {isOwner && <TableCell align="right">{t('action')}</TableCell>}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -171,11 +171,11 @@ export const ShareBoards = ({ devMetaData }) => {
                     <TableCell component="th" scope="row" sx={tableCellStyle} >
                       {userItem.lastName}
                     </TableCell>
-                    <TableCell align="right">
+                    {isOwner && <TableCell align="right">
                       <Button disabled={isDeleteId === userItem.id} variant='contained' onClick={() => onRemoveSharedUser(userItem)} size='small'>
                         {isDeleteId === userItem.id ? <CircularProgress size={20} /> : t('delete')}
                       </Button>
-                    </TableCell>
+                    </TableCell>}
                   </TableRow>
                 ))}
 
