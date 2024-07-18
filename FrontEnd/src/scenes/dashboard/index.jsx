@@ -102,7 +102,9 @@ const Dashboard = () => {
     const devId = devData.name;
     const devMeta = await getDevInfoApi(devData.id);
     console.log('ssssss', devMeta, devMetaData);
-    setDevMetaData(devMeta.data);
+
+    const tmpData = parsingDeviceData(devMeta.data)
+    setDevMetaData(tmpData);
     setDevTopic(`axinar/solbox/${devId}/jsonTelemetry`);
     socket.emit('join', { devId }, (error) => {
       if (error) {
@@ -111,6 +113,18 @@ const Dashboard = () => {
     });
     setDevInfo(null)
     setDeviceId(devId);
+  }
+  const parsingDeviceData = (devData) => {
+    // let devArr = [];
+    const tmpDevData = devData;
+    const attrKeys = Object.keys(tmpDevData.attributes);
+    if (attrKeys.find(keyItem => keyItem === 'DeviceName')) {
+      tmpDevData.DeviceName = tmpDevData.attributes['DeviceName'][0];
+    } else {
+      tmpDevData.DeviceName = tmpDevData.name
+    }
+    attrKeys.map(keyItem => tmpDevData.attributes[keyItem] = tmpDevData.attributes[keyItem][0])
+    return tmpDevData;
   }
   const loadDeviceInfo = (message) => {
     const devInfoData = JSON.parse(message);

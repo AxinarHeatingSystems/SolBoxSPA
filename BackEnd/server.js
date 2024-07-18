@@ -13,6 +13,7 @@ const path = require('path');
 
 const app = express();
 
+app.use(express.static(path.join(__dirname, '/images')))
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -27,7 +28,6 @@ const io = socketio(httServer, {cors: {
 }});
 
 // api routes
-app.use('/images', express.static(path.join(__dirname, '/images')));
 app.use('/mqtt', require('./mqttServe/mqttServe.controller'));
 app.use('/user', require('./users/users.controller'));
 

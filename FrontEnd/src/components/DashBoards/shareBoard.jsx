@@ -26,7 +26,7 @@ export const ShareBoards = ({ devMetaData }) => {
   useEffect(() => {
     loadAllUsers();
     loadSharedUsers()
-  }, [])
+  }, [devMetaData])
   const loadSharedUsers = async () => {
     if (devMetaData.attributes.devOwner === userData.id) {
       setIsOwner(true);
@@ -34,7 +34,7 @@ export const ShareBoards = ({ devMetaData }) => {
       setIsOwner(false);
     }
     const resData = await loadSharedUsersApi({ id: devMetaData.id });
-    console.log(resData);
+    console.log(resData, devMetaData.attributes.devOwner, userData.id);
     if (resData.state !== 'success') return;
     settingSharedUser(resData.data)
     setShareTabloading(false);
