@@ -159,6 +159,7 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
       }
       const newDevData = {
         userId: userData.id,
+        userEmail: userData.email,
         pairingData: pairingData,
         devInfo: devInfo
       }
