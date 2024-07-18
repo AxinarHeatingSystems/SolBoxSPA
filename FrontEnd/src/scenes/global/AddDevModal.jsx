@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   getAllCountriesName,
   getRegionsByCountryCode,
 } from 'i18n-iso-countries-regions';
-import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Box, Button, Card, CardMedia, Checkbox, Dialog, DialogActions, DialogContent, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Box, Button, Checkbox, Dialog, DialogActions, DialogContent, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useTranslation } from "react-i18next";
-import uploadIco from "../../assets/uploadIco.png"
+// import uploadIco from "../../assets/uploadIco.png"
 import loadingGif from "../../assets/loading.gif"
-import { createDeviceApi, uploadDevImgApi } from "../../axios/ApiProvider";
+import { createDeviceApi } from "../../axios/ApiProvider";
 import io from "socket.io-client";
 import "./addDevModal.css"
 import { useSelector } from "react-redux";
@@ -21,11 +21,11 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
   const [countryList, setCountryList] = useState([]);
   const [regionList, setRegionList] = useState([]);
   const userData = useSelector(store => store.userData);
-  const picuploader = useRef();
+  // const picuploader = useRef();
   const { t } = useTranslation();
   const [country, setCountry] = useState('');
   const [city, setCity] = useState('');
-  const [deviceName, setDeviceName] = useState('');
+  // const [deviceName, setDeviceName] = useState('');
   const [watterLimit, setWatterLimit] = useState(100);
   const [watterLimitError, setWatterLimitError] = useState(false);
   const [isHeatSource, setIsHeatSource] = useState(false);
@@ -34,8 +34,8 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
   const [solopanelPower, setSolopanelPower] = useState()
   const [installName, setInstalName] = useState()
 
-  const [uploadImg, setUploadImg] = useState(null);
-  const [previewImg, setPreviewImg] = useState(uploadIco);
+  // const [uploadImg, setUploadImg] = useState(null);
+  // const [previewImg, setPreviewImg] = useState(uploadIco);
   const [installEmail, setInstallEmail] = useState('');
   const [installPhone, setInstallPhone] = useState();
   const [useDevType, setUseDevType] = useState('professional');
@@ -52,36 +52,11 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
     allCountries.map(ctItem => { tmpList.push({ label: ctItem.name, iso: ctItem.iso }) });
     setCountryList(tmpList);
     console.log(pairingData);
-    if (isAddDev) {
-      setDeviceName('');
-    }
-    if (pairingData) {
-      const devId = pairingData?.deviceId
-      tmpSocket.emit('join', { devId }, (error) => {
-        if (error) {
-          alert(error);
-        }
-      });
-      const messagePath = `devname/axinar/solbox/${devId}/jsonTelemetry`
-      tmpSocket.on(messagePath, message => {
-        console.log(messagePath, message);
-        parsingDevName(message);
-        tmpSocket.off(messagePath);
-      });
-    }
-
   }, [pairingData, isAddDev])
-
-  const parsingDevName = (deviceMessage) => {
-    const devData = JSON.parse(deviceMessage);
-    console.log(devData);
-    setDeviceName(devData.DeviceName)
-  }
 
   const onCountryChange = (e, value) => {
     console.log('country Change', e, value);
     const regions = getRegionsByCountryCode('en', value.iso);
-    // console.log(regions);
     let tmpList = [];
     regions.map(resItem => {
       tmpList.push({ label: resItem.name, iso: resItem.iso })
@@ -128,40 +103,45 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
     e.preventDefault();
     setIsSubmiting(true);
     if (e.target.checkValidity()) {
-      const devInfo = {
+      const devMetaInfo = {
         country: country.label,
         city: city.label,
         watterLimit: watterLimit,
         isHeatSource: isHeatSource,
         solopanelPower: solopanelPower,
-        installName: installName
+        DeviceName: installName
       }
-      if (deviceName) {
-        devInfo.DeviceName = deviceName;
+
+      const devInfo = {
+        DeviceID: pairingData.deviceId,
+        payload: {
+          setNickname: installName
+        }
       }
+
+      tmpSocket.emit('devUpdate', { devInfo }, (error) => {
+        if (error) {
+          alert(error);
+        }
+      })
       if (isHeatSource) {
-        devInfo.heatType = heatType;
+        devMetaInfo.heatType = heatType;
         if (heatType === 1) {
-          devInfo.heatValue = heatValue;
+          devMetaInfo.heatValue = heatValue;
         }
       }
       if (isExpanded) {
-
-        devInfo.useDevType = useDevType;
-        devInfo.installEmail = installEmail;
-        devInfo.installPhone = installPhone;
-        devInfo.boilerContact = boilerContact;
-        devInfo.gpsLoc = gpsLoc;
-        if (uploadImg) {
-          devInfo.devImage = uploadImg;
-        }
-
+        devMetaInfo.useDevType = useDevType;
+        devMetaInfo.installEmail = installEmail;
+        devMetaInfo.installPhone = installPhone;
+        devMetaInfo.boilerContact = boilerContact;
+        devMetaInfo.gpsLoc = gpsLoc;
       }
       const newDevData = {
         userId: userData.id,
         userEmail: userData.email,
         pairingData: pairingData,
-        devInfo: devInfo
+        devInfo: devMetaInfo
       }
       const createdRes = await createDeviceApi(newDevData);
       console.log(createdRes);
@@ -174,29 +154,6 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
       setIsSubmiting(false);
     }
     e.preventDefault();
-  }
-
-  const uploaderPicker = () => {
-    picuploader.current.click();
-  }
-
-  const chooseUploadfile = async (e) => {
-    if (!e || !e.target || !e.target.files[0]) {
-      // window.toastr.warning('file select error')
-      return
-    }
-    // setUploadImg(e.target.files[0])
-    let imgFile = e.target.files[0];
-    const newImgUrl = URL.createObjectURL(imgFile);
-    setPreviewImg(newImgUrl)
-    const formData = new FormData()
-    formData.append('image', imgFile);
-    const uploadRes = await uploadDevImgApi(formData);
-    console.log(uploadRes);
-    if (uploadRes.status !== 200) return;
-
-    setUploadImg(uploadRes.data);
-    // console.log(uploadImg);
   }
 
   const onAccodionChange = (e, expanded) => {
@@ -322,19 +279,6 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
                 </AccordionSummary>
                 <AccordionDetails sx={{ padding: 0 }}>
                   <Grid container>
-                    <Grid item xs={12} padding={1}>
-                      <Card onClick={() => { uploaderPicker() }}>
-                        <CardMedia
-                          component="img"
-                          height="130"
-                          width={'fit-content'}
-                          sx={{ margin: 'auto', width: 'fit-content !important' }}
-                          image={previewImg}
-                          alt="uploader"
-                        />
-                      </Card>
-                      <input type="file" hidden ref={picuploader} onChange={chooseUploadfile} accept=".jpg, .png" />
-                    </Grid>
                     <Grid item xs={useDevType === 'private' ? 6 : 12} padding={1}>
                       <FormControl fullWidth size="small">
                         <InputLabel id="demo-simple-select-helper-label">{t('intended_use_of_device')}</InputLabel>

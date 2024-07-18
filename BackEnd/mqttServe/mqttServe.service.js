@@ -149,7 +149,6 @@ async function mqttcreatedev(devData) {
         }else{
             resultData = {state: 'failed', message: 'The device is already exist'};    
         }
-        
     } catch (error) {
         // console.log(error);
         resultData = {state: 'failed', message: 'New Device is failed'};
@@ -173,7 +172,7 @@ async function mqttdevFileupload(imageData) {
         // await fs.writeFileSync(imgPath,e);
         fs.readFile(files.image[0].path,(err,e)=>{
             if(err) console.log(err);
-            imgPath = `${rootPath}/images/${files.image[0].originalFilename}`;
+            imgPath = `${rootPath}/images/images/${files.image[0].originalFilename}`;
             fs.writeFile(imgPath,e,(err)=>{
                 console.log(err)
             });
