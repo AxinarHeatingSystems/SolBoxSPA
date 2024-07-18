@@ -122,7 +122,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
 
   const loadDevlist = async () => {
     const userDevs = await getUserDeviceListApi();
-    console.log(userDevs);
+    console.log('userDevs', userDevs);
     if (userDevs.state !== 'success') return;
     if (userDevs.data.length > 0) {
       const devArr = parsingDeviceData(userDevs.data);
@@ -193,7 +193,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
             const hexStr = hexVal.toString();
             const pairingNum = hexStr.slice(hexStr.length - 6, hexStr.length);
             const existDev = devList.find(dev => dev.name === devItem.clientid);
-            console.log(existDev);
+            console.log('dddd', existDev);
             if (!existDev) {
               if (devItem.clientid === inputVal) {
                 isPaired = true;
@@ -212,9 +212,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
                 return;
               // }
               }
-            } else {
-              errorTxt = 'already_added'
-            }
+            } 
           })
           if (isPaired) {
             return paringData;
