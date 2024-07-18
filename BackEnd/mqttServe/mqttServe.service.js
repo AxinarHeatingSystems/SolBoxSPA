@@ -11,6 +11,7 @@ const KcAdminClient = require('keycloak-admin').default;
 module.exports = {
     mqttclients,
     mqttcreatedev,
+    mqttupdatedev,
     mqttsharedev,
     mqttloadsharedUsers,
     mqttremoveshareduser,
@@ -117,6 +118,11 @@ async function mqttsharedev(shareData) {
         resultData = {state: 'failed', message: 'Device Sharing is failed'};  
     }
     return resultData;
+}
+
+async function mqttupdatedev(devData) {
+    console.log(devData);
+
 }
 
 async function mqttcreatedev(devData) {

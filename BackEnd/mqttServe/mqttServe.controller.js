@@ -10,6 +10,7 @@ router.get('/devMessage', mqttMessage)
 router.post('/devControl', mqttPublish);
 router.post('/getClients', mqttClients);
 router.post('/createDev', mqttCreateDev);
+router.post('/updateDev', mqttUpdateDev)
 router.post('/shareDev', mqttShareDev);
 router.post('/loadDevSharedUsers', mqttLoadDevSharedUser)
 router.post('/removeSharedUser', mqttRemoveSharedUser);
@@ -46,6 +47,14 @@ function mqttShareDev(req, res, next){
     resData => resData? 
         resData.state == 'success'? 
             res.json(resData.data) : res.status(400).json({ message: resData.message }) : res.status(400).json({ message: 'Device sharing is failed' })
+  ).catch(err => next(err));
+}
+
+function mqttUpdateDev(req, res, next) {
+  mqttServeService.mqttupdatedev(req.body).then(
+    resData => resData? 
+        resData.state == 'success'? 
+            res.json(resData) : res.status(400).json({ message: resData.message }) : res.status(400).json({ message: 'New Device creating is failed' })
   ).catch(err => next(err));
 }
 
