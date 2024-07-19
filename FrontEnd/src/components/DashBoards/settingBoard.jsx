@@ -37,6 +37,7 @@ export const SettingBoards = ({ devData }) => {
   const [startDayOpen, setStartDayOpen] = useState(false);
   const [endDate, setEndDate] = useState();
   const [endDayOpen, setEndDayOpen] = useState(false);
+  const [maxWaterTemperature, setMaxWaterTemperature] = useState()
 
   const [deviceName, setDeviceName] = useState();
   const [country, setCountry] = useState('');
@@ -130,6 +131,7 @@ export const SettingBoards = ({ devData }) => {
 
   const onSettingSubmit = async (e) => {
     setIsSetting(true);
+    console.log('START', `${startDate.$D}${(startDate.$M + 1).toString().padStart(2, '0')}${startDate.$y}`, endDate);
     e.preventDefault();
     if (e.target.checkValidity()) {
       const devMetaInfo = {
@@ -150,13 +152,21 @@ export const SettingBoards = ({ devData }) => {
         solopanelPower: solopanelPower,
         useDevType: useDevType,
         occupants: occupants,
-        watterLimit: watterLimit
+        watterLimit: watterLimit,
+        setMaxWaterTemp: maxWaterTemperature
+      }
+      let payload = {
+        setNickname: deviceName,
+        setMaxWaterTemp: maxWaterTemperature
+      }
+      if (startDate && endDate) {
+        payload.setVacationPeriod = 1;
+        payload.startDate = [`${startDate.$D}${(startDate.$M + 1).toString().padStart(2, '0')}${startDate.$y}`];
+        payload.endDate = [`${endDate.$D}${(endDate.$M + 1).toString().padStart(2, '0')}${endDate.$y}`];
       }
       const devInfo = {
         DeviceID: devData.DeviceID,
-        payload: {
-          setNickname: deviceName
-        }
+        payload: payload
       }
 
       tmpSocket.emit('devUpdate', { devInfo }, (error) => {
@@ -238,7 +248,7 @@ export const SettingBoards = ({ devData }) => {
             </Grid>
             <Grid item xs={6}>
               <TextField type="number" fullWidth id="outlined-basic" label={t('max_water_temperature')}
-                variant="outlined" size='small' disabled={!isOwner}
+                variant="outlined" size='small' disabled={!isOwner} value={maxWaterTemperature} onChange={(e) => { setMaxWaterTemperature(e.target.value) }}
               />
             </Grid>
             <Grid item xs={6}>

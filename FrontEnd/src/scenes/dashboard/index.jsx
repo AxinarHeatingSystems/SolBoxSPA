@@ -118,6 +118,8 @@ const Dashboard = () => {
 
   const loadDeviceInfo = (message) => {
     const devInfoData = JSON.parse(message);
+    console.log('settingPath', devInfoData);
+
     if (deviceId === devInfoData.DeviceID) {
       setDevInfo(devInfoData)
       setDeviceName(devInfoData.DeviceName)
