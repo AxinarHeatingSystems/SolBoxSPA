@@ -25,7 +25,7 @@ const tmpSocket = io(EndPoint);
 export const SettingBoards = ({ devData }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-
+  const [isOwner, setIsOwner] = useState(false);
   const userData = useSelector(store => store.userData);
   const devMetaData = useSelector(store => store.devMetaData);
   const allCountries = getAllCountriesName('en');
@@ -60,6 +60,9 @@ export const SettingBoards = ({ devData }) => {
 
   useEffect(() => {
     let countArr = [];
+    if (devMetaData.attributes.devOwner == userData.id) {
+      setIsOwner(true);
+    }
     allCountries.map(countryItem => { countArr.push({ label: countryItem.name, iso: countryItem.iso }) })
     setCountryList(countArr);
     setDeviceName(devMetaData.attributes.DeviceName);
@@ -197,13 +200,13 @@ export const SettingBoards = ({ devData }) => {
           <Grid component={'form'} onSubmit={onSettingSubmit} container spacing={2}>
             <Grid item xs={12} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
               <SettingsSuggestIcon fontSize="large" color='success' />
-              <Button disabled={isSetting} type='submit' variant='contained' sx={{ paddingX: '30px', fontWeight: 'bold' }} color='success'>
+              {isOwner && <Button disabled={isSetting} type='submit' variant='contained' sx={{ paddingX: '30px', fontWeight: 'bold' }} color='success'>
                 {isSetting ? <CircularProgress size={20} /> : <>{t('save')}</>}
-              </Button>
+              </Button>}
             </Grid>
             <Grid item xs={12}>
               <TextField fullWidth id="outlined-basic" label={t('device_name')}
-                variant="outlined" required size='small'
+                variant="outlined" required size='small' disabled={!isOwner}
                 value={deviceName} onChange={(e) => { setDeviceName(e.target.value) }}
               />
             </Grid>
@@ -212,6 +215,7 @@ export const SettingBoards = ({ devData }) => {
                 options={countryList}
                 value={country}
                 onChange={onCountryChange}
+                disabled={!isOwner}
                 renderInput={(params) => <TextField {...params} label="Country" required />}
                 size="small"
               />
@@ -222,34 +226,30 @@ export const SettingBoards = ({ devData }) => {
                 value={city}
                 onChange={onCityChange}
                 renderInput={(params) => <TextField {...params} label="City" required />}
+                disabled={!isOwner}
                 size="small"
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <TextField fullWidth id="outlined-basic" label={`${t('water_tank_limit')} (100 - 500)`}
-                type="number" inputProps={{ min: 100, max: 500 }}
+                type="number" inputProps={{ min: 100, max: 500 }} disabled={!isOwner}
                 value={watterLimit} onChange={(e) => { onWatterlimitChange(e) }}
                 variant="outlined" size="small" required error={watterLimitError} />
             </Grid>
             <Grid item xs={6}>
-              <TextField type="number" fullWidth id="outlined-basic" label={t('max_water_temperature_allowed')}
-                variant="outlined" size='small'
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField type="number" fullWidth id="outlined-basic" label={t('max_water_temperature_alternative')}
-                variant="outlined" size='small' 
+              <TextField type="number" fullWidth id="outlined-basic" label={t('max_water_temperature')}
+                variant="outlined" size='small' disabled={!isOwner}
               />
             </Grid>
             <Grid item xs={6}>
               <TextField type="number" fullWidth id="outlined-basic" label={`${t('solopanel_max_power')} (Watts)`}
-                variant="outlined" size="small" required
+                variant="outlined" size="small" required disabled={!isOwner}
                 value={solopanelPower} onChange={(e) => { setSolopanelPower(e.target.value); }}
               />
             </Grid>
             <Grid item xs={6}>
               <TextField type="number" fullWidth id="outlined-basic" label={`${t('price_per')} kW/h`}
-                variant="outlined" required size='small'
+                variant="outlined" required size='small' disabled={!isOwner}
                 value={priceKWH} onChange={(e) => { setPriceKWH(e.target.value) }}
               />
             </Grid>
@@ -259,7 +259,7 @@ export const SettingBoards = ({ devData }) => {
                   <Grid xs={isHeatSource ? 6 : 12}>
                     <FormControlLabel
                       value="start"
-                      control={<Checkbox checked={isHeatSource} onChange={(e) => { onIsHeatSourceChange(e) }} color="success" />}
+                      control={<Checkbox checked={isHeatSource} onChange={(e) => { onIsHeatSourceChange(e) }} color="success" disabled={!isOwner} />}
                       label={t('alternative_heat_source_available')}
                       labelPlacement="start"
                     />
@@ -272,6 +272,7 @@ export const SettingBoards = ({ devData }) => {
                         id="demo-simple-select-helper"
                         label={t('type_of_heat_source')}
                         value={heatType}
+                        disabled={!isOwner}
                         onChange={(e) => { onHeatTypeChange(e) }}
                       >
 
@@ -291,6 +292,7 @@ export const SettingBoards = ({ devData }) => {
                         id="demo-simple-select-helper"
                         label={t('heat_resistor_value')}
                         value={heatValue}
+                        disabled={!isOwner}
                         onChange={(e) => { onHeatValueChange(e) }}
                       >
 
@@ -312,6 +314,7 @@ export const SettingBoards = ({ devData }) => {
                     value={startDate}
                     maxDate={endDate}
                     open={startDayOpen}
+                    disabled={!isOwner}
                     onOpen={() => setStartDayOpen(true)}
                     onClose={() => setStartDayOpen(false)}
                     onChange={(newValue) => setStartDate(newValue)}
@@ -330,6 +333,7 @@ export const SettingBoards = ({ devData }) => {
                     value={endDate}
                     minDate={startDate}
                     open={endDayOpen}
+                    disabled={!isOwner}
                     onOpen={() => setEndDayOpen(true)}
                     onClose={() => setEndDayOpen(false)}
                     onChange={(newValue) => setEndDate(newValue)}
@@ -353,6 +357,7 @@ export const SettingBoards = ({ devData }) => {
                         id="demo-simple-select-helper"
                         label={t('intended_use_of_device')}
                         value={useDevType}
+                        disabled={!isOwner}
                         onChange={(e) => { setUseDevType(e.target.value) }}
                       >
                         <MenuItem value={'professional'}>{t('professional')}</MenuItem>
@@ -362,16 +367,19 @@ export const SettingBoards = ({ devData }) => {
                   </Grid>
                   {useDevType === 'private' && <Grid item xs={6} padding={1}>
                     <TextField type="number" fullWidth id="outlined-basic" label={t('number_of_occupants')}
+                      disabled={!isOwner}
                       variant="outlined" size="small" value={occupants} onChange={(e) => { setOccupants(e.target.value) }}
                     />
                   </Grid>}
                   <Grid item xs={6} padding={1}>
                     <TextField type="email" fullWidth id="outlined-basic" label={t('email')}
+                      disabled={!isOwner}
                       variant="outlined" size="small" value={installEmail} onChange={(e) => { setInstallEmail(e.target.value) }}
                     />
                   </Grid>
                   <Grid item xs={6} padding={1}>
                     <TextField fullWidth id="outlined-basic" label={t('phone_number')}
+                      disabled={!isOwner} 
                       variant="outlined" size="small" value={installPhone} onChange={(e) => { setInstallPhone(e.target.value) }}
                     />
                   </Grid>
@@ -383,6 +391,7 @@ export const SettingBoards = ({ devData }) => {
                         id="demo-simple-select-helper"
                         label={t('axinar_boilers_should_contact')}
                         value={boilerContact}
+                        disabled={!isOwner}
                         onChange={(e) => { setBoilerContact(e.target.value) }}
                       >
                         <MenuItem value={'owner'}>{t('the_owner')}</MenuItem>
@@ -392,6 +401,7 @@ export const SettingBoards = ({ devData }) => {
                   </Grid>
                   <Grid item xs={6} padding={1}>
                     <TextField fullWidth id="outlined-basic" label={t('gps_location')}
+                      disabled={!isOwner}
                       variant="outlined" size="small" value={gpsLoc} onChange={(e) => { setGPSLoc(e.target.value) }}
                     />
                   </Grid>

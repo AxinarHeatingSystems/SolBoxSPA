@@ -210,6 +210,17 @@ export const themeSettings = (mode) => {
           },
         },
       },
+      MuiFormControl: {
+        styleOverrides: {
+          root: {
+            '& .Mui-focused fieldset':{
+              borderColor:"#fff !important"},
+            '& .Mui-focused':{
+              color:"#fff !important"
+            }
+          },
+        },
+      }
     }:{
       MuiTextField: {
         styleOverrides: {
@@ -222,6 +233,17 @@ export const themeSettings = (mode) => {
           },
         },
       },
+      MuiFormControl: {
+        styleOverrides: {
+          root: {
+            '& .Mui-focused fieldset':{
+              borderColor:"#6F7E8C !important"},
+            '& .Mui-focused':{
+              color:"#6F7E8C !important"
+            }
+          },
+        },
+      }
     }
   };
 };
