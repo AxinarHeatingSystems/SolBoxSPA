@@ -1,5 +1,5 @@
 # build environment
-FROM node:alpine as build
+FROM node:20
 WORKDIR /app
 COPY . .
 RUN yarn cache clean --force
