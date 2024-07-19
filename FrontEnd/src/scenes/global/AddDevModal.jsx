@@ -31,8 +31,9 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
   const [isHeatSource, setIsHeatSource] = useState(false);
   const [heatType, setHeatType] = useState(1);
   const [heatValue, setHeatValue] = useState(4);
-  const [solopanelPower, setSolopanelPower] = useState()
-  const [installName, setInstalName] = useState()
+  const [solopanelPower, setSolopanelPower] = useState();
+  const [installName, setInstalName] = useState();
+  const [priceKWH, setPriceKWH] = useState();
 
   // const [uploadImg, setUploadImg] = useState(null);
   // const [previewImg, setPreviewImg] = useState(uploadIco);
@@ -109,7 +110,8 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
         watterLimit: watterLimit,
         isHeatSource: isHeatSource,
         solopanelPower: solopanelPower,
-        DeviceName: installName
+        DeviceName: installName,
+        priceKWH: priceKWH
       }
 
       const devInfo = {
@@ -132,6 +134,9 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
       }
       if (isExpanded) {
         devMetaInfo.useDevType = useDevType;
+        if (useDevType === 'private') {
+          devMetaInfo.occupants = occupants;
+        }
         devMetaInfo.installEmail = installEmail;
         devMetaInfo.installPhone = installPhone;
         devMetaInfo.boilerContact = boilerContact;
@@ -178,23 +183,18 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
               <Autocomplete
                 options={countryList}
                 onChange={onCountryChange}
-                renderInput={(params) => <TextField {...params} label="Country" />}
+                renderInput={(params) => <TextField {...params} label="Country" required />}
                 size="small"
+
               />
             </Grid>
             <Grid xs={6} padding={1}>
               <Autocomplete
                 options={regionList}
                 onChange={onCityChange}
-                renderInput={(params) => <TextField {...params} label="City" />}
+                renderInput={(params) => <TextField {...params} label="City" required />}
                 size="small"
               />
-              {/* <RegionDropdown
-                prepareStyles={{ width: '100%' }}
-                countryid={country.id}
-                onChange={(e) => { onCityChange(e) }}
-                placeHolder="Select State"
-              /> */}
             </Grid>
             <Grid xs={12} padding={1}>
               <TextField fullWidth id="outlined-basic" label={`${t('water_tank_limit')} (100 - 500)`}
@@ -258,10 +258,16 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
                 onChange={(e) => { onSoloPanelPowerChange(e) }}
               />
             </Grid>
-            <Grid xs={12} padding={1}>
+            <Grid xs={6} padding={1}>
               <TextField fullWidth id="outlined-basic" label={t('name_of_installation')}
                 variant="outlined" size="small" required
                 value={installName} onChange={(e) => { setInstalName(e.target.value) }}
+              />
+            </Grid>
+            <Grid xs={6} padding={1}>
+              <TextField fullWidth type="number" id="outlined-basic" label={`${t('price_per')} kW/h`}
+                variant="outlined" size="small" required
+                value={priceKWH} onChange={(e) => { setPriceKWH(e.target.value) }}
               />
             </Grid>
             <Grid xs={12}>

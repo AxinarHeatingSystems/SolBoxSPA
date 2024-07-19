@@ -4,6 +4,7 @@ export const USERDATA = 'USERDATA';
 export const ISLOGGEDIN = 'ISLOGGEDIN';
 export const COLORMODENAME = 'COLORMODENAME';
 export const LANGUAGECODE = 'LANGUAGECODE';
+export const DEVMETADATA = 'DEVMETADATA';
 
 export const mainConst = {
 	langugeCode: 'en',
@@ -12,5 +13,6 @@ export const mainConst = {
 	userData: {},
     isLoggedIn: false,
     colorModeName: 'dark',
+	devMetaData: {}
 };
 

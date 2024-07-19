@@ -82,4 +82,7 @@ export const Es_Str = {
     action: "Acción",
     shared_users: "Usuarios compartidas",
     already_added: "ya esta agregado",
+    device_name: "Nombre del dispositivo",
+    saved_successfully: "Guardado exitosamente",
+    save_failed: "El guardado ha fallado",
 }

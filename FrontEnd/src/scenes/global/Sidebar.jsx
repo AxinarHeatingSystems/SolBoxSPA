@@ -20,7 +20,7 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { getUserDeviceListApi, getDevicesApi, logoutApi } from '../../axios/ApiProvider';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { SetLang } from '../../components/Language/SetLang';
 import { useTranslation } from 'react-i18next';
 import { AddDevModal } from './AddDevModal';

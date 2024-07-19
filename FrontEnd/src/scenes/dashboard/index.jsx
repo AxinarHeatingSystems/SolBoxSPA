@@ -20,15 +20,18 @@ import { ScheduleBoards } from '../../components/DashBoards/scheduleBoard';
 import { ShareBoards } from '../../components/DashBoards/shareBoard';
 import Sidebar from '../global/Sidebar';
 import io from "socket.io-client";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { getDevInfoApi } from '../../axios/ApiProvider';
+import { devMetaData_store } from '../../store/actions/mainAction';
+import { parsingDeviceData } from '../../axios/ParseProvider';
 
 const EndPoint = process.env.REACT_APP_BASE_BACKEND_URL;
 // let socket;
 const tmpSocket = io(EndPoint);
 const Dashboard = () => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   // const isLogged = useSelector(store => store.isLoggedIn);
   const [socket, setSocket] = useState(tmpSocket)
   const isMobileDetect = useSelector(store => store.isMobileDetect);
@@ -41,7 +44,7 @@ const Dashboard = () => {
   const [deviceId, setDeviceId] = useState('08F9E0E1915C');
   const [devTopic, setDevTopic] = useState('');
   const [devInfo, setDevInfo] = useState(null);
-  const [devMetaData, setDevMetaData] = useState();
+  // const [devMetaData, setDevMetaData] = useState();
   const [socketEventCount, setSocketEventCount] = useState(0);
   // const devId = '08B61F971EAC'
   // const devId = '08F9E0E18FF4'
@@ -101,10 +104,8 @@ const Dashboard = () => {
     // });
     const devId = devData.name;
     const devMeta = await getDevInfoApi(devData.id);
-    console.log('ssssss', devMeta, devMetaData);
-
     const tmpData = parsingDeviceData(devMeta.data)
-    setDevMetaData(tmpData);
+    dispatch(devMetaData_store(tmpData));
     setDevTopic(`axinar/solbox/${devId}/jsonTelemetry`);
     socket.emit('join', { devId }, (error) => {
       if (error) {
@@ -114,18 +115,7 @@ const Dashboard = () => {
     setDevInfo(null)
     setDeviceId(devId);
   }
-  const parsingDeviceData = (devData) => {
-    // let devArr = [];
-    const tmpDevData = devData;
-    const attrKeys = Object.keys(tmpDevData.attributes);
-    if (attrKeys.find(keyItem => keyItem === 'DeviceName')) {
-      tmpDevData.DeviceName = tmpDevData.attributes['DeviceName'][0];
-    } else {
-      tmpDevData.DeviceName = tmpDevData.name
-    }
-    attrKeys.map(keyItem => tmpDevData.attributes[keyItem] = tmpDevData.attributes[keyItem][0])
-    return tmpDevData;
-  }
+
   const loadDeviceInfo = (message) => {
     const devInfoData = JSON.parse(message);
     if (deviceId === devInfoData.DeviceID) {
@@ -251,7 +241,7 @@ const Dashboard = () => {
                 {submenuId === 1 && <StatusBoards isMobile={isMobileDetect} isPortrait={isPortrait} devData={devInfo} socketIo={socket} />}
                 {submenuId === 2 && <SettingBoards />}
                 {submenuId === 3 && <ScheduleBoards />}
-                {submenuId === 4 && <ShareBoards devMetaData={devMetaData} />}
+                {submenuId === 4 && <ShareBoards />}
               </Box>
             </>}
 
@@ -383,9 +373,9 @@ const Dashboard = () => {
                 </Grid>
               </Box>
               {submenuId === 1 && <StatusBoards isMobile={isMobileDetect} isPortrait={isPortrait} devData={devInfo} socketIo={socket} />}
-              {submenuId === 2 && <SettingBoards />}
+              {submenuId === 2 && <SettingBoards devData={devInfo} />}
               {submenuId === 3 && <ScheduleBoards />}
-              {submenuId === 4 && <ShareBoards devMetaData={devMetaData} />}
+              {submenuId === 4 && <ShareBoards />}
             </Box>}
 
           </Box>

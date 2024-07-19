@@ -127,6 +127,7 @@ async function mqttupdatedev(devData) {
     try {
         const groupData = await kcAdminClient.groups.findOne({id: devData.devId, realm: config.keycloakRealm});
         let groupAttrs = {};
+        
         const devInfoKeys = Object.keys(devData.devInfo);
         devInfoKeys.map(keyItem => {
             groupAttrs = {...groupAttrs, [keyItem]: [devData.devInfo[keyItem]]}

@@ -112,6 +112,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const userData = useSelector(store => store.userData);
+  const devMetaData = useSelector(store => store.devMetaData);
   const [deviceId, setDeviceId] = useState('');
   const [deviceName, setDeviceName] = useState('');
   const [heatOn, setHeatOn] = useState(true);
@@ -122,6 +123,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const [nowPower, setNowPower] = useState(0);
   const [todayKWH, setTodayKWH] = useState(0);
   const [savePrice, setSavePrice] = useState(0);
+  const [priceKWH, setPriceKWH] = useState(0);
   const [isUser, setIsUser] = useState(null);
   const [devCyle, setDevCycle] = useState('');
   // console.log(userData);
@@ -148,7 +150,9 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
       // setNowPower(parseInt((devData.powerNeedlePer / devData.leastPowerThirty) * 100))
 
       setTodayKWH(parseFloat(devData.WattHours / 1000).toFixed(2));
-      setSavePrice(parseFloat((devData.WattHours / 1000) * 0.1).toFixed(2));
+      const tmpPriceKWH = devMetaData.attributes.priceKWH;
+      setPriceKWH(tmpPriceKWH)
+      setSavePrice(parseFloat((devData.WattHours / 1000) * tmpPriceKWH).toFixed(2));
       // setMaxVal(parseFloat(devData.ATHwattHours));
       if (isUser === 'user') {
         setDevCycle(`${parseInt(devData.DutyCycle)} %`);
@@ -433,7 +437,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                     >
                       {t("saved")} 
                       <Typography variant='body1' fontWeight={'bold'} sx={{ marginX: '0.3rem', color: colors.grey[100] }}>
-                        (0.10 € / kwh)
+                        ({priceKWH} € / kwh)
                       </Typography>
                     </Typography>
                     <Typography
@@ -482,7 +486,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                 >
                   {t("saved")} 
                   <Typography variant='body1' fontWeight={'bold'} sx={{ marginX: '0.3rem', color: colors.grey[100] }}>
-                    (0.10 € / kwh)
+                    ({priceKWH} € / kwh)
                   </Typography>
                 </Typography>
                 <Typography

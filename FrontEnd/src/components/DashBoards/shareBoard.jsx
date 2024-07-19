@@ -9,10 +9,11 @@ import { shareDeviceApi } from '../../axios/ApiProvider';
 
 const tableCellStyle = { fontWeight: 'bold', fontSize: '0.9rem' }
 
-export const ShareBoards = ({ devMetaData }) => {
+export const ShareBoards = () => {
   const theme = useTheme();
   const { t } = useTranslation();
   const colors = tokens(theme.palette.mode);
+  const devMetaData = useSelector(store => store.devMetaData);
   const userData = useSelector(store => store.userData)
   const [shareTabloading, setShareTabloading] = useState(true);
   const [availableEmails, setAvailableEmails] = useState([]);

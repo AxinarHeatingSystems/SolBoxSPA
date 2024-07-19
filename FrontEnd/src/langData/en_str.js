@@ -82,4 +82,7 @@ export const En_Str = {
     action: "Action",
     shared_users: "Shared Users",
     already_added: "It is already added",
+    device_name: "Device Name",
+    saved_successfully: "Saved successfully",
+    save_failed: "Saving is failed",
 }

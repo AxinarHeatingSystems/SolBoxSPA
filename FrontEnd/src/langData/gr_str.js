@@ -82,4 +82,7 @@ export const Gr_Str = {
     action: "Δράση",
     shared_users: "Κοινόχρηστοι χρήστες",
     already_added: "Έχει ήδη προστεθεί",
+    device_name: "Ονομα της συσκευής",
+    saved_successfully: "Αποθηκεύτηκε επιτυχώς",
+    save_failed: "Η αποθήκευση απέτυχε",
 }

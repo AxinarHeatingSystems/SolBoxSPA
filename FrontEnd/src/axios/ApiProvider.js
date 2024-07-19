@@ -317,14 +317,34 @@ export const shareDeviceApi =async (shareInfo) => {
   return resultState;
 }
 
-export const createDeviceApi = async (deveInfo) => {
+export const updateDeviceApi = async (devInfo) => {
+  let resultState = {};
+  const tokenData = getJWTToken();
+  const apiUrl = `${BASE_BACKEND_URL}mqtt/updateDev`;
+  await axios({
+    method: 'post',
+    url: apiUrl,
+    data: devInfo,
+    headers: {Authorization: tokenData}
+  }).then(function(response) {
+    resultState = response.data;
+    console.log('getDevicess', response);
+  }).catch(function (err){
+    resultState.state = 'error';
+    resultState.data = err.message;
+    window.toastr.error(resultState.data);
+  })
+  return resultState;
+}
+
+export const createDeviceApi = async (devInfo) => {
   let resultState = {state: '', data: {}};
   const tokenData = getJWTToken();
   const apiUrl = `${BASE_BACKEND_URL}mqtt/createDev`;
   await axios({
     method: 'post',
     url: apiUrl,
-    data: deveInfo,
+    data: devInfo,
     headers: {Authorization: tokenData}
   }).then(function(response) {
     resultState.state = 'success';

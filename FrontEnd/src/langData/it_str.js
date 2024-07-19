@@ -82,4 +82,7 @@ export const It_Str = {
     action: "Azione",
     shared_users: "Utenti condivisi",
     already_added: "È già stato aggiunto",
+    device_name: "Nome del dispositivo",
+    saved_successfully: "Salvato con successo",
+    save_failed: "Il salvataggio non è riuscito",
 }
