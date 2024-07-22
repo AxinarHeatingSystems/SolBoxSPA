@@ -96,4 +96,5 @@ export const Es_Str = {
     pairing: "Emparejamiento",
     not_device_matched_ip:"No existe el Dispositivo que coincida con su IP",
     device_list_matched_ip: "Lista de dispositivos coincidentes con IP",
+    remove: "Eliminar"
 }

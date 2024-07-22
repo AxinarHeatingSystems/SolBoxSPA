@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useTheme, Box, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, Button, InputLabel, Select, MenuItem, TextField, Typography } from "@mui/material";
 import { useSelector } from 'react-redux';
 import { tokens } from '../../theme';
@@ -17,7 +17,7 @@ export const ScheduleBoards = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [scheduleOption, setScheduleOption] = useState('daily');
-  const [weeklyOption, setWeeklyOption] = useState(0);
+  const [weeklyOption, setWeeklyOption] = useState("0");
   const [weekStartArr, setWeekStartArr] = useState(weeks);
   const [weekStartDay, setWeekStartDay] = useState();
   const [weekEndArr, setWeekEndArr] = useState(weeks);
@@ -115,15 +115,15 @@ export const ScheduleBoards = () => {
           {scheduleOption === "daily" &&
             <Grid item xs={12}>
               <Stack direction={'row'} paddingBottom={2} spacing={1} justifyContent={'space-between'} alignItems={'center'}>
-                <Typography variant='body1'>Add New Daily Schedule</Typography>
-                <Button variant='contained' color='success' onClick={() => { addNewDailySchedule() }}>Add</Button>
+                <Typography variant='body1'>{t('add_new_daily_schedule')}</Typography>
+                <Button variant='contained' color='success' onClick={() => { addNewDailySchedule() }}>{t('add')}</Button>
               </Stack>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 {dailyList.map((dayItem, key) => (
                   <Stack marginBottom={1} key={key} direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
                     <DatePicker
                       sx={{ width: '100%' }}
-                      label={`${t("daily")} 1`}
+                      label={`${t("daily")} ${(key + 1)}`}
                       value={dayItem.date}
                       open={dayPickerOpen === key}
                       onOpen={() => setDayPickerOpen(key)}
@@ -138,7 +138,7 @@ export const ScheduleBoards = () => {
 
                     />
                     <TimePicker
-                      label="Start"
+                      label={t('start')}
                       open={startTimeOpen === key}
                       onOpen={() => setStartTimeOpen(key)}
                       onClose={() => setStartTimeOpen(null)}
@@ -150,7 +150,7 @@ export const ScheduleBoards = () => {
                       }}
                     />
                     <TimePicker
-                      label="End"
+                      label={t('end')}
                       open={endTimeOpen === key}
                       onOpen={() => setEndTimeOpen(key)}
                       onClose={() => setEndTimeOpen(null)}

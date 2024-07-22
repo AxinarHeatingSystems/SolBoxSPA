@@ -96,5 +96,5 @@ export const En_Str = {
     pairing: "Pairing",
     not_device_matched_ip:"There is not the Device matched with your IP",
     device_list_matched_ip: "Device List matched with IP",
-    
+    remove: "Remove"
 }

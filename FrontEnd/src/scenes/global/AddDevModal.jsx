@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {
-  getAllCountriesName,
-  getRegionsByCountryCode,
-} from 'i18n-iso-countries-regions';
+// import {
+//   getAllCountriesName,
+//   getRegionsByCountryCode,
+// } from 'i18n-iso-countries-regions';
 import { Country, City } from 'country-state-city';
 import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Box, Button, Checkbox, Dialog, DialogActions, DialogContent, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -61,6 +61,7 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData, ipAddress }) => {
     console.log('country Change', e, value);
     // const regions = getRegionsByCountryCode('en', value.iso);
     const regions = City.getCitiesOfCountry(value.iso);
+    // console.log(regions);
     let tmpList = [];
     regions.map(resItem => {
       tmpList.push({ label: resItem.name, iso: resItem.stateCode })

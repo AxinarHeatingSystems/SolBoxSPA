@@ -96,4 +96,5 @@ export const Gr_Str = {
     pairing: "Σύζευξη",
     not_device_matched_ip:"Δεν υπάρχει η Συσκευή που να ταιριάζει με την IP σας",
     device_list_matched_ip: "Λίστα συσκευών αντιστοιχισμένη με IP",
+    remove: "Αφαιρώ"
 }

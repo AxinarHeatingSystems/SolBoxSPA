@@ -96,4 +96,5 @@ export const It_Str = {
     pairing: "accoppiamento",
     not_device_matched_ip:"Non esiste un dispositivo abbinato al tuo IP",
     device_list_matched_ip: "Elenco dispositivi abbinato all'IP",
+    remove: "Rimuovere"
 }
