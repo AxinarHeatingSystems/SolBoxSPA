@@ -3,6 +3,7 @@ import {
   getAllCountriesName,
   getRegionsByCountryCode,
 } from 'i18n-iso-countries-regions';
+import { Country, City } from 'country-state-city';
 import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Box, Button, Checkbox, Dialog, DialogActions, DialogContent, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useTranslation } from "react-i18next";
@@ -16,8 +17,9 @@ import { useSelector } from "react-redux";
 const EndPoint = process.env.REACT_APP_BASE_BACKEND_URL;
 const tmpSocket = io(EndPoint);
 
-export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
-  const allCountries = getAllCountriesName('en');
+export const AddDevModal = ({ isAddDev, onClose, pairingData, ipAddress }) => {
+  // const allCountries = getAllCountriesName('en');
+  const allCountries = Country.getAllCountries();
   const [countryList, setCountryList] = useState([]);
   const [regionList, setRegionList] = useState([]);
   const userData = useSelector(store => store.userData);
@@ -50,17 +52,18 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
 
   useEffect(() => {
     const tmpList = [];
-    allCountries.map(ctItem => { tmpList.push({ label: ctItem.name, iso: ctItem.iso }) });
+    allCountries.map(ctItem => { tmpList.push({ label: ctItem.name, iso: ctItem.isoCode }) });
     setCountryList(tmpList);
     console.log(pairingData);
   }, [pairingData, isAddDev])
 
   const onCountryChange = (e, value) => {
     console.log('country Change', e, value);
-    const regions = getRegionsByCountryCode('en', value.iso);
+    // const regions = getRegionsByCountryCode('en', value.iso);
+    const regions = City.getCitiesOfCountry(value.iso);
     let tmpList = [];
     regions.map(resItem => {
-      tmpList.push({ label: resItem.name, iso: resItem.iso })
+      tmpList.push({ label: resItem.name, iso: resItem.stateCode })
     })
     setRegionList(tmpList)
     setCountry(value);
@@ -183,7 +186,9 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
               <Autocomplete
                 options={countryList}
                 onChange={onCountryChange}
-                renderInput={(params) => <TextField {...params} label="Country" required />}
+                renderInput={(params) => <TextField {...params} label="Country" InputLabelProps={{
+                  shrink: true,
+                }} required />}
                 size="small"
 
               />
@@ -192,7 +197,9 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
               <Autocomplete
                 options={regionList}
                 onChange={onCityChange}
-                renderInput={(params) => <TextField {...params} label="City" required />}
+                renderInput={(params) => <TextField {...params} label="City" InputLabelProps={{
+                  shrink: true,
+                }} required />}
                 size="small"
               />
             </Grid>
@@ -200,7 +207,9 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
               <TextField fullWidth id="outlined-basic" label={`${t('water_tank_limit')} (100 - 500)`}
                 type="number" inputProps={{ min: 100, max: 500 }} error={watterLimitError}
                 value={watterLimit} onChange={(e) => { onWatterlimitChange(e) }}
-                variant="outlined" size="small" required />
+                variant="outlined" size="small" required InputLabelProps={{
+                  shrink: true,
+                }} />
             </Grid>
             <Grid xs={12} padding={1}>
               <Box border={1} borderColor={'gray'} borderRadius={1} paddingX={1} paddingY={1}>
@@ -256,18 +265,27 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
               <TextField type="number" fullWidth id="outlined-basic" label={`${t('solopanel_max_power')} (Watts)`}
                 variant="outlined" size="small" required value={solopanelPower}
                 onChange={(e) => { onSoloPanelPowerChange(e) }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
             <Grid xs={6} padding={1}>
               <TextField fullWidth id="outlined-basic" label={t('name_of_installation')}
                 variant="outlined" size="small" required
                 value={installName} onChange={(e) => { setInstalName(e.target.value) }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
             <Grid xs={6} padding={1}>
               <TextField fullWidth type="number" id="outlined-basic" label={`${t('price_per')} kW/h`}
                 variant="outlined" size="small" required
                 value={priceKWH} onChange={(e) => { setPriceKWH(e.target.value) }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
             <Grid xs={12}>
@@ -303,16 +321,25 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
                     {useDevType === 'private' && <Grid item xs={6} padding={1}>
                       <TextField type="number" fullWidth id="outlined-basic" label={t('number_of_occupants')}
                         variant="outlined" size="small" value={occupants} onChange={(e) => { setOccupants(e.target.value) }}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
                       />
                     </Grid>}
                     <Grid item xs={6} padding={1}>
                       <TextField type="email" fullWidth id="outlined-basic" label={t('email')}
                         variant="outlined" size="small" value={installEmail} onChange={(e) => { setInstallEmail(e.target.value) }}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
                       />
                     </Grid>
                     <Grid item xs={6} padding={1}>
                       <TextField fullWidth id="outlined-basic" label={t('phone_number')}
                         variant="outlined" size="small" value={installPhone} onChange={(e) => { setInstallPhone(e.target.value) }}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
                       />
                     </Grid>
                     <Grid item xs={6} padding={1}>
@@ -333,6 +360,9 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData }) => {
                     <Grid item xs={6} padding={1}>
                       <TextField fullWidth id="outlined-basic" label={t('gps_location')}
                         variant="outlined" size="small" value={gpsLoc} onChange={(e) => { setGPSLoc(e.target.value) }}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
                       />
                     </Grid>
                   </Grid>

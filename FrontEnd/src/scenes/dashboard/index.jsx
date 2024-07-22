@@ -72,7 +72,7 @@ const Dashboard = () => {
     socket.on('DevSubscribed', message => {
       console.log('DevSubscribed', message);
     });
-    console.log(devTopic);
+    // console.log(devTopic);
     socket.on(devTopic, message => {
       // console.log(devTopic, message);
       loadDeviceInfo(message);
@@ -118,7 +118,7 @@ const Dashboard = () => {
 
   const loadDeviceInfo = (message) => {
     const devInfoData = JSON.parse(message);
-    console.log('settingPath', devInfoData);
+    // console.log('settingPath', devInfoData);
 
     if (deviceId === devInfoData.DeviceID) {
       setDevInfo(devInfoData)

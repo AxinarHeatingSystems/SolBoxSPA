@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Swal from "sweetalert2";
 // import io from "socket.io-client";
 
-import { Box, Button, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, useTheme } from "@mui/material";
+import { Alert, Box, Button, Divider, FormControlLabel, Grid, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Modal, TextField, Typography, useTheme } from "@mui/material";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
@@ -24,6 +24,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { SetLang } from '../../components/Language/SetLang';
 import { useTranslation } from 'react-i18next';
 import { AddDevModal } from './AddDevModal';
+import axios from 'axios';
+
 
 // const EndPoint = process.env.REACT_APP_BASE_BACKEND_URL;
 const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) => {
@@ -39,6 +41,29 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
   const [pairingData, setPairingData] = useState();
   const [devList, setDevList] = useState([]);
   const open = Boolean(anchorEl);
+  const [ipAddress, setIpAddress] = useState('')
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 600,
+    bgcolor: theme.palette.background.default,
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+
+
+  const [isSearchUI, setIsSearchUI] = useState(false);
+  const [pairableDevs, setPairableDevs] = useState([]);
+  const [pairingCode, setPairingCode] = useState();
+  const [pairingCodeError, setPairingCodeError] = useState(false);
+  const getData = async () => {
+    const res = await axios.get("https://api.ipify.org/?format=json");
+    console.log("ipData", res.data);
+    setIpAddress(res.data.ip);
+  };
 
   const desktopStyle = {
     "& .pro-sidebar": {
@@ -99,6 +124,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
   };
 
   useEffect(() => {
+    getData();
     loadDevlist();
     console.log('useData', userData);
     const handleResize = (e) => {
@@ -133,7 +159,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
       console.log(devArr);
 
     } else {
-      handelAddDevOpen();
+      handleSearchDevOpen();
     }
   }
 
@@ -166,76 +192,156 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
     setIsAddDev(false);
     loadDevlist();
   }
-  const handelAddDevOpen = async () => {
+  const handleSearchDevOpen = async () => {
     // setIsAddDev(true);
-    Swal.fire({
-      title: t('searching_your_device'),
-      input: "text",
-      inputAttributes: {
-        autocapitalize: "off"
-      },
-      inputPlaceholder: t('feel_devid_paircode'),
-      showCancelButton: false,
-      confirmButtonText: t('search'),
-      showLoaderOnConfirm: true,
-      preConfirm: async (inputVal) => {
-        let errorTxt = 'pairing_failed';
-        if (inputVal) {
-          console.log(inputVal, devList);
-          const allDevs = await getDevicesApi();
-          console.log(allDevs);
-          const devsArr = allDevs.data.data;
-          let isPaired = false;
-          let paringData = {};
-          devsArr.map(devItem => {
-            console.log(devItem.clientid, parseInt(devItem.clientid, 16));
-            const hexVal = parseInt(devItem.clientid, 16);
-            const hexStr = hexVal.toString();
-            const pairingNum = hexStr.slice(hexStr.length - 6, hexStr.length);
-            const existDev = devList.find(dev => dev.name === devItem.clientid);
-            console.log('dddd', existDev);
-            if (!existDev) {
-              if (devItem.clientid === inputVal) {
-                isPaired = true;
-                paringData = {
-                  deviceId: devItem.clientid,
-                  pairingCode: pairingNum
-                }
-                return;
-              } else if (pairingNum === inputVal) {
-                // if (pairingNum === inputVal) {
-                isPaired = true;
-                paringData = {
-                  deviceId: devItem.clientid,
-                  pairingCode: pairingNum
-                }
-                return;
-              // }
-              }
-            } 
+    setPairableDevs([]);
+    setIsSearchUI(true);
+    const allDevs = await getDevicesApi();
+    console.log(allDevs);
+    const resDevs = allDevs.data.data;
+    let ableDevArr = [];
+    resDevs.map(devItem => {
+      const existDev = devList.find(dev => dev.name === devItem.clientid);
+      console.log('dddd', existDev);
+      if (existDev === undefined) {
+        if (devItem.ip_address === ipAddress) {
+          const hexVal = parseInt(devItem.clientid, 16);
+          const hexStr = hexVal.toString();
+          const pairingNum = hexStr.slice(hexStr.length - 6, hexStr.length);
+          ableDevArr.push({
+            deviceId: devItem.clientid,
+            pairingCode: pairingNum
           })
-          if (isPaired) {
-            return paringData;
-          } else {
-            Swal.showValidationMessage(`
-              ${t(errorTxt)}
-            `);
-          }
-        } else {
-          Swal.showValidationMessage(`
-            ${t('please_feel_input')}
-          `);
         }
-
-      },
-      allowOutsideClick: () => !Swal.isLoading()
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setPairingData(result.value);
-        setIsAddDev(true);
       }
-    });
+    })
+    setPairableDevs(ableDevArr);
 
+    // Swal.fire({
+    //   title: t('searching_your_device'),
+    //   input: "text",
+    //   inputAttributes: {
+    //     autocapitalize: "off"
+    //   },
+    //   inputPlaceholder: t('feel_devid_paircode'),
+    //   showCancelButton: false,
+    //   confirmButtonText: t('search'),
+    //   showLoaderOnConfirm: true,
+    //   didOpen: async () => {
+    //     Swal.isLoading()
+    //     const allDevs = await getDevicesApi();
+    //     console.log(allDevs);
+    //   },
+    //   preConfirm: async (inputVal) => {
+    //     let errorTxt = 'pairing_failed';
+    //     if (inputVal) {
+    //       console.log(inputVal, devList);
+    //       const allDevs = await getDevicesApi();
+    //       console.log(allDevs);
+    //       const devsArr = allDevs.data.data;
+    //       let isPaired = false;
+    //       let paringData = {};
+    //       devsArr.map(devItem => {
+    //         console.log(devItem.clientid, parseInt(devItem.clientid, 16));
+    //         const hexVal = parseInt(devItem.clientid, 16);
+    //         const hexStr = hexVal.toString();
+    //         const pairingNum = hexStr.slice(hexStr.length - 6, hexStr.length);
+    //         const existDev = devList.find(dev => dev.name === devItem.clientid);
+    //         console.log('dddd', existDev);
+    //         if (!existDev) {
+    //           if (devItem.clientid === inputVal) {
+    //             isPaired = true;
+    //             paringData = {
+    //               deviceId: devItem.clientid,
+    //               pairingCode: pairingNum
+    //             }
+    //             return;
+    //           } else if (pairingNum === inputVal) {
+    //             // if (pairingNum === inputVal) {
+    //             isPaired = true;
+    //             paringData = {
+    //               deviceId: devItem.clientid,
+    //               pairingCode: pairingNum
+    //             }
+    //             return;
+    //           // }
+    //           }
+    //         } 
+    //       })
+    //       if (isPaired) {
+    //         return paringData;
+    //       } else {
+    //         Swal.showValidationMessage(`
+    //           ${t(errorTxt)}
+    //         `);
+    //       }
+    //     } else {
+    //       Swal.showValidationMessage(`
+    //         ${t('please_feel_input')}
+    //       `);
+    //     }
+
+    //   },
+    //   allowOutsideClick: () => !Swal.isLoading()
+    // }).then((result) => {
+    //   if (result.isConfirmed) {
+    //     setPairingData(result.value);
+    //     setIsAddDev(true);
+    //   }
+    // });
+
+  }
+
+  const handleSearchDevClose = () => {
+    setIsSearchUI(false);
+  }
+
+  const onDevSearchFormSubmit = async (e) => {
+    e.preventDefault();
+    if (e.target.checkValidity()) {
+      const allDevs = await getDevicesApi();
+      console.log(allDevs);
+      const devsArr = allDevs.data.data;
+      let isPaired = false;
+      let paringData = {};
+      devsArr.map(devItem => {
+        console.log(devItem.clientid, parseInt(devItem.clientid, 16));
+        const hexVal = parseInt(devItem.clientid, 16);
+        const hexStr = hexVal.toString();
+        const pairingNum = hexStr.slice(hexStr.length - 6, hexStr.length);
+        const existDev = devList.find(dev => dev.name === devItem.clientid);
+        console.log('dddd', existDev);
+        if (!existDev) {
+          if (devItem.clientid === pairingCode) {
+            isPaired = true;
+            paringData = {
+              deviceId: devItem.clientid,
+              pairingCode: pairingNum
+            }
+            return;
+          } else if (pairingNum === pairingCode) {
+            isPaired = true;
+            paringData = {
+              deviceId: devItem.clientid,
+              pairingCode: pairingNum
+            }
+            return;
+          }
+        }
+      })
+      if (isPaired) {
+        setPairingData(paringData);
+        setIsSearchUI(false);
+        setIsAddDev(true);
+      } else {
+        setPairingCodeError(true);
+      }
+    }
+  }
+  const handleAddDevOpen = (pairingInfo) => {
+    setPairingData(pairingInfo);
+    setIsSearchUI(false);
+    setIsAddDev(true);
   }
 
   return (
@@ -324,7 +430,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
               >
                 {t("devices")}
               </Typography>
-              <Button size='small' color='success' onClick={() => { handelAddDevOpen() }}>
+              <Button size='small' color='success' onClick={() => { handleSearchDevOpen() }}>
                 + {t("add")}
               </Button>
             </Box>
@@ -430,7 +536,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
               >
                 {t("devices")}
               </Typography>
-              <Button size='small' color='success' onClick={() => { handelAddDevOpen() }}>
+              <Button size='small' color='success' onClick={() => { handleSearchDevOpen() }}>
                 + {t("add")} 
               </Button>
             </Box>
@@ -452,8 +558,53 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
           ))}
         </List>
       </ProSidebar>}
-      <AddDevModal isAddDev={isAddDev} onClose={handleAddDevClose} pairingData={pairingData} />
+      <AddDevModal isAddDev={isAddDev} onClose={handleAddDevClose} pairingData={pairingData} ipAddress={ipAddress} />
 
+      <Modal
+        open={isSearchUI}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Grid component={'form'} onSubmit={onDevSearchFormSubmit} container spacing={1}>
+            <Grid item xs={12}>
+              <Typography variant={'h4'} textAlign={'center'}>{t('searching_your_device')}</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              {/* <FormControlLabel label="Search Dev"/> */}
+              <TextField fullWidth variant='outlined' placeholder={t('feel_devid_paircode')}
+                value={pairingCode} onChange={(e) => { setPairingCode(e.target.value) }}
+                required error={pairingCodeError} helperText={pairingCodeError ? t('pairing_failed') : ''} />
+
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant='body1'>{t('device_list_matched_ip')}</Typography>
+              {pairableDevs.length > 0 &&
+                <List sx={{ paddingY: 0 }}>
+                  {pairableDevs.map((devData, key) => (
+                    <ListItem key={key}>
+                      <HomeOutlinedIcon />
+                      <ListItemText>{devData.deviceId}</ListItemText>
+                      <Button onClick={() => { handleAddDevOpen(devData) }} type='button' variant='contained' size='small' color='success'>
+                        {t('pairing')}
+                      </Button>
+                    </ListItem>
+                  ))
+                  }
+                </List>
+              }
+              {pairableDevs.length < 1 &&
+                <Alert severity="info" >{t('not_device_matched_ip')}</Alert>
+              }
+              <Divider />
+            </Grid>
+            <Grid item xs={12} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
+              <Button variant='contained' type='button' onClick={() => { handleSearchDevClose() }} color="error">{t('cancel')}</Button>
+              <Button variant='contained' type='submit' color='success'>{t('pairing')}</Button>
+            </Grid>
+          </Grid>
+        </Box>
+      </Modal>
     </Box>
   );
 };

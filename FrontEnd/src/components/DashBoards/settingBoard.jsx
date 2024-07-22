@@ -3,6 +3,7 @@ import {
   getAllCountriesName,
   getRegionsByCountryCode,
 } from 'i18n-iso-countries-regions';
+import { Country, City } from 'country-state-city';
 import { useTheme, Box, Grid, TextField, Typography, Button, Autocomplete, MenuItem, Select, InputLabel, FormControl, Checkbox, FormControlLabel, CircularProgress } from "@mui/material";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -21,14 +22,16 @@ import { devMetaData_store } from '../../store/actions/mainAction';
 
 const EndPoint = process.env.REACT_APP_BASE_BACKEND_URL;
 const tmpSocket = io(EndPoint);
-
+const tCountry = Country.getAllCountries();
+console.log('testing country', tCountry);
 export const SettingBoards = ({ devData }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const [isOwner, setIsOwner] = useState(false);
   const userData = useSelector(store => store.userData);
   const devMetaData = useSelector(store => store.devMetaData);
-  const allCountries = getAllCountriesName('en');
+  // const allCountries = getAllCountriesName('en');
+  const allCountries = Country.getAllCountries();
   const [countryList, setCountryList] = useState([]);
   const [regionList, setRegionList] = useState([]);
   const theme = useTheme();
@@ -64,14 +67,15 @@ export const SettingBoards = ({ devData }) => {
     if (devMetaData.attributes.devOwner == userData.id) {
       setIsOwner(true);
     }
-    allCountries.map(countryItem => { countArr.push({ label: countryItem.name, iso: countryItem.iso }) })
+    allCountries.map(countryItem => { countArr.push({ label: countryItem.name, iso: countryItem.isoCode }) })
     setCountryList(countArr);
     setDeviceName(devMetaData.attributes.DeviceName);
     const existCountry = countArr.find(ctItem => ctItem.label === devMetaData.attributes.country);
     setCountry(existCountry);
-    const regionArr = getRegionsByCountryCode('en', existCountry.iso);
+    // const regionArr = getRegionsByCountryCode('en', existCountry.iso);
+    const regionArr = City.getCitiesOfCountry(existCountry.iso)
     let existRegionArr = [];
-    regionArr.map(reItem => { existRegionArr.push({ label: reItem.name, iso: reItem.iso }) })
+    regionArr.map(reItem => { existRegionArr.push({ label: reItem.name, iso: reItem.stateCode }) })
     const existRegion = existRegionArr.find(reItem => reItem.label === devMetaData.attributes.city)
     console.log(existRegionArr, regionArr, existCountry)
     setRegionList(existRegionArr);
@@ -97,10 +101,12 @@ export const SettingBoards = ({ devData }) => {
   }, [])
 
   const onCountryChange = (e, value) => {
-    const regions = getRegionsByCountryCode('en', value.iso);
+    // const regions = getRegionsByCountryCode('en', value.iso);
+    const regions = City.getCitiesOfCountry(value.iso);
+    console.log('countryCode', regions, value);
     let tmpList = [];
     regions.map(resItem => {
-      tmpList.push({ label: resItem.name, iso: resItem.iso })
+      tmpList.push({ label: resItem.name, iso: resItem.stateCode })
     })
     setRegionList(tmpList)
     setCountry(value);
@@ -218,6 +224,9 @@ export const SettingBoards = ({ devData }) => {
               <TextField fullWidth id="outlined-basic" label={t('device_name')}
                 variant="outlined" required size='small' disabled={!isOwner}
                 value={deviceName} onChange={(e) => { setDeviceName(e.target.value) }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
             <Grid item xs={6}>
@@ -226,7 +235,9 @@ export const SettingBoards = ({ devData }) => {
                 value={country}
                 onChange={onCountryChange}
                 disabled={!isOwner}
-                renderInput={(params) => <TextField {...params} label="Country" required />}
+                renderInput={(params) => <TextField {...params} label="Country" required InputLabelProps={{
+                  shrink: true,
+                }} />}
                 size="small"
               />
             </Grid>
@@ -235,7 +246,9 @@ export const SettingBoards = ({ devData }) => {
                 options={regionList}
                 value={city}
                 onChange={onCityChange}
-                renderInput={(params) => <TextField {...params} label="City" required />}
+                renderInput={(params) => <TextField {...params} label="City" required InputLabelProps={{
+                  shrink: true,
+                }} />}
                 disabled={!isOwner}
                 size="small"
               />
@@ -244,23 +257,35 @@ export const SettingBoards = ({ devData }) => {
               <TextField fullWidth id="outlined-basic" label={`${t('water_tank_limit')} (100 - 500)`}
                 type="number" inputProps={{ min: 100, max: 500 }} disabled={!isOwner}
                 value={watterLimit} onChange={(e) => { onWatterlimitChange(e) }}
-                variant="outlined" size="small" required error={watterLimitError} />
+                variant="outlined" size="small" required error={watterLimitError}
+                InputLabelProps={{
+                  shrink: true,
+                }} />
             </Grid>
             <Grid item xs={6}>
               <TextField type="number" fullWidth id="outlined-basic" label={t('max_water_temperature')}
                 variant="outlined" size='small' disabled={!isOwner} value={maxWaterTemperature} onChange={(e) => { setMaxWaterTemperature(e.target.value) }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
             <Grid item xs={6}>
               <TextField type="number" fullWidth id="outlined-basic" label={`${t('solopanel_max_power')} (Watts)`}
                 variant="outlined" size="small" required disabled={!isOwner}
                 value={solopanelPower} onChange={(e) => { setSolopanelPower(e.target.value); }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
             <Grid item xs={6}>
               <TextField type="number" fullWidth id="outlined-basic" label={`${t('price_per')} kW/h`}
                 variant="outlined" required size='small' disabled={!isOwner}
                 value={priceKWH} onChange={(e) => { setPriceKWH(e.target.value) }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -379,18 +404,27 @@ export const SettingBoards = ({ devData }) => {
                     <TextField type="number" fullWidth id="outlined-basic" label={t('number_of_occupants')}
                       disabled={!isOwner}
                       variant="outlined" size="small" value={occupants} onChange={(e) => { setOccupants(e.target.value) }}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                     />
                   </Grid>}
                   <Grid item xs={6} padding={1}>
                     <TextField type="email" fullWidth id="outlined-basic" label={t('email')}
                       disabled={!isOwner}
                       variant="outlined" size="small" value={installEmail} onChange={(e) => { setInstallEmail(e.target.value) }}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                     />
                   </Grid>
                   <Grid item xs={6} padding={1}>
                     <TextField fullWidth id="outlined-basic" label={t('phone_number')}
                       disabled={!isOwner} 
                       variant="outlined" size="small" value={installPhone} onChange={(e) => { setInstallPhone(e.target.value) }}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                     />
                   </Grid>
                   <Grid item xs={6} padding={1}>
@@ -413,6 +447,9 @@ export const SettingBoards = ({ devData }) => {
                     <TextField fullWidth id="outlined-basic" label={t('gps_location')}
                       disabled={!isOwner}
                       variant="outlined" size="small" value={gpsLoc} onChange={(e) => { setGPSLoc(e.target.value) }}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                     />
                   </Grid>
                 </Grid>

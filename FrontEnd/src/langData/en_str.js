@@ -84,4 +84,17 @@ export const En_Str = {
     device_name: "Device Name",
     saved_successfully: "Saved successfully",
     save_failed: "Saving is failed",
+    scheule_option: "Schedule Option",
+    weekly_option: "Weekly Option",
+    daily: "Daily",
+    weekdays: "Weekdays",
+    weekend: "Weekend",
+    entire_week: "Entire Week",
+    add_new_daily_schedule: "Add New Daily Schedule",
+    start: "Start",
+    end: "End",
+    pairing: "Pairing",
+    not_device_matched_ip:"There is not the Device matched with your IP",
+    device_list_matched_ip: "Device List matched with IP",
+    
 }
