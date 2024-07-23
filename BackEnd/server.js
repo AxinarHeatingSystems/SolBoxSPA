@@ -73,6 +73,16 @@ io.on('connect', (socket) => {
           console.log('eeee', err);
         }
       });
+      const controlTopic = `axinar/solbox/${devId}/mainControlJson`
+      client.subscribe(controlTopic, (err) => {
+        if(!err) {
+          socket.emit('DevControlSubscribed', 'Device connected')
+        }else{
+          callback(err);
+          socket.emit('devCondiscon', 'devCondiscon');
+          console.log('eeeeCon', err);
+        }
+      })
   
       callback();
     });
