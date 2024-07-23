@@ -102,7 +102,7 @@ io.on('connect', (socket) => {
       
       const lastMessage = payload.toString();
       socket.emit(topic, lastMessage);
-      socket.emit(`devname/${topic}`, lastMessage);
+      // socket.emit(`devname/${topic}`, lastMessage);
       socket.emit('message', lastMessage);
     })
 

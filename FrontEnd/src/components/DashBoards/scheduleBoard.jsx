@@ -5,6 +5,7 @@ import { tokens } from '../../theme';
 import { useTranslation } from 'react-i18next';
 import { Stack } from '@mui/system';
 
+import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -19,17 +20,21 @@ export const ScheduleBoards = () => {
   const [scheduleOption, setScheduleOption] = useState('daily');
   const [weeklyOption, setWeeklyOption] = useState("0");
   const [weekStartArr, setWeekStartArr] = useState(weeks);
-  const [weekStartDay, setWeekStartDay] = useState();
-  const [weekEndArr, setWeekEndArr] = useState(weeks);
-  const [weekEndDay, setWeekEndDay] = useState();
+  const [weeklyData, setWeeklyData] = useState({
+    weekDay: null,
+    startTime: null,
+    endTime: null
+  })
+  const [weeklyStartTimeOpen, setWeeklyStartTimeOpen] = useState(false);
+  const [weeklyEndTimeOpen, setWeeklyEndTimeOpen] = useState(false);
 
   const [dayPickerOpen, setDayPickerOpen] = useState();
   const [startTimeOpen, setStartTimeOpen] = useState();
   const [endTimeOpen, setEndTimeOpen] = useState();
   const [dailyList, setDailyList] = useState([{
     date: null,
-    startTime: '',
-    endTime: ''
+    startTime: null,
+    endTime: null
   }]);
 
   const addNewDailySchedule = () => {
@@ -64,18 +69,28 @@ export const ScheduleBoards = () => {
   }
 
   const handleChangeWeekStartDay = (e) => {
-    setWeekStartDay(e.target.value);
-    const indexer = weeks.indexOf(e.target.value);
-    const slicedData = weeks.slice((indexer + 1));
-    console.log('clidedData', slicedData);
-    setWeekEndArr(slicedData);
+    const tmpWeekDay = weeklyData;
+    tmpWeekDay.weekDay = e.target.value;
+    setWeeklyData(tmpWeekDay);
+    // setWeekStartDay(e.target.value);
+    // const indexer = weeks.indexOf(e.target.value);
+    // const slicedData = weeks.slice((indexer + 1));
+    // console.log('clidedData', slicedData);
+    // setWeekEndArr(slicedData);
   }
 
-  const handleChangeWeekEndDay = (e) => {
-    setWeekEndDay(e.target.value);
-    const indexer = weeks.indexOf(e.target.value);
-    const slicedData = weeks.slice(0, indexer);
-    setWeekStartArr(slicedData);
+  const handleChangeWeekStartTime = (e) => {
+    // console.log(dayjs(e));
+    // const startTimeStr = `${(e.$H).toString().padStart(2, '0')}${(e.$m).toString().padStart(2, '0')}${(e.$s).toString().padStart(2, '0')}`
+    const tmpWeekDay = weeklyData;
+    tmpWeekDay.startTime = e
+    setWeeklyData(tmpWeekDay);
+
+  }
+  const handleChangeWeekEndTime = (e) => {
+    const tmpWeekDay = weeklyData;
+    tmpWeekDay.endTime = e;
+    setWeeklyData(tmpWeekDay);
   }
 
   const onChangeDailyVal = (dateVal, index) => {
@@ -83,7 +98,10 @@ export const ScheduleBoards = () => {
     tmpDailyList[index].date = dateVal;
     setDailyList(tmpDailyList);
   }
-
+  const onScheduleSumit = (e) => {
+    e.preventDefault();
+    console.log('FOrm Submit');
+  }
 
   return (
     <Box width={"100%"} padding={3}>
@@ -95,30 +113,34 @@ export const ScheduleBoards = () => {
         padding={4}
         zIndex={0}
       >
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <FormControl>
-              <FormLabel id="demo-radio-buttons-group-label">{t('scheule_option')}</FormLabel>
-              <RadioGroup
-                row
-                aria-labelledby="demo-radio-buttons-group-label"
-                value={scheduleOption}
-                onChange={handleScheduleChange}
-                name="weekly-option"
-              >
-                <FormControlLabel value="daily" control={<Radio />} label={t('daily')} />
-                <FormControlLabel value="weekdays" control={<Radio />} label={`${t('weekdays')}/${t('weekend')}`} />
-                <FormControlLabel value="fullweek" control={<Radio />} label={t('entire_week')} />
-              </RadioGroup>
-            </FormControl>
-          </Grid>
-          {scheduleOption === "daily" &&
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Grid component={'form'} onSubmit={onScheduleSumit} container spacing={3}>
             <Grid item xs={12}>
-              <Stack direction={'row'} paddingBottom={2} spacing={1} justifyContent={'space-between'} alignItems={'center'}>
-                <Typography variant='body1'>{t('add_new_daily_schedule')}</Typography>
-                <Button variant='contained' color='success' onClick={() => { addNewDailySchedule() }}>{t('add')}</Button>
+              <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
+                <FormControl>
+                  <FormLabel id="demo-radio-buttons-group-label">{t('scheule_option')}</FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    value={scheduleOption}
+                    onChange={handleScheduleChange}
+                    name="weekly-option"
+                  >
+                    <FormControlLabel value="daily" control={<Radio />} label={t('daily')} />
+                    <FormControlLabel value="weekdays" control={<Radio />} label={`${t('weekdays')}/${t('weekend')}`} />
+                    <FormControlLabel value="fullweek" control={<Radio />} label={t('entire_week')} />
+                  </RadioGroup>
+                </FormControl>
+                <Button type='submit' variant='contained' color='success'>Save</Button>
               </Stack>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
+            </Grid>
+            {scheduleOption === "daily" &&
+              <Grid item xs={12}>
+                <Stack direction={'row'} paddingBottom={2} spacing={1} justifyContent={'space-between'} alignItems={'center'}>
+                  <Typography variant='body1'>{t('add_new_daily_schedule')}</Typography>
+                  <Button variant='contained' color='success' onClick={() => { addNewDailySchedule() }}>{t('add')}</Button>
+                </Stack>
+
                 {dailyList.map((dayItem, key) => (
                   <Stack marginBottom={1} key={key} direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
                     <DatePicker
@@ -165,72 +187,89 @@ export const ScheduleBoards = () => {
                   </Stack>
                 ))}
 
-              </LocalizationProvider>
-            </Grid>
-          }
-          {scheduleOption === "weekdays" &&
-            <Grid item xs={12}>
-              <Box>
-                <FormControl>
-                  <FormLabel id="demo-radio-buttons-group-label">{t('weekly_option')}</FormLabel>
-                  <RadioGroup
-                    row
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    value={weeklyOption}
-                    onChange={handleWeeklyChange}
-                    name="week-option"
-                  >
-                    <FormControlLabel value="0" control={<Radio />} label={t('weekdays')} />
-                    <FormControlLabel value="1" control={<Radio />} label={t('weekend')} />
-                  </RadioGroup>
-                </FormControl>
-              </Box>
-              <Box >
-                {weeklyOption === "0" &&
-                  <Stack direction={'row'} spacing={2}>
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">Start</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={weekStartDay}
-                        label="Age"
-                        onChange={handleChangeWeekStartDay}
-                      >
-                        {weekStartArr.map((weekData, key) => (
-                          <MenuItem value={weekData} key={key}>{weekData}</MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">End</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={weekEndDay}
-                        label="Age"
-                        onChange={handleChangeWeekEndDay}
-                      >
-                        {weekEndArr.map((weekData, key) => <MenuItem value={weekData} key={key}>{weekData}</MenuItem>)}
-                      </Select>
-                    </FormControl>
-                  </Stack>
-                }
-                {weeklyOption === "1" &&
-                  <Stack direction={'row'} spacing={2}>
-                    <TextField label="Start" fullWidth variant='outlined' value={'Saturday'} disabled />
-                    <TextField label="End" fullWidth variant='outlined' value={'Sunday'} disabled />
-                  </Stack>
-                }
-              </Box>
-            </Grid>
-          }
-          {scheduleOption === "fullweek" &&
-            <Grid item xs={12}>
-              <Button variant='contained'>ECO mode</Button>
-            </Grid>
-          }
-        </Grid>
+              </Grid>
+            }
+            {scheduleOption === "weekdays" &&
+              <Grid item xs={12}>
+                <Box>
+                  <FormControl>
+                    <FormLabel id="demo-radio-buttons-group-label">{t('weekly_option')}</FormLabel>
+                    <RadioGroup
+                      row
+                      aria-labelledby="demo-radio-buttons-group-label"
+                      value={weeklyOption}
+                      onChange={handleWeeklyChange}
+                      name="week-option"
+                    >
+                      <FormControlLabel value="0" control={<Radio />} label={t('weekdays')} />
+                      <FormControlLabel value="1" control={<Radio />} label={t('weekend')} />
+                    </RadioGroup>
+                  </FormControl>
+                </Box>
+                <Box >
+                  {weeklyOption === "0" &&
+                    <Stack direction={'row'} spacing={2}>
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label" size='small'>Start</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={weeklyData.weekDay}
+                          label="Age"
+                          size='small'
+                          onChange={handleChangeWeekStartDay}
+                        >
+                          {weekStartArr.map((weekData, key) => (
+                            <MenuItem value={weekData} key={key}>{weekData}</MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      <TimePicker
+                        label={t('start')}
+                        value={weeklyData.startTime}
+                        onChange={handleChangeWeekStartTime}
+                        open={weeklyStartTimeOpen}
+                        onOpen={() => setWeeklyStartTimeOpen(true)}
+                        onClose={() => setWeeklyStartTimeOpen(false)}
+                        slotProps={{
+                          textField: {
+                            size: 'small',
+                            onClick: () => { setWeeklyStartTimeOpen(true); }
+                          }
+                        }}
+                      />
+                      <TimePicker
+                        label={t('end')}
+                        value={weeklyData.endTime}
+                        onChange={handleChangeWeekEndTime}
+                        open={weeklyEndTimeOpen}
+                        onOpen={() => setWeeklyEndTimeOpen(true)}
+                        onClose={() => setWeeklyEndTimeOpen(false)}
+                        slotProps={{
+                          textField: {
+                            size: 'small',
+                            onClick: () => { setWeeklyEndTimeOpen(true); }
+                          }
+                        }}
+                      />
+                    </Stack>
+                  }
+                  {weeklyOption === "1" &&
+                    <Stack direction={'row'} spacing={2}>
+                      <TextField label="Start" fullWidth variant='outlined' value={'Saturday'} disabled />
+                      <TextField label="End" fullWidth variant='outlined' value={'Sunday'} disabled />
+                    </Stack>
+                  }
+                </Box>
+              </Grid>
+            }
+            {scheduleOption === "fullweek" &&
+              <Grid item xs={12}>
+                <Button variant='contained'>ECO mode</Button>
+              </Grid>
+            }
+          </Grid>
+        </LocalizationProvider>
       </Box>
     </Box>
   )

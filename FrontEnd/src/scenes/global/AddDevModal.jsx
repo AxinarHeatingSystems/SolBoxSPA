@@ -233,7 +233,6 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData, ipAddress }) => {
                         value={heatType}
                         onChange={(e) => { onHeatTypeChange(e) }}
                       >
-
                         <MenuItem value={1}>{t('electric_heater')}</MenuItem>
                         <MenuItem value={2}>{t('gas_boiler')}</MenuItem>
                         <MenuItem value={3}>{t('diesel_boiler')}</MenuItem>

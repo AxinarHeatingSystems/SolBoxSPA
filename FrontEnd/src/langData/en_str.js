@@ -53,7 +53,7 @@ export const En_Str = {
     other: "Other",
     solopanel_max_power: "SoloPanel Max Power",
     name_of_installation: "Name Of Installation",
-    heat_resistor_value : "Heat Resistor Value ",
+    heat_resistor_value: "Heat Resistor Value ",
     more_fields: "More Fields",
     intended_use_of_device: "Intended use of device",
     professional: "Professional",

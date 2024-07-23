@@ -43,6 +43,7 @@ const Dashboard = () => {
   const [deviceName, setDeviceName] = useState('');
   const [deviceId, setDeviceId] = useState('08F9E0E1915C');
   const [devTopic, setDevTopic] = useState('');
+  const [controlTopic, setControlTopic] = useState('');
   const [devInfo, setDevInfo] = useState(null);
   // const [devMetaData, setDevMetaData] = useState();
   const [socketEventCount, setSocketEventCount] = useState(0);
@@ -78,10 +79,10 @@ const Dashboard = () => {
       loadDeviceInfo(message);
       setSocketEventCount(prev => prev + 1);
     });
-    // socket.on("message", message => {
-    //   console.log(message);
-    //   // setSocketEventCount(prev => prev + 1);
-    // });
+    socket.on(controlTopic, message => {
+      console.log('controlTopic ', message);
+      // setSocketEventCount(prev => prev + 1);
+    });
 
     socket.on('devControl', error => {
       console.log('Dev Controlled', error);
@@ -90,6 +91,7 @@ const Dashboard = () => {
     return () => {
       socket.off('message');
       socket.off(devTopic);
+      socket.off(controlTopic)
     }
   }, [deviceId, devTopic, socketEventCount])
 
@@ -107,6 +109,7 @@ const Dashboard = () => {
     const tmpData = parsingDeviceData(devMeta.data)
     dispatch(devMetaData_store(tmpData));
     setDevTopic(`axinar/solbox/${devId}/jsonTelemetry`);
+    setControlTopic(`axinar/solbox/${devId}/mainControlJson`)
     socket.emit('join', { devId }, (error) => {
       if (error) {
         alert(error);
