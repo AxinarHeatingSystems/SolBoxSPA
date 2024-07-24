@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 export const BASE_BACKEND_URL = process.env.REACT_APP_BASE_BACKEND_URL
-export const GoogleClientID = "1095375617733-7epn0ikmfmvisfir90k57s4ih975mrh5.apps.googleusercontent.com"
+export const GoogleClientID = process.env.GOOGLE_CLIENT_ID
 
 const getJWTToken = () => {
   const strUser = localStorage.getItem('userData');
