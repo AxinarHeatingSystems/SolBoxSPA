@@ -9,5 +9,4 @@ services:
       - "4000:4000"
     volumes:
       - .:/usr/src/app
-      - .:/usr/src/app/node_modules:/home/nodejs/node_modules
-
+      - ./node_modules:/usr/src/app/node_modules
