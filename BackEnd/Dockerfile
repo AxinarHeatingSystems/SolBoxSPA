@@ -1,13 +1,13 @@
 
 FROM node:20
 
-RUN npm install --force
-
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package*.json /usr/src/app
 
-COPY . .
+RUN npm install --force
+
+COPY ./ /usr/src/app
 
 CMD ["npm", "run", "start"]
 
