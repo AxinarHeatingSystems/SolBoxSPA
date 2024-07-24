@@ -2,8 +2,9 @@
 import axios from 'axios';
 
 export const BASE_BACKEND_URL = process.env.REACT_APP_BASE_BACKEND_URL
-export const GoogleClientID = process.env.GOOGLE_CLIENT_ID
+export const GoogleClientID = process.env.REACT_APP_GOOGLE_CLIENT_ID
 
+console.log(process.env);
 const getJWTToken = () => {
   const strUser = localStorage.getItem('userData');
   const userData = JSON.parse(strUser);
