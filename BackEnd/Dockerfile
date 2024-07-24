@@ -5,9 +5,10 @@ WORKDIR /usr/src/app
 
 COPY ./ /usr/src/app
 
-RUN npm install --force
-
 CMD ["npm", "run", "start"]
+# RUN npm install --force
+
+
 
 # EXPOSE 4000
 
