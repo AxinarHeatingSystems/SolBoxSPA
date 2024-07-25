@@ -12,7 +12,7 @@ import { isLoggedIn_Store, userData_Store } from '../../store/actions/mainAction
 import { GoogleLogin } from 'react-google-login';
 import { SetLang } from '../../components/Language/SetLang';
 import { useTranslation } from 'react-i18next';
-
+console.log('checkClientID', GoogleClientID)
 export const Login = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
