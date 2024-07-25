@@ -76,7 +76,7 @@ async function googleAuth(authload) {
                 if(loggedUser.attributes.googleId){
                     const userHash = loggedUser.attributes.googleId[0];
                 }else{
-                    loggedUser.attributes.googleId[0] = authload.googleId;
+                    loggedUser.attributes.googleId = [authload.googleId];
                     await kcAdminClient.users.update({id: loggedUser.id, realm: config.keycloakRealm}, loggedUser);
                 }
                 const token = jwt.sign({ sub: loggedUser.id }, config.secret, { expiresIn: '7d' });
