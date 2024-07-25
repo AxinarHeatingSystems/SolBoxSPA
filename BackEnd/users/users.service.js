@@ -82,7 +82,7 @@ async function googleAuth(authload) {
                 const token = jwt.sign({ sub: loggedUser.id }, config.secret, { expiresIn: '7d' });
                 resultData = {state: 'success', data: loggedUser, token: token};
             }else{
-                if(loggedUser.attributes.userType === 'user'){
+                if(loggedUser.attributes.userType[0] === 'user'){
                     resultData = {state: 'failed', message: 'Please verify your email'};
                 }else{
                     if(loggedUser.attributes.verified === false){

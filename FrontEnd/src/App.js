@@ -14,6 +14,8 @@ import Pie from "./scenes/Pie";
 import Line from "./scenes/line";
 import Geography from "./scenes/geography";
 
+import { GoogleOAuthProvider } from '@react-oauth/google'
+import { GoogleClientID } from './axios/ApiProvider';
 import { Login } from './scenes/Auth/login';
 import { Register } from './scenes/Auth/register'; 
 import { ForgotPassword } from './scenes/Auth/forgotPassword';
@@ -115,6 +117,7 @@ function App() {
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
+        <GoogleOAuthProvider clientId={GoogleClientID}>
         <CssBaseline />
         {/* <Router> */}
         <div className="app">
@@ -136,6 +139,7 @@ function App() {
             <Route path="/geography" element={<Geography />} />
           </Routes>
         </div>
+        </GoogleOAuthProvider>
         {/* </Router> */}
       </ThemeProvider>
     </ColorModeContext.Provider>

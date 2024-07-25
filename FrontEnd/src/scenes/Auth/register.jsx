@@ -9,10 +9,13 @@ import { ColorModeContext, tokens } from "../../theme";
 import { Link } from 'react-router-dom';
 // import MuiPhoneNumber from 'material-ui-phone-number';
 import { useSelector } from 'react-redux';
-import { GoogleClientID, googleSignUpApi, registerApi } from '../../axios/ApiProvider';
-import { GoogleLogin } from 'react-google-login';
+import { googleSignUpApi, registerApi } from '../../axios/ApiProvider';
+// import { GoogleLogin, useGoogleLogin } from 'react-google-login';
+import googleIco from "../../assets/google.svg"
+import { useGoogleLogin } from '@react-oauth/google';
 import { useTranslation } from 'react-i18next';
 import { SetLang } from '../../components/Language/SetLang';
+import axios from 'axios';
 
 export const Register = () => {
   const { t } = useTranslation();
@@ -117,11 +120,26 @@ export const Register = () => {
       setIsSignUp(false);
     }
   }
-  const responseGoogle = async (response) => {
-    setIsSignUp(true);
-    console.log(response);
-    if (response.profileObj) {
-      const profileData = response.profileObj;
+  const googleSignupFnc = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      console.log(tokenResponse)
+      const res = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenResponse.access_token}`, {
+        headers: {
+          Authorization: `Bearer ${tokenResponse.access_token}`,
+          Accept: 'application/json'
+        }
+      })
+      console.log(res);
+      if (res.status !== 200) return;
+      const googleProfile = res.data;
+      const profileData = {
+        googleId: googleProfile.id,
+        email: googleProfile.email,
+        usertype: 'user',
+        name: googleProfile.email,
+        familyName: googleProfile.family_name,
+        givenName: googleProfile.given_name
+      }
       Swal.fire({
         title: t('select_user_type'),
         input: 'select',
@@ -148,19 +166,60 @@ export const Register = () => {
           setIsSignUp(false);
         }
       });
-      // const profileData = response.profileObj;
-      // const googleRes = await googleSignUpApi(profileData);
-      // if (googleRes.state === 'success') {
-      //   // setUserCreated(true);
-      //   setTimeout(() => { window.location.href = '/registerationsuccess'; }, 500)
-      // } else {
-      //   setIsSignUp(false);
-      // }
-    } else {
-      setIsSignUp(false);
-    }
+      //   .then((res) => {
+      //   console.log(res.data);
 
-  }
+      // })
+      // .catch((err) => console.log(err));
+    },
+    scope: 'profile',
+  });
+
+  // const responseGoogle = async (response) => {
+
+  //   setIsSignUp(true);
+  //   console.log(response);
+  //   if (response.profileObj) {
+  //     const profileData = response.profileObj;
+  //     Swal.fire({
+  //       title: t('select_user_type'),
+  //       input: 'select',
+  //       inputOptions: {
+  //         user: t('user'),
+  //         technician: t('technician'),
+  //       },
+  //       inputValue: 'user',
+  //       inputPlaceholder: t('select_user_type'),
+  //       showCancelButton: false,
+  //       confirmButtonText: t('register'),
+  //     }).then(async (result) => {
+  //       console.log(result);
+  //       if (result.isConfirmed) {
+  //         profileData.usertype = result.value;
+  //         const googleRes = await googleSignUpApi(profileData);
+  //         if (googleRes.state === 'success') {
+  //           // setUserCreated(true);
+  //           setTimeout(() => { window.location.href = '/registerationsuccess'; }, 500)
+  //         } else {
+  //           setIsSignUp(false);
+  //         }
+  //       } else {
+  //         setIsSignUp(false);
+  //       }
+  //     });
+  //     // const profileData = response.profileObj;
+  //     // const googleRes = await googleSignUpApi(profileData);
+  //     // if (googleRes.state === 'success') {
+  //     //   // setUserCreated(true);
+  //     //   setTimeout(() => { window.location.href = '/registerationsuccess'; }, 500)
+  //     // } else {
+  //     //   setIsSignUp(false);
+  //     // }
+  //   } else {
+  //     setIsSignUp(false);
+  //   }
+
+  // }
   return (
     <main className="content" >
       <Box width={'100%'} height={'100vh'} display={'flex'}
@@ -258,13 +317,19 @@ export const Register = () => {
                   required
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} marginBottom={1}>
                 <Button fullWidth variant="contained" color={'success'}
                   sx={{ fontWeight: 600 }} type='submit' disabled={isSignUp}
                 >{t("register")}</Button>
               </Grid>
             </Grid>
-            <Box width={'100%'} display={'flex'} justifyContent={'center'} alignItems={'center'} marginY={1}>
+            <Box width={'100%'} display={'flex'} justifyContent={'center'} alignItems={'center'} marginBottom={1}>
+              <Button fullWidth variant='contained' color='success' onClick={() => { googleSignupFnc() }}>
+                <img src={googleIco} alt='gooleIco' style={{ width: '30px' }} />
+                <Typography variant='body1' fontWeight={'bold'} marginLeft={1}>{t("regist_with_google")}</Typography>
+              </Button>
+            </Box>
+            {/* <Box width={'100%'} display={'flex'} justifyContent={'center'} alignItems={'center'} marginY={1}>
               <GoogleLogin
                 clientId={GoogleClientID}
                 buttonText={t("regist_with_google")}
@@ -274,7 +339,7 @@ export const Register = () => {
                 disabled={isSignUp}
                 cookiePolicy={'single_host_origin'}
               />
-            </Box>
+            </Box> */}
             <Box marginTop={1} width={'100%'} textAlign={'right'} >
               <Link to="/login" style={{ color: theme.palette.mode === "dark" ? colors.primary[100] : colors.primary[600] }}>
                 <Typography variant='body1' fontWeight={600} >

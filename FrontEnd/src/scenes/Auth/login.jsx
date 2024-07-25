@@ -1,18 +1,21 @@
 import React, { useState, useContext } from 'react';
 import { Box } from "@mui/system"
 import iotBg from '../../assets/Backgroound/iotBg.jpg'
-import { useTheme, Button, TextField, Typography, IconButton, Grid } from "@mui/material"
+import { useTheme, Button, TextField, Typography, IconButton, Grid, Icon } from "@mui/material"
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import { ColorModeContext, tokens } from "../../theme";
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { googleAuthApi, loginApi, GoogleClientID } from '../../axios/ApiProvider';
+import { googleAuthApi, loginApi } from '../../axios/ApiProvider';
 import { isLoggedIn_Store, userData_Store } from '../../store/actions/mainAction';
-import { GoogleLogin } from 'react-google-login';
+// import { GoogleLogin } from 'react-google-login';
+import googleIco from "../../assets/google.svg"
+import { useGoogleLogin } from '@react-oauth/google';
 import { SetLang } from '../../components/Language/SetLang';
 import { useTranslation } from 'react-i18next';
-console.log('checkClientID', GoogleClientID)
+import axios from 'axios';
+
 export const Login = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -61,10 +64,22 @@ export const Login = () => {
       alert("Form is invalid! Please check the fields...");
     }
   }
-  const responseGoogle = async (response) => {
-    console.log(response);
-    if (response.profileObj) {
-      const profileData = response.profileObj;
+  const googleLoginFnc = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      console.log(tokenResponse)
+      const res = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenResponse.access_token}`, {
+        headers: {
+          Authorization: `Bearer ${tokenResponse.access_token}`,
+          Accept: 'application/json'
+        }
+      })
+      console.log(res);
+      if (res.status !== 200) return;
+      const googleProfile = res.data;
+      const profileData = {
+        googleId: googleProfile.id,
+        email: googleProfile.email,
+      }
       const googleRes = await googleAuthApi(profileData);
       if (googleRes.state === 'success') {
         let tmpUser = googleRes.data.data;
@@ -74,9 +89,33 @@ export const Login = () => {
         dispatch(isLoggedIn_Store(true));
         setTimeout(() => { window.location.href = '/'; }, 500)
       }
-    }
+      //   .then((res) => {
+      //   console.log(res.data);
 
-  }
+      // })
+      // .catch((err) => console.log(err));
+    },
+    scope: 'profile',
+  });
+  // const notificafe = (notRes) => {
+  //   console.log(notRes);
+  // }
+  // const responseGoogle = async (response) => {
+  //   console.log(response);
+  //   if (response.profileObj) {
+  //     const profileData = response.profileObj;
+  //     const googleRes = await googleAuthApi(profileData);
+  //     if (googleRes.state === 'success') {
+  //       let tmpUser = googleRes.data.data;
+  //       tmpUser.tokens = googleRes.data.token;
+  //       localStorage.setItem('userData', JSON.stringify(tmpUser));
+  //       dispatch(userData_Store(tmpUser));
+  //       dispatch(isLoggedIn_Store(true));
+  //       setTimeout(() => { window.location.href = '/'; }, 500)
+  //     }
+  //   }
+
+  // }
   return (
     <main className="content" >
       <Box width={'100%'} height={'100vh'} display={'flex'}
@@ -123,15 +162,25 @@ export const Login = () => {
               </Grid>
             </Grid>
             <Box width={'100%'} display={'flex'} justifyContent={'center'} alignItems={'center'} marginBottom={1}>
+              <Button fullWidth variant='contained' color='success' onClick={() => { googleLoginFnc() }}>
+                <img src={googleIco} alt='gooleIco' style={{ width: '30px' }} />
+                <Typography variant='body1' fontWeight={'bold'} marginLeft={1}>{t("login_with_google")}</Typography>
+              </Button>
+            </Box>
+            {/* <Box width={'100%'} display={'flex'} justifyContent={'center'} alignItems={'center'} marginBottom={1}>
+              <Button variant='contained' color='success' onClick={() => { loginFnc() }}>
+
+              </Button>
               <GoogleLogin
-                clientId={GoogleClientID}
+
                 buttonText={t("login_with_google")}
                 className='googleSign-Button'
+                promptMomentNotification={notificafe}
                 onSuccess={responseGoogle}
                 onFailure={responseGoogle}
                 cookiePolicy={'single_host_origin'}
               />
-            </Box>
+            </Box> */}
             <Box width={'100%'} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
               <Link to="/register" style={{ color: theme.palette.mode === "dark" ? colors.primary[100] : colors.primary[600] }}>
                 <Typography variant='body1' fontWeight={600}>
