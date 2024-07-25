@@ -70,6 +70,7 @@ async function googleAuth(authload) {
     await kcAdminAuth();
     try {
         const users = await kcAdminClient.users.findOne({email: authload.email, realm: config.keycloakRealm});
+        console.log(users);
         if(users.length > 0){
             const loggedUser = users[0];
             if(loggedUser.emailVerified){
