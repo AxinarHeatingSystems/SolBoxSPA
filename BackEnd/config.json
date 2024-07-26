@@ -2,7 +2,7 @@
     "secret": "SET SECRET KEY",
     "emqxhost": "https://solbox-emqx.axinars.uk/",
     "emqxuser": "a9cdba63ec8ad8b8",
-    "emqxpassword": "5e9ANZmSGeN8pnXiAGT9CdyJ9AitXMg9BXHDCvSTVVE6veK",
+    "emqxpassword": "FPvSA9ADJ79A1nqtyrs4tsvQ2PnNk384b2Y8q9CyeI2HJC",
     "solbox-frontend": "https://solbox.axinars.uk",
     "solbox-backend": "https://solbox-back.axinars.uk",
     "keycloakPath": "https://solbox-auth.axinars.uk",
