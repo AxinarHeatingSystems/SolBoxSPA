@@ -139,7 +139,7 @@ async function googleSignUp(authload){
                     id: newUser.id,
                     clientId: config.keycloakClientId2,
                     lifespan: 60,
-                    redirectUri: 'https://solbox-clients.axinars.uk/login',
+                    redirectUri: `${config['solbox-frontend']}/login`,
                     actions: [RequiredActionAlias.VERIFY_EMAIL], 
                     realm: config.keycloakRealm
                 })  
@@ -148,7 +148,7 @@ async function googleSignUp(authload){
                     id: newUser.id,
                     clientId: config.keycloakClientId2,
                     lifespan: 60,
-                    redirectUri: `https://solbox-back.axinars.uk/user/technicianverfity?userId=${newUser.id}`,
+                    redirectUri: `${config['solbox-backend']}/user/technicianverfity?userId=${newUser.id}`,
                     actions: [], 
                     realm: config.keycloakRealm
                 })   
@@ -271,13 +271,12 @@ async function create(userParam) {
               console.log(createduserId);
             //   try {
                 // await kcAdminClient.users.sendVerifyEmail({id: createduserId.id, clientId: config.keycloakClientId2, 
-                //     redirectUri: 'https://solbox-clients.axinars.uk/login', realm: config.keycloakRealm});   
                 if(userParam.usertype === 'user') {
                     await kcAdminClient.users.executeActionsEmail({
                         id: createduserId.id,
                         clientId: config.keycloakClientId2,
                         lifespan: 60,
-                        redirectUri: 'https://solbox-clients.axinars.uk/login',
+                        redirectUri: `${config['solbox-frontend']}/login`,
                         actions: [RequiredActionAlias.VERIFY_EMAIL], 
                         realm: config.keycloakRealm
                     })   
@@ -286,7 +285,7 @@ async function create(userParam) {
                         id: createduserId.id,
                         clientId: config.keycloakClientId2,
                         lifespan: 60,
-                        redirectUri: `https://solbox-back.axinars.uk/user/technicianverfity?userId=${createduserId.id}`,
+                        redirectUri: `${config['solbox-backend']}/user/technicianverfity?userId=${createduserId.id}`,
                         actions: [], 
                         realm: config.keycloakRealm
                     })   
@@ -321,7 +320,7 @@ async function emailResetPassword({email}) {
                 id: selectedUser.id,
                 clientId: config.keycloakClientId2,
                 lifespan: 60,
-                redirectUri: 'https://solbox-clients.axinars.uk/resetpassword',
+                redirectUri: `${config['solbox-frontend']}/resetpassword`,
                 actions: [], 
                 realm: config.keycloakRealm
             })    
