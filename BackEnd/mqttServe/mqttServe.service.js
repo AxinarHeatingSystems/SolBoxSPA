@@ -214,6 +214,10 @@ async function mqttDevScheduleUpdate(devInfo) {
     try {
         const existGroup = await kcAdminClient.groups.findOne({id: devInfo.devId, realm: config.keycloakRealm});    
         console.log(existGroup);
+        if(existGroup){
+            const existAttr = {...existGroup.attributes, ...devInfo.schedulePayLoad};
+            console.log(existAttr);
+        }
     } catch (error) {
         
     }
