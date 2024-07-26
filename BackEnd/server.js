@@ -48,16 +48,17 @@ const options = {
 const mqttPath = `${config.protocol}://${config.host}:${config.port}`
 const client = mqtt.connect(mqttPath, options);
 
-client.on('connect', () => {
-  console.log(`${config.protocol}: Connected`)
-})
+
 client.on('reconnect', (error) => {
-  // console.log(`Reconnecting(${config.protocol}):`, error)
+  console.log(`Reconnecting(${config.protocol}):`, error)
 })
 // start server
 const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 4000;
 
 io.on('connect', (socket) => {
+  client.on('connect', () => {
+    console.log(`${config.protocol}: Connected`);
+
     socket.on('join', ({ devId }, callback) => {
       
       console.log('devID', devId);
@@ -128,6 +129,8 @@ io.on('connect', (socket) => {
       //   io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
       // }
     })
+  })
+    
   });
 
   const server = httServer.listen(port, function () {
