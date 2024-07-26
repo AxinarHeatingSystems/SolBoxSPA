@@ -21,7 +21,7 @@ app.use(cors());
 // use JWT auth to secure the api
 app.use(jwtAuth());
 const httServer = http.createServer(app);
-app.setMaxListeners(0);
+app.setMaxListeners(1000);
 const io = socketio(httServer, {cors: {
   origin: "*",
   methods: ["GET", "POST"]
@@ -46,6 +46,7 @@ const options = {
   // for more options and details, please refer to https://github.com/mqttjs/MQTT.js#mqttclientstreambuilder-options
 }
 const mqttPath = `${config.protocol}://${config.host}:${config.port}`
+
 const client = mqtt.connect(mqttPath, options);
 
 client.on('connect', () => {
