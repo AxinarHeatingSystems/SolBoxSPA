@@ -227,7 +227,7 @@ async function mqttDevScheduleUpdate(devInfo) {
         console.log(error);
         resultData = {state: 'failed', message: 'Device Schedule Updating is failed'};
     }
-    
+    return resultData;
 }
 
 async function mqttconnect(input) {
