@@ -224,6 +224,7 @@ async function mqttDevScheduleUpdate(devInfo) {
             resultData = {state: 'failed', message: 'There is not the Device'};
         }
     } catch (error) {
+        console.log(error);
         resultData = {state: 'failed', message: 'Device Schedule Updating is failed'};
     }
     
