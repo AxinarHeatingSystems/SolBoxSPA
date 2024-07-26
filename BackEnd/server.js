@@ -88,23 +88,23 @@ io.on('connect', (socket) => {
     callback();
   });
 
-  socket.on('leave', ({devId}, callback) => {
-    const devTopic = `axinar/solbox/${devId}/jsonTelemetry`
-    client.unsubscribe(devTopic, (err) => {
-      if (!err) {
-        socket.emit('DevUnSubscribed', 'Device disconnected')
-      }
-    });
+  // socket.on('leave', ({devId}, callback) => {
+  //   const devTopic = `axinar/solbox/${devId}/jsonTelemetry`
+  //   client.unsubscribe(devTopic, (err) => {
+  //     if (!err) {
+  //       socket.emit('DevUnSubscribed', 'Device disconnected')
+  //     }
+  //   });
 
-    callback();
-  })
+  //   callback();
+  // })
 
   client.on('message', (topic, payload) => {
     
     const lastMessage = payload.toString();
     socket.emit(topic, lastMessage);
     // socket.emit(`devname/${topic}`, lastMessage);
-    socket.emit('message', lastMessage);
+    // socket.emit('message', lastMessage);
   })
 
   socket.on('devUpdate', ({devInfo}, callback) => {
