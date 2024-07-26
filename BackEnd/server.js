@@ -51,7 +51,7 @@ const options = {
 const mqttPath = `${config.protocol}://${config.host}:${config.port}`
 
 const client = mqtt.connect(mqttPath, options);
-client.setMaxListeners(0);
+client.setMaxListeners(1000);
 client.on('connect', () => {
   console.log(`${config.protocol}: Connected`);
 })
