@@ -208,7 +208,16 @@ async function mqttdevFileupload(imageData) {
 }
 
 async function mqttDevScheduleUpdate(devInfo) {
+    let resultData = {};
+    await kcAdminAuth();
     console.log(devInfo);
+    try {
+        const existGroup = await kcAdminClient.groups.findOne({id: devInfo.devId, realm: config.keycloakRealm});    
+        console.log(existGroup);
+    } catch (error) {
+        
+    }
+    
 }
 
 async function mqttconnect(input) {
