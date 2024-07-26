@@ -1,13 +1,5 @@
 ﻿{
-    "connectionString": "mongodb://localhost/devConnection",
     "secret": "SET SECRET KEY",
-    "protocol": "mqtt",
-    "port": 18083,
-    "host": "100.90.169.20/",
-    "user": "admin",
-    "password": "$axinaR%6623&",
-    "clientId": "mqttx_6885a045",
-    "name": "emqx@172.22.0.2",
     "emqxhost": "https://solbox-emqx.axinars.uk/",
     "emqxuser": "a9cdba63ec8ad8b8",
     "emqxpassword": "5e9ANZmSGeN8pnXiAGT9CdyJ9AitXMg9BXHDCvSTVVE6veK",
