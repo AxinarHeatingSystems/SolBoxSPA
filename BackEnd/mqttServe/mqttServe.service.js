@@ -13,6 +13,7 @@ module.exports = {
     mqttcreatedev,
     mqttupdatedev,
     mqttsharedev,
+    mqttDevScheduleUpdate,
     mqttloadsharedUsers,
     mqttremoveshareduser,
     mqttDevicelist,
@@ -137,6 +138,7 @@ async function mqttupdatedev(devData) {
         console.log(updatedGroup);
         resultData = {state: 'success', data: groupData};
     } catch (error) {
+        console.log('errorUpdateDev', error)
         resultData = {state: 'failed', message: 'New Device is failed'};
     }
     return resultData
@@ -203,6 +205,10 @@ async function mqttdevFileupload(imageData) {
         });    
     });
     return imgPath;
+}
+
+async function mqttDevScheduleUpdate(devInfo) {
+    console.log(devInfo);
 }
 
 async function mqttconnect(input) {

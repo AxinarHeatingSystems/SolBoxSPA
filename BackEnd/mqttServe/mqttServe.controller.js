@@ -12,6 +12,7 @@ router.post('/getClients', mqttClients);
 router.post('/createDev', mqttCreateDev);
 router.post('/updateDev', mqttUpdateDev)
 router.post('/shareDev', mqttShareDev);
+router.post('/saveDevSchedule', mqttSaveDevSchedule)
 router.post('/loadDevSharedUsers', mqttLoadDevSharedUser)
 router.post('/removeSharedUser', mqttRemoveSharedUser);
 router.post('/userDevs', mqttUserDevs);
@@ -76,6 +77,14 @@ function mqttUserDevs(req, res, next){
 
 function mqttDeviceInfo(req, res, next){
   mqttServeService.mqttDeviceInfo(req.body).then(
+    resData => resData? 
+        resData.state == 'success'? 
+            res.json(resData) : res.status(400).json({ message: resData.message }) : res.status(400).json({ message: 'Device info is failed' })
+  ).catch(err => next(err));
+}
+
+function mqttSaveDevSchedule(req, res, next) {
+  mqttServeService.mqttDevScheduleUpdate(req.body).then(
     resData => resData? 
         resData.state == 'success'? 
             res.json(resData) : res.status(400).json({ message: resData.message }) : res.status(400).json({ message: 'Device info is failed' })

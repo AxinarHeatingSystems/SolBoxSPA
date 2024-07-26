@@ -114,7 +114,6 @@ io.on('connect', (socket) => {
   socket.on('devUpdate', ({devInfo}, callback) => {
     console.log(devInfo)
     const payload = devInfo.payload;
-
     const devTopic = `axinar/solbox/${devInfo.DeviceID}/mainControlJson`
     client.publish(devTopic, JSON.stringify(payload), (error) => {
       if (error) {
@@ -124,6 +123,10 @@ io.on('connect', (socket) => {
     });
     callback();
   });
+
+  socket.on('scheduleTopic', ({devInfo}, callback) => {
+    console.log(devInfo);
+  })
 
   socket.on('disconnect', () => {
     // const user = removeUser(socket.id);
