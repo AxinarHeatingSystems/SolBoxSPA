@@ -21,7 +21,7 @@ app.use(cors());
 // use JWT auth to secure the api
 app.use(jwtAuth());
 const httServer = http.createServer(app);
-
+app.setMaxListeners(0);
 const io = socketio(httServer, {cors: {
   origin: "*",
   methods: ["GET", "POST"]
