@@ -48,7 +48,8 @@ const options = {
   
   // for more options and details, please refer to https://github.com/mqttjs/MQTT.js#mqttclientstreambuilder-options
 }
-const mqttPath = `${config.protocol}://${config.host}:${config.port}`
+// const mqttPath = `${config.protocol}://${config.host}:${config.port}`
+const mqttPath = `${config.protocol}://EMQX:1883`
 
 
 const client = mqtt.connect(mqttPath, options);
