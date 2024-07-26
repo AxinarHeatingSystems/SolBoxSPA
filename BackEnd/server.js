@@ -49,7 +49,7 @@ const options = {
   // for more options and details, please refer to https://github.com/mqttjs/MQTT.js#mqttclientstreambuilder-options
 }
 // const mqttPath = `${config.protocol}://${config.host}:${config.port}`
-const mqttPath = `${config.protocol}://emqx:${config.port}`
+const mqttPath = `${config.protocol}://emqx:1883`
 console.log(mqttPath);
 const client = mqtt.connect(mqttPath, options);
 client.setMaxListeners(1000);
