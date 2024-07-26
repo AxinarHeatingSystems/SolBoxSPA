@@ -20,12 +20,15 @@ app.use(bodyParser.json());
 app.use(cors());
 // use JWT auth to secure the api
 app.use(jwtAuth());
+app.setMaxListeners(0);
 const httServer = http.createServer(app);
-app.setMaxListeners(1000);
+
 const io = socketio(httServer, {cors: {
   origin: "*",
-  methods: ["GET", "POST"]
+  methods: ["GET", "POST"],
+
 }});
+
 
 // api routes
 app.use('/mqtt', require('./mqttServe/mqttServe.controller'));
