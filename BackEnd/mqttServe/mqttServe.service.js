@@ -218,11 +218,13 @@ async function mqttDevScheduleUpdate(devInfo) {
             const existAttr = {...existGroup.attributes, ...devInfo.schedulePayLoad};
             console.log(existAttr);
             existGroup.attributes = existAttr;
-            const updatedGroup = await kcAdminClient.groups.update({id: devInfo.devId, realm: config.keycloakRealm}, existGroup);
-            console.log(updatedGroup);
+            await kcAdminClient.groups.update({id: devInfo.devId, realm: config.keycloakRealm}, existGroup);
+            resultData = {state: 'success', data: existGroup};
+        }else{
+            resultData = {state: 'failed', message: 'There is not the Device'};
         }
     } catch (error) {
-        
+        resultData = {state: 'failed', message: 'Device Schedule Updating is failed'};
     }
     
 }
