@@ -12,10 +12,11 @@ Topic: axinar/solbox/MACADD/mainControlJson";
 {"delayWifiFlag":1} --> 1-Wifi begins after device reaches 38 PWMduty 0-Wifi begins straight away
 {"manualRelayEnable":1} --> 0-Turns relay off 1-Turns relay ON 
 {"setNickname":"SomeName"} --> Sets the device's nickname
-{"fanControl":1} --> 1-Turns fan on. 0-Turns fan off. If protection temp is reached and fan is on 0(off) command is disabled
+{"fanControl":1} --> 1-Turns fan on. 0-Turns fan off. If protection temp is reached and fan is on, 0(off) command is disabled
 {"CheckLoad":1} --> 1-Clears the last meassured resistor value
 {"telemetryMode":1} --> 0-User's telemetry 1-Debugging telemetry 2-Technician's telemetry
-{"sendPowerData":1} --> Sends 30 day history of power production per day in axinar/solbox/MACADD/jsonPowerDataSent
+{"sendPowerData":1} --> Sends 30 day history of power production per day in axinar/solbox/MACADD/jsonDataSent
+{"sendWeekSchedule":1} --> Sends weekly Schedule saved on the device in axinar/solbox/MACADD/jsonDataSent
 {"checkBacteriaEnable":1} --> Enables function that checks if the water reached the correct temperature for the right amount of time
 {"setMaxWaterTemp":90} --> Sets the max temperature the water is allowed reach (default value is 80)
 {"clearProduction":1} --> Clears today's log of watt-hours.

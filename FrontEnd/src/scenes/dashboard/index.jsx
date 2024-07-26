@@ -244,8 +244,8 @@ const Dashboard = () => {
               </Box>
               <Box maxWidth={'90vw'} height={'80vh'} position={'relative'}>
                 {submenuId === 1 && <StatusBoards isMobile={isMobileDetect} isPortrait={isPortrait} devData={devInfo} socketIo={socket} />}
-                {submenuId === 2 && <SettingBoards />}
-                {submenuId === 3 && <ScheduleBoards />}
+                {submenuId === 2 && <SettingBoards devData={devInfo} />}
+                {submenuId === 3 && <ScheduleBoards devData={devInfo} socketIo={socket} />}
                 {submenuId === 4 && <ShareBoards />}
               </Box>
             </>}
@@ -379,7 +379,7 @@ const Dashboard = () => {
               </Box>
               {submenuId === 1 && <StatusBoards isMobile={isMobileDetect} isPortrait={isPortrait} devData={devInfo} socketIo={socket} />}
               {submenuId === 2 && <SettingBoards devData={devInfo} />}
-              {submenuId === 3 && <ScheduleBoards />}
+              {submenuId === 3 && <ScheduleBoards devData={devInfo} socketIo={socket} />}
               {submenuId === 4 && <ShareBoards />}
             </Box>}
 

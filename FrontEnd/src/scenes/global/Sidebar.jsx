@@ -54,7 +54,6 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
     p: 4,
   };
 
-
   const [isSearchUI, setIsSearchUI] = useState(false);
   const [pairableDevs, setPairableDevs] = useState([]);
   const [pairingCode, setPairingCode] = useState();
@@ -202,8 +201,8 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
     let ableDevArr = [];
     resDevs.map(devItem => {
       const existDev = devList.find(dev => dev.name === devItem.clientid);
-      console.log('dddd', existDev);
-      if (existDev === undefined) {
+      console.log('dddd', existDev, /^[0-9A-F]{12}$/i.test(devItem.clientid));
+      if (existDev === undefined && /^[0-9A-F]{12}$/i.test(devItem.clientid)) {
         if (devItem.ip_address === ipAddress) {
           const hexVal = parseInt(devItem.clientid, 16);
           const hexStr = hexVal.toString();

@@ -27,7 +27,7 @@ export const Login = () => {
   const [emailError, setEmailError] = useState(false);
   const [password, setPassword] = useState();
   const [passwordError, setPasswordError] = useState(false);
-
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const onEmailChange = (e) => {
     setEmail(e.target.value);
     if (e.target.validity.valid) {
@@ -48,6 +48,7 @@ export const Login = () => {
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitted(true)
     if (e.target.checkValidity()) {
       const resLog = await loginApi({ email: email, password: password });
       console.log('email Logged In', resLog);
@@ -58,15 +59,19 @@ export const Login = () => {
         dispatch(userData_Store(tmpUser));
         dispatch(isLoggedIn_Store(true));
         setTimeout(() => { window.location.href = '/'; }, 500)
+      } else {
+        setIsSubmitted(false)
       }
       // alert("Form is valid! Submitting the form...");
     } else {
+      setIsSubmitted(false)
       alert("Form is invalid! Please check the fields...");
     }
   }
   const googleLoginFnc = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       console.log(tokenResponse)
+      setIsSubmitted(true);
       const res = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenResponse.access_token}`, {
         headers: {
           Authorization: `Bearer ${tokenResponse.access_token}`,
@@ -74,7 +79,8 @@ export const Login = () => {
         }
       })
       console.log(res);
-      if (res.status !== 200) return;
+      if (res.status !== 200) { setIsSubmitted(false); return; }
+
       const googleProfile = res.data;
       const profileData = {
         googleId: googleProfile.id,
@@ -88,6 +94,8 @@ export const Login = () => {
         dispatch(userData_Store(tmpUser));
         dispatch(isLoggedIn_Store(true));
         setTimeout(() => { window.location.href = '/'; }, 500)
+      } else {
+        setIsSubmitted(false);
       }
       //   .then((res) => {
       //   console.log(res.data);
@@ -155,14 +163,14 @@ export const Login = () => {
                   required />
               </Grid>
               <Grid item xs={12}>
-                <Button fullWidth variant="contained" color={'success'}
+                <Button disabled={isSubmitted} fullWidth variant="contained" color={'success'}
                   type="submit" 
                   sx={{ fontWeight: 600 }}
                 >{t("login")}</Button>
               </Grid>
             </Grid>
             <Box width={'100%'} display={'flex'} justifyContent={'center'} alignItems={'center'} marginBottom={1}>
-              <Button fullWidth variant='contained' color='success' onClick={() => { googleLoginFnc() }}>
+              <Button disabled={isSubmitted} fullWidth variant='contained' color='success' onClick={() => { googleLoginFnc() }}>
                 <img src={googleIco} alt='gooleIco' style={{ width: '30px' }} />
                 <Typography variant='body1' fontWeight={'bold'} marginLeft={1}>{t("login_with_google")}</Typography>
               </Button>

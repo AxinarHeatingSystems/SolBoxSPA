@@ -25,7 +25,7 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData, ipAddress }) => {
   const userData = useSelector(store => store.userData);
   // const picuploader = useRef();
   const { t } = useTranslation();
-  const [country, setCountry] = useState('');
+  const [country, setCountry] = useState({ iso: "GR", label: "Greece" });
   const [city, setCity] = useState('');
   // const [deviceName, setDeviceName] = useState('');
   const [watterLimit, setWatterLimit] = useState(100);
@@ -179,12 +179,19 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData, ipAddress }) => {
     >
       <DialogContent>
         <Box sx={{ position: "relative", width: '100%' }}>
-          <Typography id="modal-modal-title" variant="h2" component="h2">
-            {t('device_info')}
-          </Typography>
+          <Box display={"flex"} justifyContent={'space-between'} alignItems={"baseline"}>
+            <Typography id="modal-modal-title" variant="h2" component="h2">
+              {t('device_info')}
+            </Typography>
+            <Typography id="device-id" variant="h4" component={'h4'}>
+              ({pairingData?.deviceId})
+            </Typography>
+          </Box>
+
           <Grid component={'form'} onSubmit={onNewDevSubmit} container direction={'row'} >
             <Grid xs={6} padding={1}>
               <Autocomplete
+                value={country}
                 options={countryList}
                 onChange={onCountryChange}
                 renderInput={(params) => <TextField {...params} label="Country" InputLabelProps={{

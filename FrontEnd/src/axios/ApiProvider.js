@@ -147,7 +147,7 @@ export const loginApi = async (loginInfo) => {
   }).catch(function(err) {
     console.log('err', err);
     resultState.state = 'error';
-    resultState.data = err.response.data? err.response.data.message : err.message;
+    resultState.data = err.response?.data? err.response.data.message : err.message;
     window.toastr.error('Email or Password is not matched');
   })
 
@@ -168,7 +168,7 @@ export const googleAuthApi = async (googleUser) => {
   }).catch(function(err) {
     console.log('err', err);
     resultState.state = 'error';
-    resultState.data = err.response.data? err.response.data.message : err.message;
+    resultState.data = err.response?.data? err.response.data.message : err.message;
     window.toastr.error(resultState.data);
   })
   return resultState;
@@ -252,6 +252,26 @@ export const resetPasswordApi = async (newPasswordData) => {
     console.log('err', err);
     resultState.state = 'error';
     resultState.data = err.response.data? err.response.data.message : err.message;
+    window.toastr.error(resultState.data);
+  })
+  return resultState;
+}
+
+export const saveDevScheduleApi = async (devData) => {
+  let resultState = {state: '', data: {}};
+  const tokenData = getJWTToken();
+  const apiUrl = `${BASE_BACKEND_URL}mqtt/saveDevSchedule`;
+  await axios({
+    method: 'post',
+    url: apiUrl,
+    data: devData,
+    headers: {Authorization: tokenData}
+  }).then(function(response) {
+    // resultState.state = 'success';
+    resultState = response.data;
+  }).catch(function (err){
+    resultState.state = 'error';
+    resultState.data = err.message;
     window.toastr.error(resultState.data);
   })
   return resultState;
