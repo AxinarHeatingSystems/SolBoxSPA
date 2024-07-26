@@ -126,6 +126,14 @@ io.on('connect', (socket) => {
 
   socket.on('scheduleTopic', ({devInfo}, callback) => {
     console.log(devInfo);
+    const payload = devInfo.payload;
+    const scheduleTopic = `axinar/solbox/${devInfo.DeviceID}/jsonWeeklyCon`
+    client.publish(scheduleTopic, JSON.stringify(payload), (error) => {
+      if (error) {
+        console.error('schedule publish failed', error)
+      }
+    });
+    callback();
   })
 
   socket.on('disconnect', () => {
