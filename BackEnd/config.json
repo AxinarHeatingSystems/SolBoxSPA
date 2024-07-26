@@ -1,5 +1,9 @@
 ﻿{
     "secret": "SET SECRET KEY",
+    "protocol": "mqtt",
+    "port": 18083,
+    "host": "100.90.169.20/",
+    "password": "$axinaR%6623&",
     "emqxhost": "https://solbox-emqx.axinars.uk/",
     "emqxuser": "a9cdba63ec8ad8b8",
     "emqxpassword": "FPvSA9ADJ79A1nqtyrs4tsvQ2PnNk384b2Y8q9CyeI2HJC",
