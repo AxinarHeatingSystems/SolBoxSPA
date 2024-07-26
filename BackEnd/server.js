@@ -48,6 +48,9 @@ const options = {
 const mqttPath = `${config.protocol}://${config.host}:${config.port}`
 const client = mqtt.connect(mqttPath, options);
 
+client.on('connect', () => {
+  console.log(`${config.protocol}: Connected`);
+})
 
 client.on('reconnect', (error) => {
   console.log(`Reconnecting(${config.protocol}):`, error)
@@ -56,79 +59,75 @@ client.on('reconnect', (error) => {
 const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 4000;
 
 io.on('connect', (socket) => {
-  client.on('connect', () => {
-    console.log(`${config.protocol}: Connected`);
-
-    socket.on('join', ({ devId }, callback) => {
+  socket.on('join', ({ devId }, callback) => {
       
-      console.log('devID', devId);
-      // socket.emit('message', { user: 'admin', text: `${user.name}, welcome to room ${user.room}.`});
-      const devTopic = `axinar/solbox/${devId}/jsonTelemetry`
-      console.log('devTopic', devTopic);
-      client.subscribe(devTopic, (err) => {
-        if (!err) {
-          socket.emit('DevSubscribed', 'Device connected')
-        }else{
-          callback(err);
-          socket.emit('devdiscon', 'devDiscon');
-          console.log('eeee', err);
-        }
-      });
-      const controlTopic = `axinar/solbox/${devId}/mainControlJson`
-      client.subscribe(controlTopic, (err) => {
-        if(!err) {
-          socket.emit('DevControlSubscribed', 'Device connected')
-        }else{
-          callback(err);
-          socket.emit('devCondiscon', 'devCondiscon');
-          console.log('eeeeCon', err);
-        }
-      })
-  
-      callback();
+    console.log('devID', devId);
+    // socket.emit('message', { user: 'admin', text: `${user.name}, welcome to room ${user.room}.`});
+    const devTopic = `axinar/solbox/${devId}/jsonTelemetry`
+    console.log('devTopic', devTopic);
+    client.subscribe(devTopic, (err) => {
+      if (!err) {
+        socket.emit('DevSubscribed', 'Device connected')
+      }else{
+        callback(err);
+        socket.emit('devdiscon', 'devDiscon');
+        console.log('eeee', err);
+      }
+    });
+    const controlTopic = `axinar/solbox/${devId}/mainControlJson`
+    client.subscribe(controlTopic, (err) => {
+      if(!err) {
+        socket.emit('DevControlSubscribed', 'Device connected')
+      }else{
+        callback(err);
+        socket.emit('devCondiscon', 'devCondiscon');
+        console.log('eeeeCon', err);
+      }
+    })
+
+    callback();
+  });
+
+  socket.on('leave', ({devId}, callback) => {
+    const devTopic = `axinar/solbox/${devId}/jsonTelemetry`
+    client.unsubscribe(devTopic, (err) => {
+      if (!err) {
+        socket.emit('DevUnSubscribed', 'Device disconnected')
+      }
     });
 
-    socket.on('leave', ({devId}, callback) => {
-      const devTopic = `axinar/solbox/${devId}/jsonTelemetry`
-      client.unsubscribe(devTopic, (err) => {
-        if (!err) {
-          socket.emit('DevUnSubscribed', 'Device disconnected')
-        }
-      });
-  
-      callback();
-    })
+    callback();
+  })
 
-    client.on('message', (topic, payload) => {
-      
-      const lastMessage = payload.toString();
-      socket.emit(topic, lastMessage);
-      // socket.emit(`devname/${topic}`, lastMessage);
-      socket.emit('message', lastMessage);
-    })
+  client.on('message', (topic, payload) => {
+    
+    const lastMessage = payload.toString();
+    socket.emit(topic, lastMessage);
+    // socket.emit(`devname/${topic}`, lastMessage);
+    socket.emit('message', lastMessage);
+  })
 
-    socket.on('devUpdate', ({devInfo}, callback) => {
-      console.log(devInfo)
-      const payload = devInfo.payload;
+  socket.on('devUpdate', ({devInfo}, callback) => {
+    console.log(devInfo)
+    const payload = devInfo.payload;
 
-      const devTopic = `axinar/solbox/${devInfo.DeviceID}/mainControlJson`
-      client.publish(devTopic, JSON.stringify(payload), (error) => {
-        if (error) {
-          console.error('publish failed', error)
-          socket.emit('devControl', error);
-        }
-      });
-      callback();
+    const devTopic = `axinar/solbox/${devInfo.DeviceID}/mainControlJson`
+    client.publish(devTopic, JSON.stringify(payload), (error) => {
+      if (error) {
+        console.error('publish failed', error)
+        socket.emit('devControl', error);
+      }
     });
-  
-    socket.on('disconnect', () => {
-      // const user = removeUser(socket.id);
-  
-      // if(user) {
-      //   io.to(user.room).emit('message', { user: 'Admin', text: `${user.name} has left.` });
-      //   io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
-      // }
-    })
+    callback();
+  });
+
+  socket.on('disconnect', () => {
+    // const user = removeUser(socket.id);
+
+    // if(user) {
+    //   io.to(user.room).emit('message', { user: 'Admin', text: `${user.name} has left.` });
+    //   io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
+    // }
   })
     
   });
