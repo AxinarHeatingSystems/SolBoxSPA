@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - 3000:80
+    # no ports forward for cloud  
+    # and nginx listener should be 3000 instead of 80
     environment:
       NODE_ENV: production
     networks:
