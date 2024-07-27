@@ -13,5 +13,5 @@ services:
     # - cloudflare1_default         # for cloud  
 networks:
   cloudflarare-tunnel_default:   # for VM
-    # - cloudflare1_default      # for cloud
+    # cloudflare1_default:      # for cloud
     external: true 
