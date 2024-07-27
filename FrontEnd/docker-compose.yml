@@ -11,10 +11,10 @@ services:
     environment:
       NODE_ENV: production
     networks:
-     - cloudflarare-tunnel_default
-    # - cloudflare1_default # for cloud  
+     - cloudflarare-tunnel_default   # for VM
+    # - cloudflare1_default          # for cloud  
 networks:
-  cloudflarare-tunnel_default:
-    # - cloudflare1_default # for cloud
+  cloudflarare-tunnel_default:       # for VM
+    # - cloudflare1_default          # for cloud
     external: true  
     
