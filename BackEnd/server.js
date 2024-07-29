@@ -112,7 +112,18 @@ io.on('connect', (socket) => {
     // socket.emit(`devname/${topic}`, lastMessage);
     // socket.emit('message', lastMessage);
   })
-
+  socket.on('devDataSent', ({devInfo}, callback) => {
+    console.log(devInfo);
+    const payload = devInfo.payload;
+    const devTopic = `axinar/solbox/${devInfo.DeviceID}/jsonDataSent`
+    client.publish(devTopic, JSON.stringify(payload), (error) => {
+      if (error) {
+        console.error('publish failed', error)
+        socket.emit('DataSentErr', error);
+      }
+    });
+    callback();
+  })
   socket.on('devUpdate', ({devInfo}, callback) => {
     console.log(devInfo)
     const payload = devInfo.payload;
