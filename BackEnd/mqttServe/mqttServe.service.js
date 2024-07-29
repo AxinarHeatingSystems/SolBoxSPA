@@ -252,12 +252,14 @@ async function mqttDeleteDevice(devInfo) {
     let resultData = {};
     console.log(devInfo);
     await kcAdminAuth();
-
     try {
-        
+        await kcAdminClient.groups.del({id: devInfo.devId, realm: config.keycloakRealm});
+        resultData = {state: 'success', data: "Removed the Device"};
     } catch (error) {
-        
+        console.log(error);
+        resultData = {state: 'failed', message: 'Devoce Removing is failed'};
     }
+    return resultData;
 }
 
 async function mqttSavedDevList() {
