@@ -17,6 +17,7 @@ module.exports = {
     mqttloadsharedUsers,
     mqttremoveshareduser,
     mqttDevicelist,
+    mqttSavedDevList,
     mqttDeviceInfo,
     mqttdevFileupload,
     mqttconnect,
