@@ -206,7 +206,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
       const existDev = allSavedDevs.find(dev => dev.name === devItem.clientid);
       console.log('dddd', existDev, /^[0-9A-F]{12}$/i.test(devItem.clientid));
       if (existDev === undefined && /^[0-9A-F]{12}$/i.test(devItem.clientid)) {
-        // if (devItem.ip_address === ipAddress) {
+        if (devItem.ip_address === ipAddress) {
           const hexVal = parseInt(devItem.clientid, 16);
           const hexStr = hexVal.toString();
           const pairingNum = hexStr.slice(hexStr.length - 6, hexStr.length);
@@ -214,7 +214,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
             deviceId: devItem.clientid,
             pairingCode: pairingNum
           })
-        // }
+        }
       }
     })
     setPairableDevs(ableDevArr);
