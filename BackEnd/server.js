@@ -90,7 +90,11 @@ io.on('connect', (socket) => {
         console.log('eeeeCon', err);
       }
     })
-
+    
+    const dataSentTopic = `axinar/solbox/${devId}/jsonDataSent`;
+    client.subscribe(dataSentTopic, (err) => {
+      callback(err);
+    })
     callback();
   });
 
