@@ -16,6 +16,7 @@ module.exports = {
     mqttDevScheduleUpdate,
     mqttloadsharedUsers,
     mqttremoveshareduser,
+    mqttDeleteDevice,
     mqttDevicelist,
     mqttSavedDevList,
     mqttDeviceInfo,
@@ -245,6 +246,18 @@ async function mqttconnect(input) {
     //     }
     //   });
     return 'mqTTConnect';
+}
+
+async function mqttDeleteDevice(devInfo) {
+    let resultData = {};
+    console.log(devInfo);
+    await kcAdminAuth();
+
+    try {
+        
+    } catch (error) {
+        
+    }
 }
 
 async function mqttSavedDevList() {

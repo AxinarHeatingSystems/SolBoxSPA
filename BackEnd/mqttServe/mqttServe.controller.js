@@ -14,6 +14,7 @@ router.post('/updateDev', mqttUpdateDev)
 router.post('/shareDev', mqttShareDev);
 router.post('/saveDevSchedule', mqttSaveDevSchedule)
 router.post('/loadDevSharedUsers', mqttLoadDevSharedUser)
+router.post('removeDevice', mqttDeleteDev);
 router.post('/removeSharedUser', mqttRemoveSharedUser);
 router.post('/userDevs', mqttUserDevs);
 router.post('/getAllDevs', mqttAllDevs)
@@ -66,6 +67,14 @@ function mqttCreateDev(req, res, next){
         resData.state == 'success'? 
             res.json(resData) : res.status(400).json({ message: resData.message }) : res.status(400).json({ message: 'New Device creating is failed' })
   ).catch(err => next(err));
+}
+
+function mqttDeleteDev(req, res, next) {
+  mqttServeService.mqttDeleteDevice(req.body).then(
+    resData => resData? 
+    resData.state == 'success'? 
+        res.json(resData) : res.status(400).json({ message: resData.message }) : res.status(400).json({ message: 'Device Delete is failed' })
+).catch(err => next(err));
 }
 
 function mqttAllDevs(req, res, next){
