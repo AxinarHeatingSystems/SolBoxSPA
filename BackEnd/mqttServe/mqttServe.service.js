@@ -35,7 +35,7 @@ const options = {
     clientId,
     clean: true,
     connectTimeout: 4000,
-    username: config.user,
+    username: config.username,
     password: config.password,
     reconnectPeriod: 1000,
     

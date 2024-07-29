@@ -42,7 +42,7 @@ const options = {
   clientId,
   clean: true,
   connectTimeout: 4000,
-  username: 'nodeJoin',
+  username: config.username,  
   password: config.password,
   reconnectPeriod: 1000,
   
