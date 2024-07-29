@@ -77,7 +77,10 @@ export const ScheduleBoards = ({ devData, socketIo }) => {
                 <CardContent >
                   <Grid container spacing={2}>
                     <Grid item xs={4}>
-
+                      <Stack direction={'flex'}>
+                        <TimePicker />
+                        <TimePicker />
+                      </Stack>
                     </Grid>
                   </Grid>
                 </CardContent>

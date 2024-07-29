@@ -19,7 +19,7 @@ import { ColorModeContext, tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import { getUserDeviceListApi, getDevicesApi, logoutApi } from '../../axios/ApiProvider';
+import { getUserDeviceListApi, getDevicesApi, logoutApi, getAllDevsApi } from '../../axios/ApiProvider';
 import { useDispatch, useSelector } from 'react-redux';
 import { SetLang } from '../../components/Language/SetLang';
 import { useTranslation } from 'react-i18next';
@@ -195,15 +195,18 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
     // setIsAddDev(true);
     setPairableDevs([]);
     setIsSearchUI(true);
+    const allSavedDevRes = await getAllDevsApi();
+    console.log(allSavedDevRes);
+    const allSavedDevs = allSavedDevRes.data;
     const allDevs = await getDevicesApi();
     console.log(allDevs);
     const resDevs = allDevs.data.data;
     let ableDevArr = [];
     resDevs.map(devItem => {
-      const existDev = devList.find(dev => dev.name === devItem.clientid);
+      const existDev = allSavedDevs.find(dev => dev.name === devItem.clientid);
       console.log('dddd', existDev, /^[0-9A-F]{12}$/i.test(devItem.clientid));
       if (existDev === undefined && /^[0-9A-F]{12}$/i.test(devItem.clientid)) {
-        if (devItem.ip_address === ipAddress) {
+        // if (devItem.ip_address === ipAddress) {
           const hexVal = parseInt(devItem.clientid, 16);
           const hexStr = hexVal.toString();
           const pairingNum = hexStr.slice(hexStr.length - 6, hexStr.length);
@@ -211,7 +214,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
             deviceId: devItem.clientid,
             pairingCode: pairingNum
           })
-        }
+        // }
       }
     })
     setPairableDevs(ableDevArr);

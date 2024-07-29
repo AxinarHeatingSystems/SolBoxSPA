@@ -51,6 +51,7 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData, ipAddress }) => {
   const [isSubmiting, setIsSubmiting] = useState(false);
 
   useEffect(() => {
+    loadRegionList(country);
     const tmpList = [];
     allCountries.map(ctItem => { tmpList.push({ label: ctItem.name, iso: ctItem.isoCode }) });
     setCountryList(tmpList);
@@ -60,6 +61,22 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData, ipAddress }) => {
   const onCountryChange = (e, value) => {
     console.log('country Change', e, value);
     // const regions = getRegionsByCountryCode('en', value.iso);
+    loadRegionList(value);
+    // const regions = City.getCitiesOfCountry(value.iso);
+    // // console.log(regions);
+    // let tmpList = [];
+    // regions.map(resItem => {
+    //   tmpList.push({ label: resItem.name, iso: resItem.stateCode })
+    // })
+    // setRegionList(tmpList)
+    setCountry(value);
+  }
+  const onCityChange = (e, value) => {
+    console.log(e);
+    setCity(value);
+  }
+
+  const loadRegionList = (value) => {
     const regions = City.getCitiesOfCountry(value.iso);
     // console.log(regions);
     let tmpList = [];
@@ -67,11 +84,6 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData, ipAddress }) => {
       tmpList.push({ label: resItem.name, iso: resItem.stateCode })
     })
     setRegionList(tmpList)
-    setCountry(value);
-  }
-  const onCityChange = (e, value) => {
-    console.log(e);
-    setCity(value);
   }
 
   const onHeatValueChange = (e) => {

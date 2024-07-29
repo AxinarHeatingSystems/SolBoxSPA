@@ -85,6 +85,26 @@ export const uploadDevImgApi = async (imageForm) => {
   return resultState;
 }
 
+export const getAllDevsApi = async () => {
+  let resultState = {state: '', data: {}};
+  const apiUrl = `${BASE_BACKEND_URL}mqtt/getAllDevs`;
+  const tokenData = getJWTToken();
+  await axios({
+    method: 'post',
+    url: apiUrl,
+    headers: {Authorization: tokenData} 
+  }).then(function(response){
+    resultState.state = 'success';
+    resultState.data = response.data.data;
+  }).catch(function(err) {
+    console.log('err', err);
+    resultState.state = 'error';
+    resultState.data = err.message;
+    window.toastr.error('Device list Gettting Api is wrong');
+  })
+  return resultState;
+}
+
 export const getUserDeviceListApi = async () => {
   let resultState = {state: '', data: {}};
   const apiUrl = `${BASE_BACKEND_URL}mqtt/userDevs`;
