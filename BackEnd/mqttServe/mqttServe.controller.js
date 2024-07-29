@@ -14,7 +14,7 @@ router.post('/updateDev', mqttUpdateDev)
 router.post('/shareDev', mqttShareDev);
 router.post('/saveDevSchedule', mqttSaveDevSchedule)
 router.post('/loadDevSharedUsers', mqttLoadDevSharedUser)
-router.post('removeDevice', mqttDeleteDev);
+router.post('/removeDevice', mqttDeleteDev);
 router.post('/removeSharedUser', mqttRemoveSharedUser);
 router.post('/userDevs', mqttUserDevs);
 router.post('/getAllDevs', mqttAllDevs)
