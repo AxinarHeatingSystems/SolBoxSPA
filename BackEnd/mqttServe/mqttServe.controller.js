@@ -16,6 +16,7 @@ router.post('/saveDevSchedule', mqttSaveDevSchedule)
 router.post('/loadDevSharedUsers', mqttLoadDevSharedUser)
 router.post('/removeSharedUser', mqttRemoveSharedUser);
 router.post('/userDevs', mqttUserDevs);
+router.post('/getAllDevs', mqttAllDevs)
 router.post('/getDevInfo', mqttDeviceInfo);
 router.post('/uploadDevImage', mqttDevFileUpload);
 
@@ -64,6 +65,14 @@ function mqttCreateDev(req, res, next){
     resData => resData? 
         resData.state == 'success'? 
             res.json(resData) : res.status(400).json({ message: resData.message }) : res.status(400).json({ message: 'New Device creating is failed' })
+  ).catch(err => next(err));
+}
+
+function mqttAllDevs(req, res, next){
+  mqttServeService.mqttSavedDevList(req.body).then(
+    resData => resData? 
+        resData.state == 'success'? 
+            res.json(resData) : res.status(400).json({ message: resData.message }) : res.status(400).json({ message: 'Device list loading is failed' })
   ).catch(err => next(err));
 }
 

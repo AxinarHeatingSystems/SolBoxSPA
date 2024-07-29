@@ -246,6 +246,19 @@ async function mqttconnect(input) {
     return 'mqTTConnect';
 }
 
+async function mqttSavedDevList() {
+    let resultData = {};
+    await kcAdminAuth();
+    try {
+        const allGroupList = await kcAdminClient.groups.find({realm: config.keycloakRealm});
+        console.log(allGroupList);
+        resultData = {state: 'success', data: allGroupList};
+    } catch (error) {
+        resultData = {state: 'failed', message: 'Loading All Devices is failed'};
+    }
+    return resultData;
+}
+
 async function mqttDevicelist(userData) {
     let resultData = {};
     console.log(userData)
