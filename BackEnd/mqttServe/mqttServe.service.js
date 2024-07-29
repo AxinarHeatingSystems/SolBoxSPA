@@ -255,6 +255,8 @@ async function mqttDevicelist(userData) {
         
         const emqxClients = await mqttclients();
         let ctGroupList = []
+        console.log(emqxClients.data);
+        console.log(grouplist);
         for (let index = 0; index < grouplist.length; index++) {
             const groupItem = grouplist[index];
             const clientData = emqxClients.data.find(clientItem => clientItem.clientid == groupItem.name);
