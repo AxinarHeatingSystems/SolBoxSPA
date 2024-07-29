@@ -18,11 +18,17 @@ import { updateDeviceApi } from '../../axios/ApiProvider';
 import { io } from 'socket.io-client';
 import { parsingDeviceData } from '../../axios/ParseProvider';
 import { devMetaData_store } from '../../store/actions/mainAction';
+import dayjs from 'dayjs';
 
 
 const EndPoint = process.env.REACT_APP_BASE_BACKEND_URL;
 const tmpSocket = io(EndPoint);
 const tCountry = Country.getAllCountries();
+const vacationArr = [
+  { start: null, end: null },
+  { start: null, end: null },
+  { start: null, end: null }
+]
 console.log('testing country', tCountry);
 export const SettingBoards = ({ devData }) => {
   const dispatch = useDispatch();
@@ -36,10 +42,12 @@ export const SettingBoards = ({ devData }) => {
   const [regionList, setRegionList] = useState([]);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [startDate, setStartDate] = useState();
-  const [startDayOpen, setStartDayOpen] = useState(false);
-  const [endDate, setEndDate] = useState();
-  const [endDayOpen, setEndDayOpen] = useState(false);
+  const [vacationList, setVacationList] = useState(vacationArr)
+  const [startDayOpen, setStartDayOpen] = useState(null);
+  const [endDayOpen, setEndDayOpen] = useState(null);
+
+  // const [startDate, setStartDate] = useState();
+  // const [endDate, setEndDate] = useState();
   const [maxWaterTemperature, setMaxWaterTemperature] = useState()
 
   const [deviceName, setDeviceName] = useState();
@@ -63,8 +71,13 @@ export const SettingBoards = ({ devData }) => {
   const [isSetting, setIsSetting] = useState(false);
 
   useEffect(() => {
+
+    devDataVacationParsing(devData)
+    // setStartDate(vacationStart);
+    // setEndDate(vacationEnd);
+    console.log('checkingDevdata', devData);
     let countArr = [];
-    if (devMetaData.attributes.devOwner == userData.id) {
+    if (devMetaData.attributes.devOwner === userData.id) {
       setIsOwner(true);
     }
     allCountries.map(countryItem => { countArr.push({ label: countryItem.name, iso: countryItem.isoCode }) })
@@ -99,7 +112,18 @@ export const SettingBoards = ({ devData }) => {
     setGPSLoc(devMetaData.attributes?.gpsLoc)
     console.log(devMetaData);
   }, [])
+  const devDataVacationParsing = (deviceData) => {
+    const devStartVacations = deviceData.vacationStart;
+    const devEndVacations = deviceData.vacationEnd;
+    let tmpVacations = [];
+    vacationArr.map((arrItem, key) => {
+      arrItem.start = devStartVacations[key] === 0 ? null : dayjs(devStartVacations[key].toString(), 'DDMMYYYY', true);
+      arrItem.end = devEndVacations[key] === 0 ? null : dayjs(devEndVacations[key].toString(), 'DDMMYYYY', true);
+      tmpVacations.push(arrItem);
+    });
 
+    setVacationList(tmpVacations);
+  }
   const onCountryChange = (e, value) => {
     // const regions = getRegionsByCountryCode('en', value.iso);
     const regions = City.getCitiesOfCountry(value.iso);
@@ -135,10 +159,21 @@ export const SettingBoards = ({ devData }) => {
     setHeatValue(e.target.value);
   }
 
+  const onChangeVacationStart = (key, newVal) => {
+    const tmpVacationList = vacationList;
+    tmpVacationList[key].start = newVal;
+    setVacationList(tmpVacationList);
+  }
+
+  const onChangeVacationEnd = (key, newVal) => {
+    const tmpVacationList = vacationList;
+    tmpVacationList[key].end = newVal;
+    setVacationList(tmpVacationList);
+  }
+
   const onSettingSubmit = async (e) => {
-    setIsSetting(true);
-    console.log('START', `${startDate.$D}${(startDate.$M + 1).toString().padStart(2, '0')}${startDate.$y}`, endDate);
     e.preventDefault();
+    setIsSetting(true);
     if (e.target.checkValidity()) {
       const devMetaInfo = {
         DeviceName: deviceName,
@@ -163,13 +198,24 @@ export const SettingBoards = ({ devData }) => {
       }
       let payload = {
         setNickname: deviceName,
-        setMaxWaterTemp: maxWaterTemperature
+        setMaxWaterTemp: maxWaterTemperature,
+        setVacationPeriod: 1
       }
-      if (startDate && endDate) {
-        payload.setVacationPeriod = 1;
-        payload.startDate = [`${startDate.$D}${(startDate.$M + 1).toString().padStart(2, '0')}${startDate.$y}`];
-        payload.endDate = [`${endDate.$D}${(endDate.$M + 1).toString().padStart(2, '0')}${endDate.$y}`];
-      }
+      const vacationStartArr = [];
+      const vacationEndArr = [];
+      vacationList.map(vacationItem => {
+        const startDateStr = vacationItem.start ? `${vacationItem.start.$D}${(vacationItem.start.$M + 1).toString().padStart(2, '0')}${vacationItem.start.$y}` : '0';
+        const endDateStr = vacationItem.end ? `${vacationItem.end.$D}${(vacationItem.end.$M + 1).toString().padStart(2, '0')}${vacationItem.end.$y}` : '0';
+        vacationStartArr.push(startDateStr);
+        vacationEndArr.push(endDateStr)
+      })
+      payload.startDate = vacationStartArr;
+      payload.endDate = vacationEndArr;
+      // if (startDate && endDate) {
+      //   payload.setVacationPeriod = 1;
+      //   payload.startDate = [`${startDate.$D}${(startDate.$M + 1).toString().padStart(2, '0')}${startDate.$y}`];
+      //   payload.endDate = [`${endDate.$D}${(endDate.$M + 1).toString().padStart(2, '0')}${endDate.$y}`];
+      // }
       const devInfo = {
         DeviceID: devData.DeviceID,
         payload: payload
@@ -340,44 +386,51 @@ export const SettingBoards = ({ devData }) => {
                 </Grid>
               </Box>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} >
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Stack direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
-                  <DatePicker
-                    sx={{ width: '100%' }}
-                    label={t("vacation_period_start")}
-                    value={startDate}
-                    maxDate={endDate}
-                    open={startDayOpen}
-                    disabled={!isOwner}
-                    onOpen={() => setStartDayOpen(true)}
-                    onClose={() => setStartDayOpen(false)}
-                    onChange={(newValue) => setStartDate(newValue)}
-                    slotProps={{
-                      textField: {
-                        onClick: () => setStartDayOpen(true)
-                      }
-                    }}
-                  />
-                  <Typography variant='body1'>
-                    <EastIcon />
-                  </Typography>
-                  <DatePicker
-                    sx={{ width: '100%' }}
-                    label={t("vacation_period_end")}
-                    value={endDate}
-                    minDate={startDate}
-                    open={endDayOpen}
-                    disabled={!isOwner}
-                    onOpen={() => setEndDayOpen(true)}
-                    onClose={() => setEndDayOpen(false)}
-                    onChange={(newValue) => setEndDate(newValue)}
-                    slotProps={{
-                      textField: {
-                        onClick: () => setEndDayOpen(true)
-                      }
-                    }}
-                  />
+                <Stack direction={'row'} spacing={1} padding={2} border={1} borderRadius={1}>
+                  {vacationList.map((vacationItem, key) => (
+                    <Stack key={key} direction={'row'} spacing={0} justifyContent={'center'} alignItems={'center'}>
+                      <DatePicker
+                        sx={{ width: '100%' }}
+                        label={t("vacation_period_start")}
+                        value={vacationItem.start}
+                        maxDate={vacationItem.end}
+                        open={startDayOpen === key}
+                        disabled={!isOwner}
+                        onOpen={() => setStartDayOpen(key)}
+                        onClose={() => setStartDayOpen(null)}
+                        onChange={(newValue) => onChangeVacationStart(key, newValue)}
+                        slotProps={{
+                          textField: {
+                            InputLabelProps: { shrink: true },
+                            size: 'small',
+                            onClick: () => setStartDayOpen(key)
+                          }
+                        }}
+                      />
+                      <Typography variant='body1'>
+                        <EastIcon />
+                      </Typography>
+                      <DatePicker
+                        sx={{ width: '100%' }}
+                        label={t("vacation_period_end")}
+                        value={vacationItem.end}
+                        minDate={vacationItem.start}
+                        open={endDayOpen === key}
+                        disabled={!isOwner}
+                        onOpen={() => setEndDayOpen(key)}
+                        onClose={() => setEndDayOpen(null)}
+                        onChange={(newValue) => onChangeVacationEnd(key, newValue)}
+                        slotProps={{
+                          textField: {
+                            InputLabelProps: { shrink: true },
+                            size: 'small',
+                            onClick: () => setEndDayOpen(key)
+                          }
+                        }}
+                      />
+                    </Stack>))}
                 </Stack>
               </LocalizationProvider>
             </Grid>

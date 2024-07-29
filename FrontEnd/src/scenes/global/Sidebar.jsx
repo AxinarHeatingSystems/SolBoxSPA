@@ -3,12 +3,12 @@ import { ProSidebar } from "react-pro-sidebar";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Swal from "sweetalert2";
-// import io from "socket.io-client";
 
-import { Alert, Box, Button, Divider, FormControlLabel, Grid, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Modal, TextField, Typography, useTheme } from "@mui/material";
+import { Alert, Box, Button, Divider, Grid, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Modal, TextField, Typography, useTheme } from "@mui/material";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -19,13 +19,12 @@ import { ColorModeContext, tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import { getUserDeviceListApi, getDevicesApi, logoutApi, getAllDevsApi } from '../../axios/ApiProvider';
-import { useDispatch, useSelector } from 'react-redux';
+import { getUserDeviceListApi, getDevicesApi, logoutApi, getAllDevsApi, getRemoveDeviceApi } from '../../axios/ApiProvider';
+import { useSelector } from 'react-redux';
 import { SetLang } from '../../components/Language/SetLang';
 import { useTranslation } from 'react-i18next';
 import { AddDevModal } from './AddDevModal';
 import axios from 'axios';
-
 
 // const EndPoint = process.env.REACT_APP_BASE_BACKEND_URL;
 const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) => {
@@ -47,7 +46,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 600,
+    width: isMobile ? '90vw' : 600,
     bgcolor: theme.palette.background.default,
     border: '2px solid #000',
     boxShadow: 24,
@@ -56,6 +55,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
 
   const [isSearchUI, setIsSearchUI] = useState(false);
   const [pairableDevs, setPairableDevs] = useState([]);
+  const [findingPairable, setFindingPairable] = useState(true);
   const [pairingCode, setPairingCode] = useState();
   const [pairingCodeError, setPairingCodeError] = useState(false);
   const getData = async () => {
@@ -146,6 +146,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
   }, []);
 
   const loadDevlist = async () => {
+
     const userDevs = await getUserDeviceListApi();
     console.log('userDevs', userDevs);
     if (userDevs.state !== 'success') return;
@@ -153,6 +154,11 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
       const devArr = parsingDeviceData(userDevs.data);
       if (!selected) {
         onSelectDevId(devArr[0]);
+      } else {
+        const isExistSelected = devArr.find(devArrItem => devArrItem.id === selected.id)
+        if (!isExistSelected) {
+          onSelectDevId(devArr[0]);
+        }
       }
       setDevList(devArr);
       console.log(devArr);
@@ -192,6 +198,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
     loadDevlist();
   }
   const handleSearchDevOpen = async () => {
+    setFindingPairable(true);
     // setIsAddDev(true);
     setPairableDevs([]);
     setIsSearchUI(true);
@@ -204,7 +211,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
     let ableDevArr = [];
     resDevs.map(devItem => {
       const existDev = allSavedDevs.find(dev => dev.name === devItem.clientid);
-      console.log('dddd', existDev, /^[0-9A-F]{12}$/i.test(devItem.clientid));
+      // console.log('dddd', existDev, /^[0-9A-F]{12}$/i.test(devItem.clientid));
       if (existDev === undefined && /^[0-9A-F]{12}$/i.test(devItem.clientid)) {
         if (devItem.ip_address === ipAddress) {
           const hexVal = parseInt(devItem.clientid, 16);
@@ -218,7 +225,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
       }
     })
     setPairableDevs(ableDevArr);
-
+    setFindingPairable(false);
     // Swal.fire({
     //   title: t('searching_your_device'),
     //   input: "text",
@@ -346,6 +353,31 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
     setIsAddDev(true);
   }
 
+  const onRemoveDevice = (devItem) => {
+    Swal.fire({
+      title: "Do you want to remove this Device?",
+      showCancelButton: true,
+      confirmButtonText: "Remove",
+      confirmButtonColor: "red"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        // Swal.fire("Removed!", "", "success");
+        console.log(devItem)
+        const devInfo = { devId: devItem.id }
+        const removedRes = await getRemoveDeviceApi(devInfo);
+        if (removedRes.state !== 'success') return;
+
+        loadDevlist();
+      }
+      /* Read more about isConfirmed, isDenied below */
+      // if (result.isConfirmed) {
+      //   Swal.fire("Saved!", "", "success");
+      // } else if (result.isDenied) {
+      //   Swal.fire("Changes are not saved", "", "info");
+      // }
+    });
+  }
+
   return (
     <Box
       sx={isMobile ? mobileStyle : desktopStyle}
@@ -398,7 +430,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
             <ListItemIcon>
               <ManageAccountsIcon fontSize="small" />
             </ListItemIcon>
-            <ListItemText>{t("setting")}</ListItemText>
+            {/* <ListItemText>{t("setting")}</ListItemText> */}
           </MenuItem>
           <MenuItem onClick={() => { onLogOut(); handleClose(); }}>
             <ListItemIcon>
@@ -484,11 +516,11 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
               {!isCollapsed && <Box marginY={1}>
                 <Typography variant='h5' fontWeight={700} textAlign={'center'}>{userData.firstName} {userData.lastName}</Typography>
               </Box>}
-              <Box display={'flex'} justifyContent={isCollapsed ? 'center' : 'space-between'} alignItems={'center'} flexWrap={'wrap'}>
-                <Button variant="outlined" color='success' sx={{ marginY: '10px' }} size={!isCollapsed ? "medium" : "small"}>
+              <Box display={'block'} justifyContent={isCollapsed ? 'center' : 'space-between'} alignItems={'center'} flexWrap={'wrap'}>
+                {/* <Button variant="outlined" color='success' sx={{ marginY: '10px' }} size={!isCollapsed ? "medium" : "small"}>
                   {!isCollapsed ? t("setting") : <ManageAccountsIcon />}
-                </Button>
-                <Button onClick={() => { onLogOut() }} variant="outlined" color='secondary' sx={{ marginY: '10px' }} size={!isCollapsed ? "medium" : "small"}>
+                </Button> */}
+                <Button fullWidth onClick={() => { onLogOut() }} variant="outlined" color='secondary' sx={{ marginY: '10px' }} size={!isCollapsed ? "medium" : "small"}>
                   {!isCollapsed ? t("logout") : <LogoutIcon />}
                 </Button>
               </Box>
@@ -545,18 +577,25 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
           </ListItem>
 
           {devList.map((devItem, key) => (
-            <ListItemButton
+            <ListItem
               key={key}
               selected={selected.id === devItem.id}
-              onClick={() => { onSelectDevId(devItem) }}
-            >
-              <ListItemIcon sx={{ justifyContent: 'center' }}>
-                <HomeOutlinedIcon />
-              </ListItemIcon>
-              {!isCollapsed && <ListItemText primary={devItem.DeviceName} />}
-              <LightbulbIcon color={devItem.connected ? 'success' : 'primary'} />
+            > 
+              <ListItemButton sx={{ padding: '0px' }} onClick={() => { onSelectDevId(devItem) }}>
+                <ListItemIcon sx={{ justifyContent: 'center' }}>
+                  <HomeOutlinedIcon />
+                </ListItemIcon>
+                {!isCollapsed && <ListItemText primary={devItem.DeviceName} />}
+              </ListItemButton>
+              <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
+                <IconButton onClick={() => { onRemoveDevice(devItem) }} sx={{ padding: 0 }}>
+                  <DeleteForeverIcon color='error' />
+                </IconButton>
+                <LightbulbIcon color={devItem.connected ? 'success' : 'primary'} />
+              </Box>
 
-            </ListItemButton>
+
+            </ListItem>
           ))}
         </List>
       </ProSidebar>}
@@ -570,7 +609,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
         <Box sx={style}>
           <Grid component={'form'} onSubmit={onDevSearchFormSubmit} container spacing={1}>
             <Grid item xs={12}>
-              <Typography variant={'h4'} textAlign={'center'}>{t('searching_your_device')}</Typography>
+              <Typography variant={'h4'} textAlign={'center'}>{t('search_your_device')}</Typography>
             </Grid>
             <Grid item xs={12}>
               {/* <FormControlLabel label="Search Dev"/> */}
@@ -581,23 +620,27 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
             </Grid>
             <Grid item xs={12}>
               <Typography variant='body1'>{t('device_list_matched_ip')}</Typography>
-              {pairableDevs.length > 0 &&
-                <List sx={{ paddingY: 0 }}>
-                  {pairableDevs.map((devData, key) => (
-                    <ListItem key={key}>
-                      <HomeOutlinedIcon />
-                      <ListItemText>{devData.deviceId}</ListItemText>
-                      <Button onClick={() => { handleAddDevOpen(devData) }} type='button' variant='contained' size='small' color='success'>
-                        {t('pairing')}
-                      </Button>
-                    </ListItem>
-                  ))
-                  }
-                </List>
+              {!findingPairable &&
+                <>
+                  {pairableDevs.length > 0 ?
+                    <List sx={{ paddingY: 0 }}>
+                      {pairableDevs.map((devData, key) => (
+                        <ListItem key={key}>
+                          <HomeOutlinedIcon />
+                          <ListItemText>{devData.deviceId}</ListItemText>
+                          <Button onClick={() => { handleAddDevOpen(devData) }} type='button' variant='contained' size='small' color='success'>
+                            {t('pairing')}
+                          </Button>
+                        </ListItem>
+                      ))
+                      }
+                    </List> 
+                  :
+                  <Alert severity="warning" >{t('not_device_matched_ip')}</Alert>
+                }
+              </>
               }
-              {pairableDevs.length < 1 &&
-                <Alert severity="info" >{t('not_device_matched_ip')}</Alert>
-              }
+              {findingPairable && <Alert severity="info" >{t('searching_your_device')}</Alert>}
               <Divider />
             </Grid>
             <Grid item xs={12} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
