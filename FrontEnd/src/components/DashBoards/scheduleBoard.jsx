@@ -156,7 +156,7 @@ export const ScheduleBoards = ({ devData, socketIo }) => {
             <Grid item xs={12}>
               <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
                 <CalendarMonthIcon fontSize="large" color='success' />
-                <Button type='submit' variant='contained' sx={{ paddingX: '30px', fontWeight: 'bold' }} color='success'>Save</Button>
+                <Button type='submit' variant='contained' sx={{ paddingX: '30px', fontWeight: 'bold' }} color='success'>{t('save_all')}</Button>
               </Stack>
             </Grid>
             {scheduleList.map((scheduleItem, key) => (<Grid item key={key} xs={12}>
