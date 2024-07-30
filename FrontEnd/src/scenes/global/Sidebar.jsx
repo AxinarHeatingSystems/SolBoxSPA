@@ -472,12 +472,17 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
             </Box>
           </ListItem>
           {devList.map((devItem, key) => (
-            <MenuItem key={key} selected={selected.id === devItem.id} onClick={() => { onSelectDevId(devItem); handleClose() }}
-              sx={{ width: '100vw' }}>
-              <ListItemIcon>
-                <HomeOutlinedIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>{devItem.DeviceName}</ListItemText>
+            <MenuItem key={key} selected={selected.id === devItem.id}
+              sx={{ width: '100%' }}>
+              <ListItemButton sx={{ padding: '0px' }} onClick={() => { onSelectDevId(devItem); handleClose() }}>
+                <ListItemIcon>
+                  <HomeOutlinedIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>{devItem.DeviceName}</ListItemText>
+              </ListItemButton>
+              <IconButton onClick={() => { onRemoveDevice(devItem); handleClose() }} sx={{ padding: 0 }}>
+                <DeleteForeverIcon color='error' />
+              </IconButton>
             </MenuItem>
           ))}
         </Menu>
@@ -582,12 +587,13 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
             <ListItem
               key={key}
               selected={selected.id === devItem.id}
+              sx={{ display: isCollapsed ? 'block' : 'flex' }}
             > 
               <ListItemButton sx={{ padding: '0px' }} onClick={() => { onSelectDevId(devItem) }}>
-                <ListItemIcon sx={{ justifyContent: 'center' }}>
+                {!isCollapsed && <ListItemIcon sx={{ justifyContent: 'center' }}>
                   <HomeOutlinedIcon />
-                </ListItemIcon>
-                {!isCollapsed && <ListItemText primary={devItem.DeviceName} />}
+                </ListItemIcon>}
+                <ListItemText primary={devItem.DeviceName} />
               </ListItemButton>
               <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
                 <IconButton onClick={() => { onRemoveDevice(devItem) }} sx={{ padding: 0 }}>
