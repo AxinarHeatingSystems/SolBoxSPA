@@ -482,9 +482,13 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
                 </ListItemIcon>
                 <ListItemText>{devItem.DeviceName}</ListItemText>
               </ListItemButton>
-              <IconButton onClick={() => { onRemoveDevice(devItem); handleClose() }} sx={{ padding: 0 }}>
-                <DeleteForeverIcon color='error' />
-              </IconButton>
+              <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
+                {devItem.attributes?.devOwner === userData.id && <IconButton onClick={() => { onRemoveDevice(devItem); handleClose() }} sx={{ padding: 0 }}>
+                  <DeleteForeverIcon color='error' />
+                </IconButton>}
+                <LightbulbIcon color={devItem.connected ? 'success' : 'primary'} />
+              </Box>
+
             </MenuItem>
           ))}
         </Menu>
