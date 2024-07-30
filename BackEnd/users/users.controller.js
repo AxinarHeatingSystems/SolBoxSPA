@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userService = require('./users.service');
+const config = require('../config.json');
 
 router.post('/googleauth', googleauth);
 router.post('/googleregister', googleRegister);
@@ -70,7 +71,7 @@ function resetPassword(req, res, next){
 
 function technicianVerfity(req, res, next){
     userService.technicianVerfity(req.query)
-        .then((data) => res.redirect('https://solbox-clients.axinars.uk/login'))
+        .then((data) => res.redirect(`${config['solbox-frontend']}/login`))
         .catch(err => next(err))
 }
 
