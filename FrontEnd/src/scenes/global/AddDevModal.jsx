@@ -56,7 +56,27 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData, ipAddress }) => {
     allCountries.map(ctItem => { tmpList.push({ label: ctItem.name, iso: ctItem.isoCode }) });
     setCountryList(tmpList);
     console.log(pairingData);
+    initVals();
   }, [pairingData, isAddDev])
+
+  const initVals = () => {
+    setCountry({ iso: "GR", label: "Greece" })
+    setWatterLimit(0)
+    setWatterLimitError(false)
+    setIsHeatSource(false)
+    setHeatType(1)
+    setHeatValue(4)
+    setSolopanelPower(null)
+    setInstalName('')
+    setPriceKWH(null)
+    setInstallEmail('')
+    setInstallPhone('')
+    setUseDevType('professional')
+    setOccupants('')
+    setBoilerContact('owner')
+    setGPSLoc('')
+    setIsSubmiting(false)
+  }
 
   const onCountryChange = (e, value) => {
     console.log('country Change', e, value);
