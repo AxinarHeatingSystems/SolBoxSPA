@@ -212,7 +212,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   }
 
   return (
-    <Box display={isPortrait ? 'block' : 'flex'} gap="20px" sx={isPortrait ? {} : { paddingX: '20px', height: '100%', position: 'relative', justifyContent: 'center', alignItems: 'center' }}>
+    <Box display={isPortrait ? 'block' : 'flex'} gap="20px" sx={isPortrait ? {} : { transform: 'scaleY(0.9) translateY(-15px)', paddingX: '20px', height: '100%', position: 'relative', justifyContent: 'center', alignItems: 'center' }}>
       <Box gridColumn="span 8" gap="20px" marginY={isPortrait ? 2 : 0} sx={isPortrait ? {} : { height: '100%' }}>
         <Box
           width={'100%'}

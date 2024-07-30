@@ -45,29 +45,29 @@ function App() {
       // Portrait mode
       
       dispatch(isPortrait_Store(true));
-      window.document.documentElement.style.transform = 'scaleY(1) translateY(0px)';
+      // window.document.documentElement.style.transform = 'scaleY(1) translateY(0px)';
     } else {
       // Landscape
       if (isMobileDetect) {
         dispatch(isPortrait_Store(false));
-        window.document.documentElement.style.transform = 'scaleY(0.8) translateY(-50px)';
+        // window.document.documentElement.style.transform = 'scaleY(0.8) translateY(-50px)';
       } else {
         dispatch(isPortrait_Store(true));
-        window.document.documentElement.style.transform = 'scaleY(1) translateY(0px)';
+        // window.document.documentElement.style.transform = 'scaleY(1) translateY(0px)';
       }
     }
   };
   const initPortraidFunc = () => {
     if(window.matchMedia("(orientation: portrait)").matches){
       dispatch(isPortrait_Store(true));
-      window.document.documentElement.style.transform = 'scaleY(1) translateY(0px)';
+      // window.document.documentElement.style.transform = 'scaleY(1) translateY(0px)';
     }else{
       if(isMobileDetect){
         dispatch(isPortrait_Store(false));
-        window.document.documentElement.style.transform = 'scaleY(0.8) translateY(-50px)';
+        // window.document.documentElement.style.transform = 'scaleY(0.8) translateY(-50px)';
       }else{
         dispatch(isPortrait_Store(true));
-        window.document.documentElement.style.transform = 'scaleY(1) translateY(0px)';
+        // window.document.documentElement.style.transform = 'scaleY(1) translateY(0px)';
       }
       
     }

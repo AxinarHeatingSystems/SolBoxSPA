@@ -9,7 +9,7 @@ import { shareDeviceApi } from '../../axios/ApiProvider';
 
 const tableCellStyle = { fontWeight: 'bold', fontSize: '0.9rem' }
 
-export const ShareBoards = () => {
+export const ShareBoards = ({ isMobile, isPortrait }) => {
   const theme = useTheme();
   const { t } = useTranslation();
   const colors = tokens(theme.palette.mode);
@@ -119,7 +119,7 @@ export const ShareBoards = () => {
   }
 
   return (
-    <Box width={"100%"} padding={3}>
+    <Box width={"100%"} paddingX={isPortrait ? 0 : 3} paddingY={3}>
       <Box
         width={'100%'}
         height={'auto'}

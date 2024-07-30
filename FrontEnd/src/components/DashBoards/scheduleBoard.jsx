@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useTheme, Box, Grid, Button, TextField, Card, CardHeader, CardContent } from "@mui/material";
+import { useTheme, Box, Grid, Button, TextField, Card, CardHeader, CardContent, Typography } from "@mui/material";
 import { useSelector } from 'react-redux';
 import { tokens } from '../../theme';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +13,7 @@ import { saveDevScheduleApi } from '../../axios/ApiProvider';
 import { parsingDeviceData } from '../../axios/ParseProvider';
 
 const weeks = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
-export const ScheduleBoards = ({ devData, socketIo }) => {
+export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const { t } = useTranslation();
   const devMetaData = useSelector(store => store.devMetaData);
   const theme = useTheme();
@@ -190,7 +190,7 @@ export const ScheduleBoards = ({ devData, socketIo }) => {
   }
 
   return (
-    <Box width={"100%"} padding={3}>
+    <Box width={"100%"} paddingX={isPortrait ? 0 : 3} paddingY={3}>
       <Box
         width={'100%'}
         height={'auto'}
@@ -209,23 +209,23 @@ export const ScheduleBoards = ({ devData, socketIo }) => {
             </Grid>
             {scheduleList.map((scheduleItem, key) => (<Grid item key={key} xs={12}>
               <Card color={colors.primary[100]} >
-                <CardHeader title={scheduleItem.weekDay}
-                  action={
+                <Grid container spacing={1} padding={1}>
+                  <Grid item md={6} xs={6} order={{ xs: 1, md: 1 }} >
+                    <Typography variant='h4'>{scheduleItem.weekDay}</Typography>
+                  </Grid>
+                  <Grid item md={5} xs={12} textAlign={'right'} order={{ xs: 3, md: 2 }} >
+                    <TextField label="Max Template" size='small'
+                      value={scheduleItem.targetTemp}
+                      onChange={(e) => onChangeTargetTemp(key, e)}
+                      InputLabelProps={{
+                        shrink: true,
+                      }} />
+                  </Grid>
+                  <Grid item md={1} xs={6} order={{ xs: 2, md: 3 }} >
+                    <Button fullWidth onClick={() => onSaveWeekDailySchedule(key)} variant='contained' color='success' sx={{ fontWeight: 'bold' }}>{t('save')}</Button>
+                  </Grid>
+                </Grid>
 
-                    <Stack direction={'row'} spacing={1}>
-                      <TextField label="Max Template" size='small'
-                        value={scheduleItem.targetTemp}
-                        onChange={(e) => onChangeTargetTemp(key, e)}
-                        InputLabelProps={{
-                          shrink: true,
-                        }} />
-                      <Button onClick={() => onSaveWeekDailySchedule(key)} variant='contained' size='small' color='success' sx={{ fontWeight: 'bold' }}>{t('save')}</Button>
-                    </Stack>
-                    // <IconButton aria-label="settings" onClick={() => addTimeToWeekDay(key)}>
-                    //   <AddIcon />
-                    // </IconButton>
-                  }
-                />
                 <CardContent sx={{
                   padding: scheduleItem.times.length > 0 ? 1 : 0, '&:last-child': {
                     paddingBottom: '15px'

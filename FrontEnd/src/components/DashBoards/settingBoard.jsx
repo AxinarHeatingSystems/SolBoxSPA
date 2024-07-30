@@ -30,7 +30,7 @@ const vacationArr = [
   { start: null, end: null }
 ]
 console.log('testing country', tCountry);
-export const SettingBoards = ({ devData }) => {
+export const SettingBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const [isOwner, setIsOwner] = useState(false);
@@ -250,7 +250,7 @@ export const SettingBoards = ({ devData }) => {
 
   return (
     <>
-      <Box width={"100%"} padding={3}>
+      <Box width={"100%"} paddingX={isPortrait ? 0 : 3} paddingY={3}>
         <Box
           width={'100%'}
           height={'auto'}
@@ -388,9 +388,9 @@ export const SettingBoards = ({ devData }) => {
             </Grid>
             <Grid item xs={12} >
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Stack direction={'row'} spacing={1} padding={2} border={1} borderRadius={1}>
+                <Grid margin={0} width={'100%'} container spacing={1} padding={1} border={1} borderRadius={1}>
                   {vacationList.map((vacationItem, key) => (
-                    <Stack key={key} direction={'row'} spacing={0} justifyContent={'center'} alignItems={'center'}>
+                    <Grid key={key} item md={4} xs={12} display={'flex'} justifyContent={'center'} alignItems={'center'}>
                       <DatePicker
                         sx={{ width: '100%' }}
                         label={t("vacation_period_start")}
@@ -430,8 +430,8 @@ export const SettingBoards = ({ devData }) => {
                           }
                         }}
                       />
-                    </Stack>))}
-                </Stack>
+                    </Grid>))}
+                </Grid>
               </LocalizationProvider>
             </Grid>
             <Grid item xs={12}>

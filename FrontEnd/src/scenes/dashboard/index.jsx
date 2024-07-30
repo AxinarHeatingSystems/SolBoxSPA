@@ -249,9 +249,9 @@ const Dashboard = () => {
               </Box>
               <Box maxWidth={'90vw'} height={'80vh'} position={'relative'}>
                 {submenuId === 1 && <StatusBoards isMobile={isMobileDetect} isPortrait={isPortrait} devData={devInfo} socketIo={socket} />}
-                {submenuId === 2 && <SettingBoards devData={devInfo} />}
-                {submenuId === 3 && <ScheduleBoards devData={devInfo} socketIo={socket} />}
-                {submenuId === 4 && <ShareBoards />}
+                {submenuId === 2 && <SettingBoards devData={devInfo} socketIo={socket} isMobile={isMobileDetect} isPortrait={isPortrait} />}
+                {submenuId === 3 && <ScheduleBoards devData={devInfo} socketIo={socket} isMobile={isMobileDetect} isPortrait={isPortrait} />}
+                {submenuId === 4 && <ShareBoards isMobile={isMobileDetect} isPortrait={isPortrait} />}
               </Box>
             </>}
 
@@ -383,9 +383,9 @@ const Dashboard = () => {
                 </Grid>
               </Box>
               {submenuId === 1 && <StatusBoards isMobile={isMobileDetect} isPortrait={isPortrait} devData={devInfo} socketIo={socket} />}
-              {submenuId === 2 && <SettingBoards devData={devInfo} />}
-              {submenuId === 3 && <ScheduleBoards devData={devInfo} socketIo={socket} />}
-              {submenuId === 4 && <ShareBoards />}
+              {submenuId === 2 && <SettingBoards devData={devInfo} socketIo={socket} isMobile={isMobileDetect} isPortrait={isPortrait} />}
+              {submenuId === 3 && <ScheduleBoards devData={devInfo} socketIo={socket} isPortrait={isPortrait} isMobile={isMobileDetect} />}
+              {submenuId === 4 && <ShareBoards isMobile={isMobileDetect} isPortrait={isPortrait} />}
             </Box>}
 
           </Box>

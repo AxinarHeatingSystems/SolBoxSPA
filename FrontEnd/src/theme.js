@@ -2,6 +2,7 @@ import { createContext, useState, useMemo } from "react";
 import { createTheme } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { colorMode_Store } from "./store/actions/mainAction";
+import { color } from "@mui/system";
 
 // color design tokens export
 export const tokens = (mode) => ({
@@ -220,6 +221,13 @@ export const themeSettings = (mode) => {
             }
           },
         },
+      },
+      MuiButton:{
+        styleOverrides: {
+          root: {
+            color: '#fff'
+          }
+        }
       }
     }:{
       MuiTextField: {
@@ -243,6 +251,13 @@ export const themeSettings = (mode) => {
             }
           },
         },
+      },
+      MuiButton:{
+        styleOverrides: {
+          root: {
+            color: '#141b2d'
+          }
+        }
       }
     }
   };
