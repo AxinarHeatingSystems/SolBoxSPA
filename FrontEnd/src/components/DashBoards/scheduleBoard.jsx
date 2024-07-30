@@ -9,6 +9,8 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { saveDevScheduleApi } from '../../axios/ApiProvider';
+import { parsingDeviceData } from '../../axios/ParseProvider';
 
 const weeks = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
 export const ScheduleBoards = ({ devData, socketIo }) => {
@@ -21,28 +23,33 @@ export const ScheduleBoards = ({ devData, socketIo }) => {
   const [openEndTime, setOpenEndTime] = useState(null);
   useEffect(() => {
     console.log('metatDataEffect', devMetaData);
-    let weekList = [];
-    weeks.map(weekItem => {
-      weekList.push({
-        weekDay: weekItem,
-        targetTemp: null,
-        times: [
-          {
-            start: null,
-            end: null
-          },
-          {
-            start: null,
-            end: null
-          },
-          {
-            start: null,
-            end: null
-          }
-        ]
+    if (devMetaData.attributes.devSchedules) {
+      setScheduleList(devMetaData.attributes.devSchedules);
+    } else {
+      let weekList = [];
+      weeks.map(weekItem => {
+        weekList.push({
+          weekDay: weekItem,
+          targetTemp: null,
+          times: [
+            {
+              start: null,
+              end: null
+            },
+            {
+              start: null,
+              end: null
+            },
+            {
+              start: null,
+              end: null
+            }
+          ]
+        })
       })
-    })
-    setScheduleList(weekList);
+      setScheduleList(weekList);
+    }
+
     const devInfo = {
       DeviceID: devData.DeviceID,
       payload: {
@@ -110,7 +117,42 @@ export const ScheduleBoards = ({ devData, socketIo }) => {
         payload: schedulePayLoad
       }
       console.log('totaly log', devInfo);
+      socketIo.emit('devDataSent', { devInfo }, (error) => {
+        if (error) {
+          alert(error);
+        }
+      })
+      await callSaveDevScheduleApi();
+      // const scheduleRes = await saveDevScheduleApi(scheduleLoad)
+      // const tmpDevMetaData = parsingDeviceData(scheduleRes.data)
+      // console.log(tmpDevMetaData);
     }
+  }
+
+  const callSaveDevScheduleApi = async () => {
+    let devSchedulePayload = [];
+    scheduleList.map(item => {
+      let scheduleDayStr = '';
+      scheduleDayStr += item.weekDay + '-';
+      scheduleDayStr += item.targetTemp + '-';
+      let startArr = [];
+      let endArr = [];
+      item.times.map(tItem => {
+        startArr.push(tItem.start ? tItem.start.$d.getTime() : 0);
+        endArr.push(tItem.end ? tItem.end.$d.getTime() : 0);
+      });
+      scheduleDayStr += startArr.join(':') + '-'
+      scheduleDayStr += endArr.join(':');
+      devSchedulePayload.push(scheduleDayStr)
+    });
+    console.log(devSchedulePayload);
+    const scheduleLoad = {
+      devId: devMetaData.id,
+      schedulePayLoad: { devSchedules: devSchedulePayload }
+    }
+    const scheduleRes = await saveDevScheduleApi(scheduleLoad)
+    const tmpDevMetaData = parsingDeviceData(scheduleRes.data)
+    console.log(tmpDevMetaData);
   }
 
   const onSaveWeekDailySchedule = async (key) => {
@@ -133,6 +175,12 @@ export const ScheduleBoards = ({ devData, socketIo }) => {
       }
     }
     console.log(devInfo);
+    socketIo.emit('scheduleTopic', { devInfo }, (error) => {
+      if (error) {
+        alert(error);
+      }
+    })
+    await callSaveDevScheduleApi();
   }
 
   const onChangeTargetTemp = (key, e) => {
@@ -185,7 +233,7 @@ export const ScheduleBoards = ({ devData, socketIo }) => {
                 }}>
                   <Grid container spacing={2} >
                     {scheduleItem.times.map((timeItem, timeKey) => (
-                      <Grid key={timeKey} item xs={4}>
+                      <Grid key={timeKey} item md={4} xs={12}>
                         <Stack direction={'flex'} spacing={1} justifyContent={'center'} alignItems={'center'}>
                           <TimePicker
                             label={t('start')}

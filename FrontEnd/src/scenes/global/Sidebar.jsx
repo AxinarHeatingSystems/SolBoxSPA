@@ -25,6 +25,7 @@ import { SetLang } from '../../components/Language/SetLang';
 import { useTranslation } from 'react-i18next';
 import { AddDevModal } from './AddDevModal';
 import axios from 'axios';
+import { parsingDeviceData } from '../../axios/ParseProvider';
 
 // const EndPoint = process.env.REACT_APP_BASE_BACKEND_URL;
 const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) => {
@@ -151,7 +152,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
     console.log('userDevs', userDevs);
     if (userDevs.state !== 'success') return;
     if (userDevs.data.length > 0) {
-      const devArr = parsingDeviceData(userDevs.data);
+      const devArr = parsingDeviceArrData(userDevs.data);
       if (!selected) {
         onSelectDevId(devArr[0]);
       } else {
@@ -168,17 +169,18 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
     }
   }
 
-  const parsingDeviceData = (devList) => {
+  const parsingDeviceArrData = (devList) => {
     let devArr = [];
     devList.map(devItem => {
-      const attrKeys = Object.keys(devItem.attributes);
-      if (attrKeys.find(keyItem => keyItem === 'DeviceName')) {
-        devItem.DeviceName = devItem.attributes['DeviceName'][0];
-      } else {
-        devItem.DeviceName = devItem.name
-      }
-      attrKeys.map(keyItem => devItem.attributes[keyItem] = devItem.attributes[keyItem][0])
-      devArr.push(devItem);
+      const tempDevData = parsingDeviceData(devItem)
+      // const attrKeys = Object.keys(devItem.attributes);
+      // if (attrKeys.find(keyItem => keyItem === 'DeviceName')) {
+      //   devItem.DeviceName = devItem.attributes['DeviceName'][0];
+      // } else {
+      //   devItem.DeviceName = devItem.name
+      // }
+      // attrKeys.map(keyItem => devItem.attributes[keyItem] = devItem.attributes[keyItem][0])
+      devArr.push(tempDevData);
     })
     return devArr;
   }
@@ -391,7 +393,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
           mt={'10px'}
         >
           <Typography variant="h3" display={'flex'} alignItems={'baseline'} color={colors.grey[100]}>
-            {t("title")} {isMobile && !isPortrait && <Typography variant='body1' marginX={1}>( <b>{deviceName}</b> - {selected.name})</Typography>}
+            {t("title")} {isMobile && !isPortrait && <Typography variant='body1' marginX={1}>( <b>{deviceName}</b> - {selected?.name})</Typography>}
           </Typography>
           <IconButton onClick={handleClick}>
             {isCollapsed && <MenuOutlinedIcon />}
