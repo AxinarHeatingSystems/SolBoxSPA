@@ -98,5 +98,13 @@ export const Gr_Str = {
     pairing: "Σύζευξη",
     not_device_matched_ip:"Δεν υπάρχει η Συσκευή που να ταιριάζει με την IP σας",
     device_list_matched_ip: "Λίστα συσκευών αντιστοιχισμένη με IP",
-    remove: "Αφαιρώ"
+    remove: "Αφαιρώ",
+    target_temperature:"Θερμοκρασία στόχου",
+    Sunday: "Κυριακή",
+    Monday: "Δευτέρα",
+    Tuesday: "Τρίτη",
+    Wednesday: "Τετάρτη",
+    Thursday: "Πέμπτη",
+    Friday: "Παρασκευή",
+    Saturday: "Σάββατο"
 }

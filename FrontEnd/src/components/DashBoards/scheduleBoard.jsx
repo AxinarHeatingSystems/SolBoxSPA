@@ -211,10 +211,10 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
               <Card color={colors.primary[100]} >
                 <Grid container spacing={1} padding={1}>
                   <Grid item md={6} xs={6} order={{ xs: 1, md: 1 }} >
-                    <Typography variant='h4'>{scheduleItem.weekDay}</Typography>
+                    <Typography variant='h4'>{t(scheduleItem.weekDay)}</Typography>
                   </Grid>
                   <Grid item md={5} xs={12} textAlign={'right'} order={{ xs: 3, md: 2 }} >
-                    <TextField label="Max Template" size='small'
+                    <TextField label={t('target_temperature')} size='small'
                       value={scheduleItem.targetTemp}
                       onChange={(e) => onChangeTargetTemp(key, e)}
                       InputLabelProps={{

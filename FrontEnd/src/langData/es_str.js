@@ -98,5 +98,13 @@ export const Es_Str = {
     pairing: "Emparejamiento",
     not_device_matched_ip:"No existe el Dispositivo que coincida con su IP",
     device_list_matched_ip: "Lista de dispositivos coincidentes con IP",
-    remove: "Eliminar"
+    remove: "Eliminar",
+    target_temperature:"Temperatura objetivo",
+    Sunday: "Domingo",
+    Monday: "Lunes",
+    Tuesday: "Martes",
+    Wednesday: "Miércoles",
+    Thursday: "Jueves",
+    Friday: "Viernes",
+    Saturday: "Sábado"
 }
