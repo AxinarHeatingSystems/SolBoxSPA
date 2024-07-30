@@ -106,5 +106,6 @@ export const Gr_Str = {
     Wednesday: "Τετάρτη",
     Thursday: "Πέμπτη",
     Friday: "Παρασκευή",
-    Saturday: "Σάββατο"
+    Saturday: "Σάββατο",
+    device_data_not_loaded: "Αυτά τα δεδομένα της συσκευής δεν έχουν φορτωθεί. Δοκιμάστε να φορτώσετε ξανά μετά από λίγα λεπτά"
 }

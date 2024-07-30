@@ -106,5 +106,6 @@ export const En_Str = {
     Wednesday: "Wednesday",
     Thursday: "Thursday",
     Friday: "Friday",
-    Saturday: "Saturday"
+    Saturday: "Saturday",
+    device_data_not_loaded: "This Device data is not loaded, Please try to reload after few minutes"
 }

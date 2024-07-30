@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Grid, useTheme } from "@mui/material";
+import { Box, Grid, Typography, useTheme } from "@mui/material";
 
 import { tokens } from "../../theme";
 import './dashboard.css'
@@ -34,6 +34,9 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   // const isLogged = useSelector(store => store.isLoggedIn);
   const [socket, setSocket] = useState(tmpSocket)
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadingCount, setLoadingCount] = useState(0);
+
   const isMobileDetect = useSelector(store => store.isMobileDetect);
   const isPortrait = useSelector(store => store.isPortrait);
   const [isSidebar, setIsSidebar] = useState(false);
@@ -71,6 +74,23 @@ const Dashboard = () => {
   }, [])
 
   useEffect(() => {
+    const interval = setInterval(() => {
+      console.log('socketCount', loadingCount, isLoading)
+      if (isLoading) {
+        if (loadingCount > 10) {
+          setIsLoading(false);
+        }
+        setLoadingCount(loadingCount + 1);
+      } else {
+        setLoadingCount(0);
+      }
+
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [loadingCount, isLoading]);
+
+  useEffect(() => {
     socket.on('DevSubscribed', message => {
       console.log('DevSubscribed', message);
     });
@@ -91,6 +111,11 @@ const Dashboard = () => {
       console.log('Dev Controlled', error);
     })
 
+    socket.on('devCondiscon', message => {
+      setIsLoading(false);
+      console.log('devCondiscon', message);
+    })
+
     return () => {
       socket.off('message');
       socket.off(devTopic);
@@ -103,6 +128,7 @@ const Dashboard = () => {
     setSubmenuId(menuId);
   }
   const onChangeDevId = async (devData) => {
+    console.log('DEvID Change');
     // socket.emit('leave', { deviceId }, (error) => {
     //   if (error) {
     //     alert(error);
@@ -112,14 +138,17 @@ const Dashboard = () => {
     const devMeta = await getDevInfoApi(devData.id);
     const tmpData = parsingDeviceData(devMeta.data)
     dispatch(devMetaData_store(tmpData));
-    setDevTopic(`axinar/solbox/${devId}/jsonTelemetry`);
-    setControlTopic(`axinar/solbox/${devId}/mainControlJson`)
-    setScheduleTopic(`axinar/solbox/${devId}/jsonDataSent`)
     socket.emit('join', { devId }, (error) => {
       if (error) {
         alert(error);
       }
     });
+
+    setDevTopic(`axinar/solbox/${devId}/jsonTelemetry`);
+    setControlTopic(`axinar/solbox/${devId}/mainControlJson`)
+    setScheduleTopic(`axinar/solbox/${devId}/jsonDataSent`)
+    setLoadingCount(0);
+    setIsLoading(true);
     setDevInfo(null)
     setDeviceId(devId);
   }
@@ -129,6 +158,7 @@ const Dashboard = () => {
     // console.log('settingPath', devInfoData);
 
     if (deviceId === devInfoData.DeviceID) {
+      setIsLoading(false);
       setDevInfo(devInfoData)
       setDeviceName(devInfoData.DeviceName)
     }
@@ -391,23 +421,31 @@ const Dashboard = () => {
           </Box>
         }
         {!devInfo &&
-          <Box className="loading-pannel">
-            <div className="pl">
-              <div className="pl__dot"></div>
-              <div className="pl__dot"></div>
-              <div className="pl__dot"></div>
-              <div className="pl__dot"></div>
-              <div className="pl__dot"></div>
-              <div className="pl__dot"></div>
-              <div className="pl__dot"></div>
-              <div className="pl__dot"></div>
-              <div className="pl__dot"></div>
-              <div className="pl__dot"></div>
-              <div className="pl__dot"></div>
-              <div className="pl__dot"></div>
-              <div className="pl__text">Loading…</div>
-            </div>
-          </Box>
+          <>
+            {isLoading ?
+            <Box className="loading-pannel">
+              <div className="pl">
+                <div className="pl__dot"></div>
+                <div className="pl__dot"></div>
+                <div className="pl__dot"></div>
+                <div className="pl__dot"></div>
+                <div className="pl__dot"></div>
+                <div className="pl__dot"></div>
+                <div className="pl__dot"></div>
+                <div className="pl__dot"></div>
+                <div className="pl__dot"></div>
+                <div className="pl__dot"></div>
+                <div className="pl__dot"></div>
+                <div className="pl__dot"></div>
+                <div className="pl__text">Loading…</div>
+              </div>
+            </Box> : <Box className="loading-pannel">
+              <Typography variant='h2'>{t('device_data_not_loaded')}</Typography>
+            </Box>
+            }
+
+          </>
+
         }
       </Box>
 
