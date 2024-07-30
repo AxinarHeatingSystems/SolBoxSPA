@@ -63,6 +63,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
     const res = await axios.get("https://api.ipify.org/?format=json");
     console.log("ipData", res.data);
     setIpAddress(res.data.ip);
+    return res.data.ip
   };
 
   const desktopStyle = {
@@ -124,7 +125,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
   };
 
   useEffect(() => {
-    getData();
+
     loadDevlist();
     console.log('useData', userData);
     const handleResize = (e) => {
@@ -147,7 +148,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
   }, []);
 
   const loadDevlist = async () => {
-
+    const tmpIpAddress = await getData();
     const userDevs = await getUserDeviceListApi();
     console.log('userDevs', userDevs);
     if (userDevs.state !== 'success') return;
@@ -165,7 +166,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
       console.log(devArr);
 
     } else {
-      handleSearchDevOpen();
+      handleSearchDevOpen(tmpIpAddress);
     }
   }
 
@@ -199,7 +200,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
     setIsAddDev(false);
     loadDevlist();
   }
-  const handleSearchDevOpen = async () => {
+  const handleSearchDevOpen = async (tmpIpAddress) => {
     setFindingPairable(true);
     // setIsAddDev(true);
     setPairableDevs([]);
@@ -214,8 +215,9 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
     resDevs.map(devItem => {
       const existDev = allSavedDevs.find(dev => dev.name === devItem.clientid);
       // console.log('dddd', existDev, /^[0-9A-F]{12}$/i.test(devItem.clientid));
+      console.log('TTTT', tmpIpAddress);
       if (existDev === undefined && /^[0-9A-F]{12}$/i.test(devItem.clientid)) {
-        if (devItem.ip_address === ipAddress) {
+        if (devItem.ip_address === tmpIpAddress) {
           const hexVal = parseInt(devItem.clientid, 16);
           const hexStr = hexVal.toString();
           const pairingNum = hexStr.slice(hexStr.length - 6, hexStr.length);
@@ -466,7 +468,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
               >
                 {t("devices")}
               </Typography>
-              <Button size='small' color='success' onClick={() => { handleSearchDevOpen() }}>
+              <Button size='small' color='success' onClick={() => { handleSearchDevOpen(ipAddress) }}>
                 + {t("add")}
               </Button>
             </Box>
@@ -596,9 +598,9 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
                 <ListItemText primary={devItem.DeviceName} />
               </ListItemButton>
               <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
-                <IconButton onClick={() => { onRemoveDevice(devItem) }} sx={{ padding: 0 }}>
+                {devItem.attributes?.devOwner === userData.id && < IconButton onClick={() => { onRemoveDevice(devItem) }} sx={{ padding: 0 }}>
                   <DeleteForeverIcon color='error' />
-                </IconButton>
+                </IconButton>}
                 <LightbulbIcon color={devItem.connected ? 'success' : 'primary'} />
               </Box>
 
