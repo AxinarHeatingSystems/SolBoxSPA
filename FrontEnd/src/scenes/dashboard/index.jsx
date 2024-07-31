@@ -61,8 +61,10 @@ const Dashboard = () => {
         setDeviceName(devInfo.DeviceName)
         setIsLoading(false)
       }else{
-        setIsLoading(true)
+        setIsLoading(false)
       }
+    } else {
+      setIsLoading(true)
     }
   }, [devInfo])
 
