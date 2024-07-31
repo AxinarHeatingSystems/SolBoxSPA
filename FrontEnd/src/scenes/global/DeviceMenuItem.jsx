@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { devInfoData_Store, devMetaData_Store } from "../../store/actions/mainAction";
 
-export const DeviceMenuItem = ({ isCollapsed, deviceInfo, userId, selectedId, onSelectDevId, onRemoveDevice, socketIo }) => {
+export const DeviceMenuItem = ({ isMobile, isCollapsed, deviceInfo, userId, selectedId, onSelectDevId, onRemoveDevice, socketIo }) => {
   const dispatch = useDispatch();
   const [isConnected, setIsConnected] = useState(false);
   const [socketCounter, setSocketCounter] = useState(0);
@@ -68,7 +68,7 @@ export const DeviceMenuItem = ({ isCollapsed, deviceInfo, userId, selectedId, on
   return (
     <ListItem
       selected={selectedId === deviceInfo.id}
-      sx={{ display: isCollapsed ? 'block' : 'flex' }}
+      sx={{ display: isMobile ? 'flex' : isCollapsed ? 'block' : 'flex' }}
     >
       <ListItemButton sx={{ padding: '0px' }} onClick={() => { onSelectDevId(deviceInfo) }}>
         {!isCollapsed && <ListItemIcon sx={{ justifyContent: 'center' }}>

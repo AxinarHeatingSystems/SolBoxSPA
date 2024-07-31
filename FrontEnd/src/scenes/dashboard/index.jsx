@@ -63,9 +63,7 @@ const Dashboard = () => {
       }else{
         setIsLoading(false)
       }
-    } else {
-      setIsLoading(true)
-    }
+    } 
   }, [devInfo])
 
   useEffect(() => {
@@ -452,7 +450,6 @@ const Dashboard = () => {
                 <div className="pl__text">Loading…</div>
               </div>
             </Box> : <Box className="loading-pannel">
-
             </Box>
             }
 

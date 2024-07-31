@@ -102,18 +102,23 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   }
 
   const parsingTime = (timeVal) => {
-    let resultVal = null;
+    console.log(timeVal);
+    // let resultVal = null;
     if (timeVal === 999999 || timeVal === null) {
-      resultVal = null;
+      return null
     } else {
-      resultVal = dayjs()
+      const dateVal = new Date()
       const tmpStr = timeVal.toString().padStart(6, '0')
       const convertStr = `${tmpStr.substr(0, 2)}:${tmpStr.substr(2, 2)}:${tmpStr.substr(4, 2)}`;
-      resultVal.hour(parseInt(tmpStr.substr(0, 2)));
-      resultVal.minute(parseInt(tmpStr.substr(2, 2)));
-      resultVal.second(parseInt(tmpStr.substr(4, 2)));
+
+      dateVal.setHours(parseInt(tmpStr.substr(0, 2)));
+      dateVal.setMinutes(parseInt(tmpStr.substr(2, 2)));
+      dateVal.setSeconds(parseInt(tmpStr.substr(4, 2)));
+      console.log(dateVal);
+      // resultVal = dateVal;
+      return dayjs(dateVal);
     }
-    return resultVal;
+
   }
 
   // const addTimeToWeekDay = (key) => {
@@ -180,7 +185,32 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
       // console.log(tmpDevMetaData);
     }
   }
-
+  const sendScheduleData = () => {
+    let schedulePayLoad = {};
+    scheduleList.map(item => {
+      let weekStartTime = [];
+      let weekEndTime = [];
+      item.times.map(tItem => {
+        const startTimeStr = tItem.start ? `${(tItem.start.$H).toString().padStart(2, '0')}${(tItem.start.$m).toString().padStart(2, '0')}${(tItem.start.$s).toString().padStart(2, '0')}` : '999999';
+        const endTimeStr = tItem.end ? `${(tItem.end.$H).toString().padStart(2, '0')}${(tItem.end.$m).toString().padStart(2, '0')}${(tItem.end.$s).toString().padStart(2, '0')}` : '999999'
+        weekStartTime.push(startTimeStr);
+        weekEndTime.push(endTimeStr);
+      });
+      schedulePayLoad = { ...schedulePayLoad, [`timeStart${item.weekDay}`]: weekStartTime }
+      schedulePayLoad = { ...schedulePayLoad, [`timeEnd${item.weekDay}`]: weekEndTime }
+    })
+    console.log('loading Data', schedulePayLoad);
+    const devInfo = {
+      DeviceID: devData.DeviceID,
+      payload: schedulePayLoad
+    }
+    console.log('totaly log', devInfo);
+    socketIo.emit('devDataSent', { devInfo }, (error) => {
+      if (error) {
+        alert(error);
+      }
+    })
+  }
   const callSaveDevScheduleApi = async () => {
     let devSchedulePayload = [];
     scheduleList.map(item => {
@@ -203,13 +233,26 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
       schedulePayLoad: { devSchedules: devSchedulePayload }
     }
     const scheduleRes = await saveDevScheduleApi(scheduleLoad)
-    const tmpDevMetaData = parsingDeviceData(scheduleRes.data)
-    setIsSavingAll(false)
+    // const tmpDevMetaData = parsingDeviceData(scheduleRes.data)
+    // setIsSavingAll(false)
     setIsSavingWeek(null);
-    window.toastr.success('Schedule Data is Saved');
-    console.log(tmpDevMetaData);
+    // window.toastr.success('Schedule Data is Saved');
+    // console.log(tmpDevMetaData);
   }
+  const resetControl = () => {
+    const devInfo = {
+      DeviceID: devData.DeviceID,
+      payload: {
+        sendWeekSchedule: 1,
+      }
+    }
 
+    socketIo.emit('devUpdate', { devInfo }, (error) => {
+      if (error) {
+        alert(error);
+      }
+    })
+  }
   const onSaveWeekDailySchedule = async (key) => {
     setIsSavingWeek(key);
     const weekDayData = scheduleList[key];
@@ -236,6 +279,8 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
         alert(error);
       }
     })
+    resetControl();
+    // sendScheduleData();
     await callSaveDevScheduleApi();
   }
 

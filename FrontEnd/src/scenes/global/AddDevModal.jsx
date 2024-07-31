@@ -97,12 +97,15 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData, ipAddress }) => {
   }
 
   const loadRegionList = (value) => {
+    if (value === null) { setRegionList([]); return; }
     const regions = City.getCitiesOfCountry(value.iso);
 
     console.log(regions);
     let tmpList = [];
     regions.map(resItem => {
-      tmpList.push({ label: resItem.name, iso: resItem.stateCode })
+      if (!tmpList.find(tmpItem => tmpItem.label === resItem.name)) {
+        tmpList.push({ label: resItem.name, iso: resItem.stateCode })
+      }
     })
     setRegionList(tmpList)
   }

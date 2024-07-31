@@ -289,6 +289,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
   }
 
   const onRemoveDevice = (devItem) => {
+    handleClose()
     Swal.fire({
       title: t('want_remove_device'),
       showCancelButton: true,
@@ -346,9 +347,9 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
         <Menu
           id="basic-menu"
           anchorEl={anchorEl}
-          open={open}
+          open={true}
           onClose={handleClose}
-          sx={{ width: '100%', color: colors.grey[100] }}
+          sx={{ width: '100%', color: colors.grey[100], display: open ? 'block' : 'none' }}
           MenuListProps={{
             'aria-labelledby': 'basic-button',
             'style': { backgroundColor: theme.palette.background.default }
@@ -417,7 +418,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
           {devList.map((devItem, key) => (
             <MenuItem key={key} sx={{ display: 'flex' }}>
               <DeviceMenuItem
-
+                isMobile={isMobile}
                 isCollapsed={isCollapsed}
                 deviceInfo={devItem}
                 userId={userData.id}
@@ -565,6 +566,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
             // </ListItem>
             <DeviceMenuItem 
               key={key}
+              isMobile={isMobile}
               isCollapsed={isCollapsed} 
               deviceInfo={devItem}
               userId={userData.id}
