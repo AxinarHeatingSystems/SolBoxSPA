@@ -98,6 +98,7 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData, ipAddress }) => {
 
   const loadRegionList = (value) => {
     const regions = City.getCitiesOfCountry(value.iso);
+
     // console.log(regions);
     let tmpList = [];
     regions.map(resItem => {

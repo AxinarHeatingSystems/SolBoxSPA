@@ -104,6 +104,9 @@ const Dashboard = () => {
     socket.on('DevSubscribed', message => {
       console.log('DevSubscribed', message);
     });
+    // socket.on('message', message => {
+    //   console.log(message);
+    // })
     // console.log(devTopic);
     // socket.on(devTopic, message => {
     //   // console.log(devTopic, message);

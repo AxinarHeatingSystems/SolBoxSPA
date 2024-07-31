@@ -11,6 +11,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { saveDevScheduleApi } from '../../axios/ApiProvider';
 import { parsingDeviceData } from '../../axios/ParseProvider';
+import dayjs from 'dayjs';
 
 const weeks = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
 export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
@@ -25,32 +26,32 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const [isSavingWeek, setIsSavingWeek] = useState(null);
   useEffect(() => {
     console.log('metatDataEffect', devMetaData);
-    if (devMetaData.attributes.devSchedules) {
-      setScheduleList(devMetaData.attributes.devSchedules);
-    } else {
-      let weekList = [];
-      weeks.map(weekItem => {
-        weekList.push({
-          weekDay: weekItem,
-          targetTemp: null,
-          times: [
-            {
-              start: null,
-              end: null
-            },
-            {
-              start: null,
-              end: null
-            },
-            {
-              start: null,
-              end: null
-            }
-          ]
-        })
-      })
-      setScheduleList(weekList);
-    }
+    // if (devMetaData.attributes.devSchedules) {
+    //   // setScheduleList(devMetaData.attributes.devSchedules);
+    // } else {
+    //   let weekList = [];
+    //   weeks.map(weekItem => {
+    //     weekList.push({
+    //       weekDay: weekItem,
+    //       targetTemp: 0,
+    //       times: [
+    //         {
+    //           start: null,
+    //           end: null
+    //         },
+    //         {
+    //           start: null,
+    //           end: null
+    //         },
+    //         {
+    //           start: null,
+    //           end: null
+    //         }
+    //       ]
+    //     })
+    //   })
+    //   setScheduleList(weekList);
+    // }
 
     const devInfo = {
       DeviceID: devData.DeviceID,
@@ -64,8 +65,56 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
         alert(error);
       }
     })
-
+    const dataSentTopic = `axinar/solbox/${devData.DeviceID}/jsonDataSent`
+    socketIo.on(dataSentTopic, (message) => {
+      const jsonData = JSON.parse(message);
+      console.log('schedule Data', dataSentTopic, message, jsonData)
+      parsingScheduleData(jsonData)
+    })
   }, [devMetaData])
+
+  const parsingScheduleData = (jsonData) => {
+    console.log('parsingSchedule', jsonData);
+    let tmpSchedules = []
+    weeks.map(weekItem => {
+      const tmpItem = {
+        weekDay: weekItem,
+        targetTemp: jsonData[`targetTemp${weekItem}`],
+        times: [
+          {
+            start: parsingTime(jsonData[`timeStart${weekItem}`][0]),
+            end: parsingTime(jsonData[`timeEnd${weekItem}`][0])
+          },
+          {
+            start: parsingTime(jsonData[`timeStart${weekItem}`][1]),
+            end: parsingTime(jsonData[`timeEnd${weekItem}`][1])
+          },
+          {
+            start: parsingTime(jsonData[`timeStart${weekItem}`][2]),
+            end: parsingTime(jsonData[`timeEnd${weekItem}`][2])
+          }
+        ]
+      };
+      tmpSchedules.push(tmpItem);
+    });
+    console.log(tmpSchedules);
+    setScheduleList(tmpSchedules);
+  }
+
+  const parsingTime = (timeVal) => {
+    let resultVal = null;
+    if (timeVal === 999999 || timeVal === null) {
+      resultVal = null;
+    } else {
+      resultVal = dayjs()
+      const tmpStr = timeVal.toString().padStart(6, '0')
+      const convertStr = `${tmpStr.substr(0, 2)}:${tmpStr.substr(2, 2)}:${tmpStr.substr(4, 2)}`;
+      resultVal.hour(parseInt(tmpStr.substr(0, 2)));
+      resultVal.minute(parseInt(tmpStr.substr(2, 2)));
+      resultVal.second(parseInt(tmpStr.substr(4, 2)));
+    }
+    return resultVal;
+  }
 
   // const addTimeToWeekDay = (key) => {
   //   let tmpWeekList = scheduleList;
@@ -167,8 +216,8 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
     let weekStartTime = [];
     let weekEndTime = [];
     weekDayData.times.map(tItem => {
-      const startTimeStr = tItem.start ? `${(tItem.start.$H).toString().padStart(2, '0')}${(tItem.start.$m).toString().padStart(2, '0')}${(tItem.start.$s).toString().padStart(2, '0')}` : '999999';
-      const endTimeStr = tItem.end ? `${(tItem.end.$H).toString().padStart(2, '0')}${(tItem.end.$m).toString().padStart(2, '0')}${(tItem.end.$s).toString().padStart(2, '0')}` : '999999'
+      const startTimeStr = tItem.start ? parseInt(`${(tItem.start.$H).toString().padStart(2, '0')}${(tItem.start.$m).toString().padStart(2, '0')}${(tItem.start.$s).toString().padStart(2, '0')}`) : parseInt('999999');
+      const endTimeStr = tItem.end ? parseInt(`${(tItem.end.$H).toString().padStart(2, '0')}${(tItem.end.$m).toString().padStart(2, '0')}${(tItem.end.$s).toString().padStart(2, '0')}`) : parseInt('999999')
       weekStartTime.push(startTimeStr);
       weekEndTime.push(endTimeStr);
     })
@@ -181,7 +230,7 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
         targetTemp: weekDayData.targetTemp
       }
     }
-    console.log(devInfo);
+    console.log('devInfo', devInfo);
     socketIo.emit('scheduleTopic', { devInfo }, (error) => {
       if (error) {
         alert(error);
@@ -211,9 +260,9 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
             <Grid item xs={12}>
               <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
                 <CalendarMonthIcon fontSize="large" color='success' />
-                <Button type='submit' variant='contained' sx={{ paddingX: '30px', fontWeight: 'bold' }} color='success'>
+                {/* <Button type='submit' variant='contained' sx={{ paddingX: '30px', fontWeight: 'bold' }} color='success'>
                   {isSavingAll ? <CircularProgress size={20} /> : t('save_all')}
-                </Button>
+                </Button> */}
               </Stack>
             </Grid>
             {scheduleList.map((scheduleItem, key) => (<Grid item key={key} xs={12}>
@@ -224,7 +273,7 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                   </Grid>
                   <Grid item md={5} xs={12} textAlign={'right'} order={{ xs: 3, md: 2 }} >
                     <TextField label={t('target_temperature')} size='small'
-                      value={scheduleItem.targetTemp}
+                      value={scheduleItem?.targetTemp}
                       onChange={(e) => onChangeTargetTemp(key, e)}
                       InputLabelProps={{
                         shrink: true,
@@ -244,8 +293,8 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                 }}>
                   <Grid container spacing={2} >
                     {scheduleItem.times.map((timeItem, timeKey) => (
-                      <Grid key={timeKey} item md={4} xs={12}>
-                        <Stack direction={'flex'} spacing={1} justifyContent={'center'} alignItems={'center'}>
+                      <Grid key={timeKey} item md={4} xs={12} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+                        {/* <Stack direction={'flex'} spacing={1} justifyContent={'center'} alignItems={'center'}> */}
                           <TimePicker
                             label={t('start')}
                             open={checkOpenStartTime(key, timeKey)}
@@ -279,7 +328,7 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                               }
                             }}
                           />
-                        </Stack>
+                        {/* </Stack> */}
                       </Grid>
                     ))}
                   </Grid>

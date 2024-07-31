@@ -80,7 +80,7 @@ export const DeviceMenuItem = ({ isCollapsed, deviceInfo, userId, selectedId, on
         {deviceInfo.attributes?.devOwner === userId && < IconButton onClick={() => { onRemoveDevice(deviceInfo) }} sx={{ padding: 0 }}>
           <DeleteForeverIcon color='error' />
         </IconButton>}
-        <LightbulbIcon color={isConnected ? 'success' : 'primary'} />
+        <LightbulbIcon color={isConnected ? 'success' : 'error'} />
       </Box>
     </ListItem>
   )

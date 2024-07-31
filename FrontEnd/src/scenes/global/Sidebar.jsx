@@ -20,17 +20,19 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { getUserDeviceListApi, getDevicesApi, logoutApi, getAllDevsApi, getRemoveDeviceApi } from '../../axios/ApiProvider';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { SetLang } from '../../components/Language/SetLang';
 import { useTranslation } from 'react-i18next';
 import { AddDevModal } from './AddDevModal';
 import axios from 'axios';
 import { parsingDeviceData } from '../../axios/ParseProvider';
 import { DeviceMenuItem } from './DeviceMenuItem';
+import { devInfoData_Store } from '../../store/actions/mainAction';
 
 // const EndPoint = process.env.REACT_APP_BASE_BACKEND_URL;
 const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, socketIo }) => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
@@ -218,7 +220,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
       // console.log('dddd', existDev, /^[0-9A-F]{12}$/i.test(devItem.clientid));
       console.log('TTTT', tmpIpAddress);
       if (existDev === undefined && /^[0-9A-F]{12}$/i.test(devItem.clientid)) {
-        if (devItem.ip_address === tmpIpAddress) {
+        // if (devItem.ip_address === tmpIpAddress) {
           const hexVal = parseInt(devItem.clientid, 16);
           const hexStr = hexVal.toString();
           const pairingNum = hexStr.slice(hexStr.length - 6, hexStr.length);
@@ -226,7 +228,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
             deviceId: devItem.clientid,
             pairingCode: pairingNum
           })
-        }
+        // }
       }
     })
     setPairableDevs(ableDevArr);
@@ -306,7 +308,10 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
         const devInfo = { devId: devItem.id }
         const removedRes = await getRemoveDeviceApi(devInfo);
         if (removedRes.state !== 'success') return;
-
+        setDevList([]);
+        if (devInfo.devId === selected.id) {
+          dispatch(devInfoData_Store(null));
+        }
         loadDevlist();
       }
       /* Read more about isConfirmed, isDenied below */
@@ -410,22 +415,34 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
             </Box>
           </ListItem>
           {devList.map((devItem, key) => (
-            <MenuItem key={key} selected={selected.id === devItem.id}
-              sx={{ width: '100%' }}>
-              <ListItemButton sx={{ padding: '0px' }} onClick={() => { onSelectDevId(devItem); handleClose() }}>
-                <ListItemIcon>
-                  <HomeOutlinedIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>{devItem.DeviceName}</ListItemText>
-              </ListItemButton>
-              <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
-                {devItem.attributes?.devOwner === userData.id && <IconButton onClick={() => { onRemoveDevice(devItem); handleClose() }} sx={{ padding: 0 }}>
-                  <DeleteForeverIcon color='error' />
-                </IconButton>}
-                <LightbulbIcon color={devItem.connected ? 'success' : 'primary'} />
-              </Box>
+            <MenuItem key={key} sx={{ display: 'flex' }}>
+              <DeviceMenuItem
 
+                isCollapsed={isCollapsed}
+                deviceInfo={devItem}
+                userId={userData.id}
+                selectedId={selected.id}
+                onSelectDevId={onSelectDevId}
+                socketIo={socketIo}
+                onRemoveDevice={onRemoveDevice} />
             </MenuItem>
+
+            // <MenuItem key={key} selected={selected.id === devItem.id}
+            //   sx={{ width: '100%' }}>
+            //   <ListItemButton sx={{ padding: '0px' }} onClick={() => { onSelectDevId(devItem); handleClose() }}>
+            //     <ListItemIcon>
+            //       <HomeOutlinedIcon fontSize="small" />
+            //     </ListItemIcon>
+            //     <ListItemText>{devItem.DeviceName}</ListItemText>
+            //   </ListItemButton>
+            //   <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
+            //     {devItem.attributes?.devOwner === userData.id && <IconButton onClick={() => { onRemoveDevice(devItem); handleClose() }} sx={{ padding: 0 }}>
+            //       <DeleteForeverIcon color='error' />
+            //     </IconButton>}
+            //     <LightbulbIcon color={devItem.connected ? 'success' : 'primary'} />
+            //   </Box>
+
+            // </MenuItem>
           ))}
         </Menu>
       </>}
@@ -519,7 +536,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
               >
                 {t("devices")}
               </Typography>
-              <Button size='small' color='success' onClick={() => { handleSearchDevOpen() }}>
+              <Button size='small' color='success' onClick={() => { handleSearchDevOpen(ipAddress) }}>
                 + {t("add")} 
               </Button>
             </Box>
