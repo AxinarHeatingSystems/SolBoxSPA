@@ -296,6 +296,12 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
       if (result.isConfirmed) {
         // Swal.fire("Removed!", "", "success");
         console.log(devItem)
+        Swal.fire({
+          title: 'Removing',
+          timerProgressBar: true,
+          timer: 5000,
+          showConfirmButton: false
+        })
         const devInfo = { devId: devItem.id }
         const removedRes = await getRemoveDeviceApi(devInfo);
         if (removedRes.state !== 'success') return;
