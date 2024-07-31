@@ -99,7 +99,7 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData, ipAddress }) => {
   const loadRegionList = (value) => {
     const regions = City.getCitiesOfCountry(value.iso);
 
-    // console.log(regions);
+    console.log(regions);
     let tmpList = [];
     regions.map(resItem => {
       tmpList.push({ label: resItem.name, iso: resItem.stateCode })
@@ -238,9 +238,14 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData, ipAddress }) => {
               <Autocomplete
                 options={regionList}
                 onChange={onCityChange}
-                renderInput={(params) => <TextField {...params} label="City" InputLabelProps={{
-                  shrink: true,
-                }} required />}
+                renderInput={(params) => <TextField {...params} label="City"
+                  InputProps={{
+                    ...params.InputProps,
+                    type: 'search',
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }} required />}
                 size="small"
               />
             </Grid>
