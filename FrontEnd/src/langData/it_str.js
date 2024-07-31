@@ -107,5 +107,7 @@ export const It_Str = {
     Thursday: "Giovedì",
     Friday: "Venerdì",
     Saturday: "Sabato",
-    device_data_not_loaded: "I dati di questo dispositivo non sono caricati. Prova a ricaricare dopo qualche minuto."
+    device_data_not_loaded: "I dati di questo dispositivo non sono caricati. Prova a ricaricare dopo qualche minuto.",
+    want_remove_device:"Vuoi rimuovere questo dispositivo?",
+    removing: "Rimozione"
 }

@@ -107,5 +107,7 @@ export const Es_Str = {
     Thursday: "Jueves",
     Friday: "Viernes",
     Saturday: "Sábado",
-    device_data_not_loaded: "Los datos de este dispositivo no están cargados. Intente volver a cargarlos después de unos minutos."
+    device_data_not_loaded: "Los datos de este dispositivo no están cargados. Intente volver a cargarlos después de unos minutos.",
+    want_remove_device:"¿Quieres eliminar este dispositivo?",
+    removing: "Quitando"
 }

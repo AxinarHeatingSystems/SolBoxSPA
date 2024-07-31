@@ -288,16 +288,17 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
 
   const onRemoveDevice = (devItem) => {
     Swal.fire({
-      title: "Do you want to remove this Device?",
+      title: t('want_remove_device'),
       showCancelButton: true,
-      confirmButtonText: "Remove",
-      confirmButtonColor: "red"
+      confirmButtonText: t('remove'),
+      confirmButtonColor: "red",
+      cancelButtonText: t('cancel')
     }).then(async (result) => {
       if (result.isConfirmed) {
         // Swal.fire("Removed!", "", "success");
         console.log(devItem)
         Swal.fire({
-          title: 'Removing',
+          title: t('removing'),
           timerProgressBar: true,
           timer: 5000,
           showConfirmButton: false

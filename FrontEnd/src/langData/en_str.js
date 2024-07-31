@@ -107,5 +107,7 @@ export const En_Str = {
     Thursday: "Thursday",
     Friday: "Friday",
     Saturday: "Saturday",
-    device_data_not_loaded: "This Device data is not loaded, Please try to reload after few minutes"
+    device_data_not_loaded: "This Device data is not loaded, Please try to reload after few minutes",
+    want_remove_device:"Do you want to remove this Device?",
+    removing: "Removing"
 }
