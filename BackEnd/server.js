@@ -95,6 +95,11 @@ io.on('connect', (socket) => {
     client.subscribe(dataSentTopic, (err) => {
       callback(err);
     })
+
+    const weelyConTopic = `axinar/solbox/${devId}/jsonWeeklyCon`
+    client.subscribe(weelyConTopic, (err) => {
+      callback(err);
+    })
     callback();
   });
 
