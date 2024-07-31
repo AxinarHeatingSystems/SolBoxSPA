@@ -26,9 +26,10 @@ import { useTranslation } from 'react-i18next';
 import { AddDevModal } from './AddDevModal';
 import axios from 'axios';
 import { parsingDeviceData } from '../../axios/ParseProvider';
+import { DeviceMenuItem } from './DeviceMenuItem';
 
 // const EndPoint = process.env.REACT_APP_BASE_BACKEND_URL;
-const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) => {
+const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, socketIo }) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -518,26 +519,35 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId }) 
           </ListItem>
 
           {devList.map((devItem, key) => (
-            <ListItem
+            // <ListItem
+            //   key={key}
+            //   selected={selected.id === devItem.id}
+            //   sx={{ display: isCollapsed ? 'block' : 'flex' }}
+            // > 
+            //   <ListItemButton sx={{ padding: '0px' }} onClick={() => { onSelectDevId(devItem) }}>
+            //     {!isCollapsed && <ListItemIcon sx={{ justifyContent: 'center' }}>
+            //       <HomeOutlinedIcon />
+            //     </ListItemIcon>}
+            //     <ListItemText primary={devItem.DeviceName} />
+            //   </ListItemButton>
+            //   <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
+            //     {devItem.attributes?.devOwner === userData.id && < IconButton onClick={() => { onRemoveDevice(devItem) }} sx={{ padding: 0 }}>
+            //       <DeleteForeverIcon color='error' />
+            //     </IconButton>}
+            //     <LightbulbIcon color={devItem.connected ? 'success' : 'primary'} />
+            //   </Box>
+
+
+            // </ListItem>
+            <DeviceMenuItem 
               key={key}
-              selected={selected.id === devItem.id}
-              sx={{ display: isCollapsed ? 'block' : 'flex' }}
-            > 
-              <ListItemButton sx={{ padding: '0px' }} onClick={() => { onSelectDevId(devItem) }}>
-                {!isCollapsed && <ListItemIcon sx={{ justifyContent: 'center' }}>
-                  <HomeOutlinedIcon />
-                </ListItemIcon>}
-                <ListItemText primary={devItem.DeviceName} />
-              </ListItemButton>
-              <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
-                {devItem.attributes?.devOwner === userData.id && < IconButton onClick={() => { onRemoveDevice(devItem) }} sx={{ padding: 0 }}>
-                  <DeleteForeverIcon color='error' />
-                </IconButton>}
-                <LightbulbIcon color={devItem.connected ? 'success' : 'primary'} />
-              </Box>
-
-
-            </ListItem>
+              isCollapsed={isCollapsed} 
+              deviceInfo={devItem}
+              userId={userData.id}
+              selectedId={selected.id}
+              onSelectDevId={onSelectDevId}
+              socketIo={socketIo}
+              onRemoveDevice={onRemoveDevice} />
           ))}
         </List>
       </ProSidebar>}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useTheme, Box, Grid, Button, TextField, Card, CardHeader, CardContent, Typography } from "@mui/material";
+import { useTheme, Box, Grid, Button, TextField, Card, CardHeader, CardContent, Typography, CircularProgress } from "@mui/material";
 import { useSelector } from 'react-redux';
 import { tokens } from '../../theme';
 import { useTranslation } from 'react-i18next';
@@ -21,6 +21,8 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const [scheduleList, setScheduleList] = useState([]);
   const [openStartTime, setOpenStartTime] = useState(null);
   const [openEndTime, setOpenEndTime] = useState(null);
+  const [isSavingAll, setIsSavingAll] = useState(false);
+  const [isSavingWeek, setIsSavingWeek] = useState(null);
   useEffect(() => {
     console.log('metatDataEffect', devMetaData);
     if (devMetaData.attributes.devSchedules) {
@@ -98,6 +100,7 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const onScheduleSumit = async (e) => {
     e.preventDefault();
     if (e.target.checkValidity()) {
+      setIsSavingAll(true)
       let schedulePayLoad = {};
       scheduleList.map(item => {
         let weekStartTime = [];
@@ -152,10 +155,14 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
     }
     const scheduleRes = await saveDevScheduleApi(scheduleLoad)
     const tmpDevMetaData = parsingDeviceData(scheduleRes.data)
+    setIsSavingAll(false)
+    setIsSavingWeek(null);
+    window.toastr.success('Schedule Data is Saved');
     console.log(tmpDevMetaData);
   }
 
   const onSaveWeekDailySchedule = async (key) => {
+    setIsSavingWeek(key);
     const weekDayData = scheduleList[key];
     let weekStartTime = [];
     let weekEndTime = [];
@@ -204,7 +211,9 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
             <Grid item xs={12}>
               <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
                 <CalendarMonthIcon fontSize="large" color='success' />
-                <Button type='submit' variant='contained' sx={{ paddingX: '30px', fontWeight: 'bold' }} color='success'>{t('save_all')}</Button>
+                <Button type='submit' variant='contained' sx={{ paddingX: '30px', fontWeight: 'bold' }} color='success'>
+                  {isSavingAll ? <CircularProgress size={20} /> : t('save_all')}
+                </Button>
               </Stack>
             </Grid>
             {scheduleList.map((scheduleItem, key) => (<Grid item key={key} xs={12}>
@@ -222,7 +231,9 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                       }} />
                   </Grid>
                   <Grid item md={1} xs={6} order={{ xs: 2, md: 3 }} >
-                    <Button fullWidth onClick={() => onSaveWeekDailySchedule(key)} variant='contained' color='success' sx={{ fontWeight: 'bold' }}>{t('save')}</Button>
+                    <Button disabled={isSavingWeek === key} fullWidth onClick={() => onSaveWeekDailySchedule(key)} variant='contained' color='success' sx={{ fontWeight: 'bold' }}>
+                      {isSavingWeek === key ? <CircularProgress size={20} /> : t('save')}
+                    </Button>
                   </Grid>
                 </Grid>
 

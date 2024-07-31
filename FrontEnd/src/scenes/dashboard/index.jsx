@@ -23,7 +23,7 @@ import io from "socket.io-client";
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { getDevInfoApi } from '../../axios/ApiProvider';
-import { devMetaData_store } from '../../store/actions/mainAction';
+import { devMetaData_Store } from '../../store/actions/mainAction';
 import { parsingDeviceData } from '../../axios/ParseProvider';
 
 const EndPoint = process.env.REACT_APP_BASE_BACKEND_URL;
@@ -39,6 +39,7 @@ const Dashboard = () => {
 
   const isMobileDetect = useSelector(store => store.isMobileDetect);
   const isPortrait = useSelector(store => store.isPortrait);
+  const devInfo = useSelector(store => store.devInfoData);
   const [isSidebar, setIsSidebar] = useState(false);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -48,12 +49,22 @@ const Dashboard = () => {
   const [devTopic, setDevTopic] = useState('');
   const [controlTopic, setControlTopic] = useState('');
   const [scheduleTopic, setScheduleTopic] = useState('');
-  const [devInfo, setDevInfo] = useState(null);
+  // const [devInfo, setDevInfo] = useState(null);
   // const [devMetaData, setDevMetaData] = useState();
   const [socketEventCount, setSocketEventCount] = useState(0);
   // const devId = '08B61F971EAC'
   // const devId = '08F9E0E18FF4'
 
+  useEffect(() => {
+    if(deviceId){
+      if(devInfo){
+        setDeviceName(devInfo.DeviceName)
+        setIsLoading(false)
+      }else{
+        setIsLoading(true)
+      }
+    }
+  }, [devInfo])
 
   useEffect(() => {
 
@@ -73,33 +84,30 @@ const Dashboard = () => {
 
   }, [])
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      console.log('socketCount', loadingCount, isLoading)
-      if (isLoading) {
-        if (loadingCount > 10) {
-          setIsLoading(false);
-        }
-        setLoadingCount(loadingCount + 1);
-      } else {
-        setLoadingCount(0);
-      }
-
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [loadingCount, isLoading]);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     if (isLoading) {
+  //       if (loadingCount > 10) {
+  //         setIsLoading(false);
+  //       }
+  //       setLoadingCount(loadingCount + 1);
+  //     } else {
+  //       setLoadingCount(0);
+  //     }
+  //   }, 1000);
+  //   return () => clearInterval(interval);
+  // }, [loadingCount, isLoading]);
 
   useEffect(() => {
     socket.on('DevSubscribed', message => {
       console.log('DevSubscribed', message);
     });
     // console.log(devTopic);
-    socket.on(devTopic, message => {
-      // console.log(devTopic, message);
-      loadDeviceInfo(message);
-      setSocketEventCount(prev => prev + 1);
-    });
+    // socket.on(devTopic, message => {
+    //   // console.log(devTopic, message);
+    //   loadDeviceInfo(message);
+    //   setSocketEventCount(prev => prev + 1);
+    // });
     socket.on(controlTopic, message => {
       console.log('controlTopic ', message);
       // setSocketEventCount(prev => prev + 1);
@@ -112,17 +120,17 @@ const Dashboard = () => {
     })
 
     socket.on('devCondiscon', message => {
-      setIsLoading(false);
+      // setIsLoading(false);
       console.log('devCondiscon', message);
     })
 
     return () => {
-      socket.off('message');
-      socket.off(devTopic);
-      socket.off(scheduleTopic);
-      socket.off(controlTopic)
+      // socket.off('message');
+      // socket.off(devTopic);
+      // socket.off(scheduleTopic);
+      // socket.off(controlTopic)
     }
-  }, [deviceId, devTopic, socketEventCount])
+  }, [devTopic, socketEventCount])
 
   const subMenuClicked = (menuId) => {
     setSubmenuId(menuId);
@@ -135,41 +143,40 @@ const Dashboard = () => {
     //   }
     // });
     const devId = devData.name;
-    const devMeta = await getDevInfoApi(devData.id);
-    const tmpData = parsingDeviceData(devMeta.data)
-    dispatch(devMetaData_store(tmpData));
-    socket.emit('join', { devId }, (error) => {
-      if (error) {
-        alert(error);
-      }
-    });
-
+    // const devMeta = await getDevInfoApi(devData.id);
+    // const tmpData = parsingDeviceData(devMeta.data)
+    
+    setDeviceId(devId);
     setDevTopic(`axinar/solbox/${devId}/jsonTelemetry`);
     setControlTopic(`axinar/solbox/${devId}/mainControlJson`)
     setScheduleTopic(`axinar/solbox/${devId}/jsonDataSent`)
-    setLoadingCount(0);
-    setIsLoading(true);
-    setDevInfo(null)
-    setDeviceId(devId);
+    // setLoadingCount(0);
+    // setIsLoading(true);
+    // setDevInfo(null)
+    //  / setIsLoading(true);
+    
+    // setTimeout(() => {
+    //   setIsLoading(false);
+    // }, 2000)
   }
 
-  const loadDeviceInfo = (message) => {
-    const devInfoData = JSON.parse(message);
-    // console.log('settingPath', devInfoData);
+  // const loadDeviceInfo = (message) => {
+  //   const devInfoData = JSON.parse(message);
+  //   // console.log('settingPath', devInfoData);
 
-    if (deviceId === devInfoData.DeviceID) {
-      setIsLoading(false);
-      setDevInfo(devInfoData)
-      setDeviceName(devInfoData.DeviceName)
-    }
-  }
+  //   if (deviceId === devInfoData.DeviceID) {
+  //     setIsLoading(false);
+  //     setDevInfo(devInfoData)
+  //     setDeviceName(devInfoData.DeviceName)
+  //   }
+  // }
   return (
     <main className='content' style={{ display: isMobileDetect ? 'block' : 'flex' }}>
-      {isSidebar && <Sidebar isMobile={isMobileDetect} isPortrait={isPortrait} isSidebar={isSidebar} deviceName={deviceName} deviceId={deviceId} onChangeDevId={onChangeDevId} />}
+      {isSidebar && <Sidebar isMobile={isMobileDetect} isPortrait={isPortrait} isSidebar={isSidebar} deviceName={deviceName} deviceId={deviceId} onChangeDevId={onChangeDevId} socketIo={socket} />}
       <Box width={'100%'}>
         {!isPortrait &&
           <Box display={'flex'} flexGrow={1} >
-            {devInfo && <>
+            {devInfo && !isLoading && <>
               <Box maxWidth={'10vw'} >
                 <Grid container direction={'column'} width={'10vw'}>
                   <Grid item xs={12} sx={{ maxWidth: '10vw !important' }} >
@@ -289,7 +296,7 @@ const Dashboard = () => {
         }
         {isPortrait &&
           <Box flexGrow={1}>
-            {devInfo && <Box m="20px">
+            {(devInfo && !isLoading) && <Box m="20px">
               {/* HEADER */}
               <Box className="header-bar">
                 <Grid container spacing={2} marginBottom={isMobileDetect ? 0 : 2} alignItems={'baseline'}>
@@ -440,7 +447,7 @@ const Dashboard = () => {
                 <div className="pl__text">Loading…</div>
               </div>
             </Box> : <Box className="loading-pannel">
-              <Typography variant='h2'>{t('device_data_not_loaded')}</Typography>
+
             </Box>
             }
 

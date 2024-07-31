@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateDeviceApi } from '../../axios/ApiProvider';
 import { io } from 'socket.io-client';
 import { parsingDeviceData } from '../../axios/ParseProvider';
-import { devMetaData_store } from '../../store/actions/mainAction';
+import { devMetaData_Store } from '../../store/actions/mainAction';
 import dayjs from 'dayjs';
 
 
@@ -79,6 +79,8 @@ export const SettingBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
     let countArr = [];
     if (devMetaData.attributes.devOwner === userData.id) {
       setIsOwner(true);
+    } else {
+      setIsOwner(false);
     }
     allCountries.map(countryItem => { countArr.push({ label: countryItem.name, iso: countryItem.isoCode }) })
     setCountryList(countArr);
@@ -111,7 +113,7 @@ export const SettingBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
     setBoilerContact(devMetaData.attributes?.boilerContact)
     setGPSLoc(devMetaData.attributes?.gpsLoc)
     console.log(devMetaData);
-  }, [])
+  }, [devMetaData])
   const devDataVacationParsing = (deviceData) => {
     const devStartVacations = deviceData.vacationStart;
     const devEndVacations = deviceData.vacationEnd;
@@ -237,7 +239,7 @@ export const SettingBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
       if (saveRes.state === "success") {
         window.toastr.info(t('saved_successfully'));
         const savedMetaData = parsingDeviceData(saveRes.data);
-        dispatch(devMetaData_store(savedMetaData));
+        dispatch(devMetaData_Store(savedMetaData));
       } else {
         window.toastr.error(t('save_failed'));
       }

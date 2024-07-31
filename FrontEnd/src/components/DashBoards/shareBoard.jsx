@@ -29,6 +29,7 @@ export const ShareBoards = ({ isMobile, isPortrait }) => {
     loadSharedUsers()
   }, [devMetaData])
   const loadSharedUsers = async () => {
+    setShareTabloading(true);
     if (devMetaData.attributes.devOwner === userData.id) {
       setIsOwner(true);
     } else {
