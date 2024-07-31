@@ -220,7 +220,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
       // console.log('dddd', existDev, /^[0-9A-F]{12}$/i.test(devItem.clientid));
       console.log('TTTT', tmpIpAddress);
       if (existDev === undefined && /^[0-9A-F]{12}$/i.test(devItem.clientid)) {
-        // if (devItem.ip_address === tmpIpAddress) {
+        if (devItem.ip_address === tmpIpAddress) {
           const hexVal = parseInt(devItem.clientid, 16);
           const hexStr = hexVal.toString();
           const pairingNum = hexStr.slice(hexStr.length - 6, hexStr.length);
@@ -228,7 +228,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
             deviceId: devItem.clientid,
             pairingCode: pairingNum
           })
-        // }
+        }
       }
     })
     setPairableDevs(ableDevArr);
