@@ -55,10 +55,10 @@ async function getAllUsers() {
         if(allUsers.length > 0){
             resultData = {state: 'success', data: allUsers};
         }else{
-            resultData = {state: 'failed', message: 'There is not users'};
+            resultData = {state: 'failed', message: 'There are no users'};
         }
     } catch (error) {
-        resultData = {state: 'failed', message: 'There is not users'};
+        resultData = {state: 'failed', message: 'There are no users'};
     }
 
     return resultData;
@@ -89,17 +89,17 @@ async function googleAuth(authload) {
                     if(loggedUser.attributes.verified === false){
                         resultData = {state: 'failed', message: 'Please verify your email'};
                     }else{
-                        resultData = {state: 'failed', message: 'Yet now, Your account is allowed. Please wait for a few time'};
+                        resultData = {state: 'failed', message: 'Please wait for an Axinar representative to activate your account'};
                     }
                 }
             }
             
         }else{
-            resultData = {state: 'failed', message: 'User is not exist'};
+            resultData = {state: 'failed', message: 'User does not exist'};
         }
     } catch (error) {
         console.log(error);
-        resultData = {state: 'failed', message: 'Google login is failed'};
+        resultData = {state: 'failed', message: 'Google login has failed'};
     }
     return resultData;
 
@@ -156,11 +156,11 @@ async function googleSignUp(authload){
              
            resultData = {state: 'success', data: newUser};
         } else{
-            resultData = {state: 'failed', message: 'User is exist'};
+            resultData = {state: 'failed', message: 'The User exists'};
         }
     } catch (error) {
         console.log(error);
-        resultData = {state: 'failed', message: 'Google signup is failed'};
+        resultData = {state: 'failed', message: 'Google signup has failed'};
     }
 
     return resultData;
@@ -185,7 +185,7 @@ async function authenticate({email, password}) {
                     const token = jwt.sign({ sub: loggedUser.id }, config.secret, { expiresIn: '7d' });
                     resultData = {state: 'success', data: loggedUser, token: token};;
                 }else{
-                    resultData = {state: 'failed', message: 'Email or Password is not matched!'};
+                    resultData = {state: 'failed', message: 'Email or Password do not match!'};
                 }
             }else{
                 if(loggedUser.attributes.userType === 'user'){
@@ -194,18 +194,18 @@ async function authenticate({email, password}) {
                     if(loggedUser.attributes.verified === false){
                         resultData = {state: 'failed', message: 'Please verify your email'};
                     }else{
-                        resultData = {state: 'failed', message: 'Yet now, Your account is allowed. Please wait for a few time'};
+                        resultData = {state: 'failed', message: 'Please wait for an Axinar representative to activate your account'};
                     }
                 }
                 
             }
             
         }else{
-            resultData = {state: 'failed', message: 'The user is not exist'};
+            resultData = {state: 'failed', message: 'The user does not exist'};
         }
     } catch (error) {
         console.log(error);
-        resultData = {state: 'failed', message: 'Email or Password is not matched'};
+        resultData = {state: 'failed', message: 'Email or Password do not match'};
     }
     
     // console.log(users[0].id);
@@ -296,11 +296,11 @@ async function create(userParam) {
             //   }
            resultData = {state: 'success', data: createduserId};
         }else{
-            resultData = {state: 'failed', message: 'User is exist'};
+            resultData = {state: 'failed', message: 'The User exists'};
         }
     } catch (error) {
         console.log(error);
-        resultData = {state: 'failed', message: 'Api working is broken'};
+        resultData = {state: 'failed', message: 'Api function is broken'};
     }
     
     
@@ -326,12 +326,12 @@ async function emailResetPassword({email}) {
             })    
             resultData = {state: 'success', message: 'The Reset Password Email was sent. Please check your email'};
         } catch (error) {
-            resultData = {state: 'failed', message: 'The Reset Password Email is failed'};
+            resultData = {state: 'failed', message: 'The Reset Password Email sending has failed'};
             console.log(error);
         }
         console.log(selectedUser);
     }else{
-        resultData = {state: 'failed', message: 'User is not exist'};
+        resultData = {state: 'failed', message: 'User does not exist'};
     }
     return resultData;
 }
@@ -360,11 +360,11 @@ async function resetPassword({email, newPassword}) {
             })
             resultData = {state: 'success', message: 'Password is updated'};
         }else{
-            resultData = {state: 'failed', message: 'User is not exist'};            
+            resultData = {state: 'failed', message: 'User does not exist'};            
         }
     } catch (error) {
         console.log(error);
-        resultData = {state: 'failed', message: 'User is not exist'};
+        resultData = {state: 'failed', message: 'User does not exist'};
     }
     
     return resultData;
@@ -379,7 +379,7 @@ async function existLogin(userdata) {
         resultData = {state: 'success', data: user[0]};    
     } catch (error) {
         console.log(error);
-        resultData = {state: 'failed', message: 'User is not exist'};
+        resultData = {state: 'failed', message: 'User does not exist'};
     }
     
     return resultData;
