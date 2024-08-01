@@ -8,7 +8,7 @@ export const En_Str = {
     register_now: "Register Now",
     login_with_google: "Login with Google",
     register: "Register",
-    regist_with_google: "Regist with Google",
+    regist_with_google: "Register with Google",
     back_login: "Back to Login !",
     user_name: "User Name",
     name: "Name",
