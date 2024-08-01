@@ -4,17 +4,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - 3000:80
+    # ports:
+    #  - 3000:80
     # no ports forward for cloud  
     # and nginx listener should be 3000 instead of 80
     environment:
       NODE_ENV: production
     networks:
-     - cloudflarare-tunnel_default   # for VM
-    # - cloudflare1_default          # for cloud  
+    # - cloudflarare-tunnel_default   # for VM
+     - cloudflare1_default          # for cloud  
 networks:
-  cloudflarare-tunnel_default:       # for VM
-    # cloudflare1_default:          # for cloud
+    # cloudflarare-tunnel_default:       # for VM
+  cloudflare1_default:          # for cloud
     external: true  
     
