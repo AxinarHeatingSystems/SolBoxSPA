@@ -72,7 +72,7 @@ const Dashboard = () => {
   }, [isMobileDetect])
 
   useEffect(() => {
-    window.scrollTo(0, 1);
+    // window.scrollTo(0, 1);
 
     setIsSidebar(true);
     // socket.emit('join', { devId }, (error) => {
@@ -180,7 +180,7 @@ const Dashboard = () => {
         {!isPortrait &&
           <Box display={'flex'} flexGrow={1} >
             {devInfo && !isLoading && <>
-              <Box maxWidth={'10vw'} >
+              <Box marginTop={isMobileDetect ? '50px' : 0} maxWidth={'10vw'}>
                 <Grid container direction={'column'} width={'10vw'}>
                   <Grid item xs={12} sx={{ maxWidth: '10vw !important' }} >
                     <Box
@@ -287,7 +287,7 @@ const Dashboard = () => {
                   </Grid>
                 </Grid>
               </Box>
-              <Box maxWidth={'90vw'} height={'80vh'} position={'relative'}>
+              <Box marginTop={isMobileDetect ? '50px' : 0} maxWidth={'90vw'} height={'80vh'} position={'relative'}>
                 {submenuId === 1 && <StatusBoards isMobile={isMobileDetect} isPortrait={isPortrait} devData={devInfo} socketIo={socket} />}
                 {submenuId === 2 && <SettingBoards devData={devInfo} socketIo={socket} isMobile={isMobileDetect} isPortrait={isPortrait} />}
                 {submenuId === 3 && <ScheduleBoards devData={devInfo} socketIo={socket} isMobile={isMobileDetect} isPortrait={isPortrait} />}
@@ -307,7 +307,7 @@ const Dashboard = () => {
                     <Header isMobile={isMobileDetect} title={devInfo.DeviceName} subtitle={devInfo.DeviceID} />
                   </Grid>}
                   <Grid item md={8} xs={12} sx={isMobileDetect ? { paddingTop: '0px !important' } : {}}>
-                    <Box>
+                    <Box marginTop={isMobileDetect ? '50px' : 0} >
                       <Grid container spacing={isMobileDetect ? 0 : 2} marginBottom={isMobileDetect ? 0 : 2}>
                         <Grid item xs={3}>
                           <Box

@@ -43,7 +43,8 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
   const [isAddDev, setIsAddDev] = useState(false);
   const [pairingData, setPairingData] = useState();
   const [devList, setDevList] = useState([]);
-  const open = Boolean(anchorEl);
+  // const open = Boolean(anchorEl);
+  const [open, setOpen] = useState(false);
   const [ipAddress, setIpAddress] = useState('')
   const style = {
     position: 'absolute',
@@ -91,8 +92,9 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
   }
 
   const mobileStyle = {
-    width: '100%',
+    width: '100vw',
     boxShadow: 'inset 0px -7px 4px -8px',
+    backgroundColor: theme.palette.background.default,
     '& .pro-menu ul': {
       paddingInlineStart: '0px',
       listStyleType: 'none',
@@ -118,12 +120,23 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
     },
   }
 
+  const mobileMenustyle = {
+    top: '40px',
+    maxHeight: 'calc(100% - 40px)',
+    overflow: 'auto',
+    position: 'fixed',
+    zIndex: 99999,
+    padding: 2, width: '100%', backgroundColor: theme.palette.background.default, color: colors.grey[100], display: open ? 'block' : 'none'
+  }
+
   const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+    // setAnchorEl(event.currentTarget);
+    setOpen(!open)
     setIsCollapsed(!isCollapsed);
   };
   const handleClose = () => {
-    setAnchorEl(null);
+    // setAnchorEl(null);
+    setOpen(false)
     setIsCollapsed(!isCollapsed);
   };
 
@@ -333,8 +346,12 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
           display="flex"
           justifyContent="space-between"
           alignItems="center"
-          mx="15px"
-          mt={'10px'}
+          position={'fixed'}
+          width={'100%'}
+          px="15px"
+          pt={'10px'}
+          height={'50px'}
+          sx={{ backgroundColor: theme.palette.background.default, zIndex: 999999, top: '0px' }}
         >
           <Typography variant="h3" display={'flex'} alignItems={'baseline'} color={colors.grey[100]}>
             {t("title")} {isMobile && !isPortrait && <Typography variant='body1' marginX={1}>( <b>{deviceName}</b> - {selected?.name})</Typography>}
@@ -344,12 +361,10 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
             {!isCollapsed && <MenuOutlinedIcon />}
           </IconButton>
         </Box>
-        <Menu
+        <List
           id="basic-menu"
-          anchorEl={anchorEl}
-          open={true}
           onClose={handleClose}
-          sx={{ width: '100%', color: colors.grey[100], display: open ? 'block' : 'none' }}
+          sx={mobileMenustyle}
           MenuListProps={{
             'aria-labelledby': 'basic-button',
             'style': { backgroundColor: theme.palette.background.default }
@@ -372,12 +387,12 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
           <Typography color={colors.grey[300]} sx={{ m: "15px 0 5px 10px" }} variant='h5' fontWeight={700} textAlign={'start'} display={'flex'} justifyContent={'start'} alignItems={'center'}>
             <AccountCircleIcon marginX={2} /> {userData.firstName} {userData.lastName}
           </Typography>
-          <MenuItem >
+          {/* <MenuItem >
             <ListItemIcon>
               <ManageAccountsIcon fontSize="small" />
             </ListItemIcon>
-            {/* <ListItemText>{t("setting")}</ListItemText> */}
-          </MenuItem>
+            <ListItemText>{t("setting")}</ListItemText>
+        </MenuItem> */}
           <MenuItem onClick={() => { onLogOut(); handleClose(); }}>
             <ListItemIcon>
               <LogoutIcon fontSize="small" />
@@ -392,14 +407,14 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
           >
             {t("theme")}
           </Typography>
-          <MenuItem onClick={() => { colorMode.toggleColorMode(); handleClose(); }} sx={{ width: '100vw' }}>
+          <ListItem onClick={() => { colorMode.toggleColorMode(); handleClose(); }} sx={{ width: '100%' }}>
             <ListItemIcon>
               {theme.palette.mode === "dark" ? <LightModeOutlinedIcon fontSize="small" /> : <DarkModeOutlinedIcon fontSize="small" />}
             </ListItemIcon>
             <ListItemText>
               {theme.palette.mode === "dark" ? t("light_mode") : t("dark_mode")}
             </ListItemText>
-          </MenuItem>
+          </ListItem>
           <Divider />
           <ListItem sx={{ padding: '5px 0px' }}>
             <Box width={'100%'} display={'flex'} justifyContent={'space-between'} alignItems={'baseline'}>
@@ -445,7 +460,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
 
             // </MenuItem>
           ))}
-        </Menu>
+        </List>
       </>}
       {!isMobile && <ProSidebar collapsed={isCollapsed} style={{ minHeight: '100vh' }}>
         <List component="nav" aria-label="main mailbox folders">
