@@ -5,11 +5,14 @@
 }
 
 .dev-label {
-    position: absolute;
-    width: 100%;
     padding: 10px;
-    top: 0;
+    position: absolute;
     text-align: center;
+    top: 0;
+        /* width: 100%; */
+        left: 50%;
+        transform-origin: center;
+        transform: translateX(-50%);
 }
 @keyframes huerotate {
     0% {
