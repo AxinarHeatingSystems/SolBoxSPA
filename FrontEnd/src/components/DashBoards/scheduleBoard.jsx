@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useTheme, Box, Grid, Button, TextField, Card, CardHeader, CardContent, Typography, CircularProgress } from "@mui/material";
+import { useTheme, Box, Grid, Button, TextField, Card, CardHeader, CardContent, Typography, CircularProgress, IconButton } from "@mui/material";
 import { useSelector } from 'react-redux';
 import { tokens } from '../../theme';
 import { useTranslation } from 'react-i18next';
 import { Stack } from '@mui/system';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-
+import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
@@ -129,6 +129,13 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   //   });
   //   setScheduleList(tmpWeekList);
   // }
+
+  const onTimeClear = (key, timekey) => {
+    let tmpWeekList = scheduleList;
+    tmpWeekList[key].times[timekey].start = null;
+    tmpWeekList[key].times[timekey].end = null;
+    setScheduleList(tmpWeekList);
+  }
 
   const setWeekDayStartTime = (key, timekey, newValue) => {
     let tmpWeekList = scheduleList;
@@ -341,6 +348,7 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                       <Grid key={timeKey} item md={4} xs={12} display={'flex'} justifyContent={'center'} alignItems={'center'}>
                         {/* <Stack direction={'flex'} spacing={1} justifyContent={'center'} alignItems={'center'}> */}
                           <TimePicker
+                          ampm={false}
                             label={t('start')}
                             open={checkOpenStartTime(key, timeKey)}
                             value={timeItem.start}
@@ -358,6 +366,7 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                           />
                           -
                           <TimePicker
+                          ampm={false}
                             label={t('end')}
                             open={checkOpenEndTime(key, timeKey)}
                             value={timeItem.end}
@@ -373,6 +382,9 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                               }
                             }}
                           />
+                        <IconButton onClick={() => onTimeClear(key, timeKey)}>
+                          <AutoDeleteIcon />
+                        </IconButton>
                         {/* </Stack> */}
                       </Grid>
                     ))}

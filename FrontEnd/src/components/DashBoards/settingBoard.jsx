@@ -88,13 +88,15 @@ export const SettingBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
     const existCountry = countArr.find(ctItem => ctItem.label === devMetaData.attributes.country);
     setCountry(existCountry);
     // const regionArr = getRegionsByCountryCode('en', existCountry.iso);
-    const regionArr = City.getCitiesOfCountry(existCountry.iso)
-    let existRegionArr = [];
-    regionArr.map(reItem => { existRegionArr.push({ label: reItem.name, iso: reItem.stateCode }) })
-    const existRegion = existRegionArr.find(reItem => reItem.label === devMetaData.attributes.city)
-    console.log(existRegionArr, regionArr, existCountry)
-    setRegionList(existRegionArr);
-    setCity(existRegion);
+    // const regionArr = City.getCitiesOfCountry(existCountry.iso)
+    // let existRegionArr = [];
+    // regionArr.map(reItem => { existRegionArr.push({ label: reItem.name, iso: reItem.stateCode }) })
+    // const existRegion = existRegionArr.find(reItem => reItem.label === devMetaData.attributes.city)
+    // console.log(existRegionArr, regionArr, existCountry)
+    // setRegionList(existRegionArr);
+    // setCity(existRegion);
+    loadRegionList(existCountry, true);
+
     setWatterLimit(devMetaData.attributes.watterLimit);
     setSolopanelPower(devMetaData.attributes.solopanelPower);
     setPriceKWH(devMetaData.attributes.priceKWH)
@@ -128,14 +130,32 @@ export const SettingBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   }
   const onCountryChange = (e, value) => {
     // const regions = getRegionsByCountryCode('en', value.iso);
+    loadRegionList(value, false)
+    // const regions = City.getCitiesOfCountry(value.iso);
+    // console.log('countryCode', regions, value);
+    // let tmpList = [];
+    // regions.map(resItem => {
+    //   tmpList.push({ label: resItem.name, iso: resItem.stateCode })
+    // })
+    // setRegionList(tmpList)
+    setCountry(value);
+  }
+  const loadRegionList = (value, isSetCity) => {
+    if (value === null) { setRegionList([]); return; }
     const regions = City.getCitiesOfCountry(value.iso);
-    console.log('countryCode', regions, value);
+
+    console.log(regions);
     let tmpList = [];
     regions.map(resItem => {
-      tmpList.push({ label: resItem.name, iso: resItem.stateCode })
+      if (!tmpList.find(tmpItem => tmpItem.label === resItem.name)) {
+        tmpList.push({ label: resItem.name, iso: resItem.stateCode })
+      }
     })
     setRegionList(tmpList)
-    setCountry(value);
+    if (isSetCity) {
+      const existRegion = tmpList.find(reItem => reItem.label === devMetaData.attributes.city)
+      setCity(existRegion);
+    }
   }
   const onCityChange = (e, value) => {
     setCity(value);

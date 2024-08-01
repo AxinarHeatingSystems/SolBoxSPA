@@ -30,6 +30,9 @@ export const tokens = (mode) => ({
           800: "#080b12",
           900: "#040509",
         },
+        primaryAlpa: {
+          500: "#141b2d73",
+        },
         greenAccent: {
           100: "#dbf5ee",
           200: "#b7ebde",
@@ -86,6 +89,9 @@ export const tokens = (mode) => ({
           700: "#727681",
           800: "#a1a4ab",
           900: "#d0d1d5",
+        },
+        primaryAlpa: {
+          500: "#141b2d73",
         },
         greenAccent: {
           100: "#0f2922",
@@ -145,6 +151,7 @@ export const themeSettings = (mode) => {
             },
             background: {
               default: colors.primary[500],
+              alpha: colors.primaryAlpa[500],
             },
             border: {
               default: '#0ff'
@@ -165,6 +172,7 @@ export const themeSettings = (mode) => {
             },
             background: {
               default: "#fcfcfc",
+              alpha: "#fcfcfc73",
             },
             border: {
               default: colors.greenAccent[500]

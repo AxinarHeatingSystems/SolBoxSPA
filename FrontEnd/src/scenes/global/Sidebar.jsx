@@ -94,7 +94,10 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
   const mobileStyle = {
     width: '100vw',
     boxShadow: 'inset 0px -7px 4px -8px',
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.alpha,
+    height: open ? '100vh' : 0,
+    zIndex: open ? 9999999 : 0,
+    position: 'absolute',
     '& .pro-menu ul': {
       paddingInlineStart: '0px',
       listStyleType: 'none',
@@ -126,18 +129,27 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
     overflow: 'auto',
     position: 'fixed',
     zIndex: 99999,
+    boxShadow: 'inset 0px -1px 0px 0px',
     padding: 2, width: '100%', backgroundColor: theme.palette.background.default, color: colors.grey[100], display: open ? 'block' : 'none'
   }
+
+
 
   const handleClick = (event) => {
     // setAnchorEl(event.currentTarget);
     setOpen(!open)
+    // if (!isMobile) {
     setIsCollapsed(!isCollapsed);
+    // }
+
   };
   const handleClose = () => {
     // setAnchorEl(null);
     setOpen(false)
+    // if (!isMobile) {
     setIsCollapsed(!isCollapsed);
+    // }
+
   };
 
   useEffect(() => {
@@ -151,15 +163,18 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
       // Perform actions on window resize
       console.log('screen Resizing', e);
     };
-    // const handlePointer = (e) => {
-    //   console.log('eventClick', e);
-    //   // setIsCollapsed(false)
-    // }
+    const handlePointer = (e) => {
+      console.log('eventClick', e);
+      // setIsCollapsed(false)
+      if (e.target.id === 'mobileMenu_panel') {
+        handleClose();
+      }
+    }
     window.addEventListener('resize', handleResize);
-    // window.addEventListener('click', handlePointer);
+    window.addEventListener('click', handlePointer);
     return () => {
       window.removeEventListener('resize', handleResize);
-      // window.removeEventListener('click', handlePointer);
+      window.removeEventListener('click', handlePointer);
     };
   }, []);
 
@@ -203,6 +218,10 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
   }
 
   const onSelectDevId = (devData) => {
+    if (isMobile) {
+      handleClose()
+    }
+
     onChangeDevId(devData)
     setSelected(devData)
   }
@@ -219,6 +238,9 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
   const handleSearchDevOpen = async (tmpIpAddress) => {
     setFindingPairable(true);
     // setIsAddDev(true);
+    if (isMobile) {
+      handleClose()
+    }
     setPairableDevs([]);
     setIsSearchUI(true);
     const allSavedDevRes = await getAllDevsApi();
@@ -339,6 +361,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
 
   return (
     <Box
+      id={isMobile ? 'mobileMenu_panel' : ''}
       sx={isMobile ? mobileStyle : desktopStyle}
     >
       {isMobile && <>
@@ -425,7 +448,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
               >
                 {t("devices")}
               </Typography>
-              <Button size='small' color='success' onClick={() => { handleSearchDevOpen(ipAddress) }}>
+              <Button size='small' color='success' onClick={() => { handleSearchDevOpen(ipAddress); }}>
                 + {t("add")}
               </Button>
             </Box>

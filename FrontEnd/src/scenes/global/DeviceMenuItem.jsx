@@ -36,13 +36,14 @@ export const DeviceMenuItem = ({ isMobile, isCollapsed, deviceInfo, userId, sele
         setPrevCounter(socketCounter);
       } else {
         if (selectedId === deviceInfo.id) {
+          // console.log(selectedId, deviceInfo)
           dispatch(devInfoData_Store(null));
         }
         setIsConnected(false);
       }
     }, 1000)
     return () => clearInterval(interVal)
-  }, [prevCounter, socketCounter])
+  }, [prevCounter, socketCounter, selectedId])
 
   useEffect(() => {
     const subScribTopic = `axinar/solbox/${deviceInfo.name}/jsonTelemetry`
