@@ -325,7 +325,10 @@ export const ScheduleBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                   </Grid>
                   <Grid item md={5} xs={12} textAlign={'right'} order={{ xs: 3, md: 2 }} >
                     <TextField label={t('target_temperature')} size='small'
+                      type='number'
                       value={scheduleItem?.targetTemp}
+                      inputProps={{ min: 100, max: 500 }}
+                      required
                       onChange={(e) => onChangeTargetTemp(key, e)}
                       InputLabelProps={{
                         shrink: true,

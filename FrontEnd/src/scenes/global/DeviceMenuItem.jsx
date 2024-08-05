@@ -1,14 +1,20 @@
-import { ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton } from "@mui/material"
+import { ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, Typography, useTheme } from "@mui/material"
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
-import { Box } from "@mui/system";
+import { BsSunriseFill, BsSunsetFill } from "react-icons/bs";
+import { GiSunrise, GiSunset } from "react-icons/gi";
+import { CiTempHigh } from "react-icons/ci";
+import { Box, Stack } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { devInfoData_Store, devMetaData_Store } from "../../store/actions/mainAction";
+import { tokens } from "../../theme";
 
 export const DeviceMenuItem = ({ isMobile, isCollapsed, deviceInfo, userId, selectedId, onSelectDevId, onRemoveDevice, socketIo }) => {
   const dispatch = useDispatch();
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   const [isConnected, setIsConnected] = useState(false);
   const [socketCounter, setSocketCounter] = useState(0);
   const [prevCounter, setPrevCounter] = useState(0);
@@ -72,10 +78,18 @@ export const DeviceMenuItem = ({ isMobile, isCollapsed, deviceInfo, userId, sele
       sx={{ display: isMobile ? 'flex' : isCollapsed ? 'block' : 'flex' }}
     >
       <ListItemButton sx={{ padding: '0px' }} onClick={() => { onSelectDevId(deviceInfo) }}>
-        {!isCollapsed && <ListItemIcon sx={{ justifyContent: 'center' }}>
-          <HomeOutlinedIcon />
-        </ListItemIcon>}
-        <ListItemText primary={deviceInfo.DeviceName} />
+        {!isCollapsed && <HomeOutlinedIcon sx={{ marginX: 0.5 }} />}
+        <Box>
+          <Box display={'flex'}>
+            <Typography variant="h5" fontWeight={'bold'} textAlign={"start"}>{deviceInfo.DeviceName}</Typography>
+          </Box>
+          <Stack direction={"row"} spacing={1} justifyContent={'flex-start'} alignItems={"center"}>
+            <GiSunrise color={colors.grey[100]} /> <span>xx:xx</span>
+            <GiSunset color={colors.grey[100]} /> <span>xx:xx</span>
+            <CiTempHigh color={colors.grey[100]} /> <span>xx:xx</span>
+          </Stack>
+        </Box>
+
       </ListItemButton>
       <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
         {deviceInfo.attributes?.devOwner === userId && < IconButton onClick={() => { onRemoveDevice(deviceInfo) }} sx={{ padding: 0 }}>

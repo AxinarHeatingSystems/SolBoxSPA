@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { tokens } from '../../theme';
 import { useSelector } from 'react-redux';
 import { shareDeviceApi } from '../../axios/ApiProvider';
+import { Stack } from '@mui/system';
 
 const tableCellStyle = { fontWeight: 'bold', fontSize: '0.9rem' }
 
@@ -149,12 +150,12 @@ export const ShareBoards = ({ isMobile, isPortrait }) => {
         <Box sx={{ position: 'relative' }} paddingTop={2}>
           <Typography variant='h4' marginBottom={2}>{t('shared_users')}</Typography>
           <TableContainer component={Paper} sx={{ position: 'relative', backgroundColor: 'transparent' }}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            {!isPortrait && <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
                   <TableCell>{t('email')}</TableCell>
                   <TableCell>{t('first_name')}</TableCell>
-                  <TableCell>{t('first_name')}</TableCell>
+                  <TableCell>{t('last_name')}</TableCell>
                   {isOwner && <TableCell align="right">{t('action')}</TableCell>}
                 </TableRow>
               </TableHead>
@@ -182,7 +183,44 @@ export const ShareBoards = ({ isMobile, isPortrait }) => {
                 ))}
 
               </TableBody>
-            </Table>
+            </Table>}
+            {isPortrait &&
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>
+                      <Grid container spacing={1}>
+                        <Grid item xs={6} textAlign={'start'} borderBottom={1}>{t('first_name')}</Grid>
+                        <Grid item xs={6} textAlign={'start'} borderBottom={1}>{t('last_name')}</Grid>
+                        <Grid item xs={10} textAlign={'start'} >{t('email')}</Grid>
+                        {isOwner && <Grid item xs={2} textAlign={'end'}>{t('action')}</Grid>}
+                      </Grid>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {sharedUsers.map((userItem, key) => (
+                    <TableRow
+                      key={key}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row" sx={tableCellStyle}>
+                        <Grid container spacing={1}>
+                          <Grid item xs={6} textAlign={'start'} >{userItem.firstName}</Grid>
+                          <Grid item xs={6} textAlign={'start'} >{userItem.lastName}</Grid>
+                          <Grid item xs={10} textAlign={'start'} >{userItem.email} {userItem.id === devMetaData.attributes.devOwner && <span>(Owner)</span>}</Grid>
+                          {isOwner && <Grid item xs={2} textAlign={'end'}>
+                            <Button disabled={isDeleteId === userItem.id} variant='contained' onClick={() => onRemoveSharedUser(userItem)} size='small'>
+                              {isDeleteId === userItem.id ? <CircularProgress size={20} /> : t('delete')}
+                            </Button>
+                          </Grid>}
+                        </Grid>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            }
             {shareTabloading && <Box sx={{ position: 'absolute', top: 0, width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <CircularProgress size={30} color='success' />
             </Box>}

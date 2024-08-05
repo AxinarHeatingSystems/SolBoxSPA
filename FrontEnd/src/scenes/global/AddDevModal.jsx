@@ -61,7 +61,7 @@ export const AddDevModal = ({ isAddDev, onClose, pairingData, ipAddress }) => {
 
   const initVals = () => {
     setCountry({ iso: "GR", label: "Greece" })
-    setWatterLimit(0)
+    setWatterLimit(100)
     setWatterLimitError(false)
     setIsHeatSource(false)
     setHeatType(1)

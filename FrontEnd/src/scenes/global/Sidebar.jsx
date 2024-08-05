@@ -96,7 +96,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
     boxShadow: 'inset 0px -7px 4px -8px',
     backgroundColor: theme.palette.background.alpha,
     height: open ? '100vh' : 0,
-    zIndex: open ? 9999999 : 0,
+    // zIndex: open ? 9999999 : 0,
     position: 'absolute',
     '& .pro-menu ul': {
       paddingInlineStart: '0px',
