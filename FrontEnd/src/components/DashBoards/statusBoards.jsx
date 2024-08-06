@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTheme, styled, Box, Typography, Switch, FormControlLabel, Grid } from "@mui/material";
 import GaugeComponent from 'react-gauge-component'
 import { tokens } from "../../theme";
@@ -110,6 +110,7 @@ const DevOnOffSwitch = styled(Switch)(({ theme }) => ({
 export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const gaugeRef = useRef();
   const colors = tokens(theme.palette.mode);
   const userData = useSelector(store => store.userData);
   const devMetaData = useSelector(store => store.devMetaData);
@@ -121,6 +122,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const [maxPower, setMaxPower] = useState(10);
   const [minPower, setMinPower] = useState(0);
   const [nowPower, setNowPower] = useState(0);
+  const [lastDayPower, setLastDayPower] = useState(0);
   const [todayKWH, setTodayKWH] = useState(0);
   const [savePrice, setSavePrice] = useState(0);
   const [priceKWH, setPriceKWH] = useState(0);
@@ -137,10 +139,19 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
         setIsUser('technician');
       }
     }
+    console.log('gaugeRef', gaugeRef.current.querySelector('.pointer'), gaugeRef.current.querySelector('.pointer').querySelector('text'))
+    // if (gaugeRef.current.querySelector('.pointer').querySelector('text')) {
+    // gaugeRef.current.querySelector('.pointer').insertAdjacentHTML("beforeend", pointerHtml);
+    // }
+
 
   }, [])
   useEffect(() => {
+    // console.log('gaugeRef', gaugeRef.current.querySelector('.pointer'), gaugeRef.current.querySelector('.pointer').querySelector('text'))
+
+
     if (isUser) {
+
       setDeviceId(devData.DeviceID)
       setDeviceName(devData.DeviceName)
       setDevOn(devData.DeviceEnabled);
@@ -170,8 +181,19 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
         setMinPower(parseFloat(devData.leastPowerThirty));
         setNowPower(parseFloat(devData.WattHours));
         setMaxVal(devData.ATHwattHours);
+
+      }
+      const tmpLastDayPower = Math.ceil((devData.lastDayWattHours / devData.ATHwattHours) * 100);
+      setLastDayPower(tmpLastDayPower);
+      const pointerHtml = `<text transform="rotate(0)" style="font-size: 15.4132px;transform: translate(0px, -4px);fill: rgb(117 116 116);text-shadow: black 1px 0.5px 0px, black 0px 0px 0.03em, black 0px 0px 0.01em;text-anchor: middle;">${tmpLastDayPower}%</text>`;
+      if (!!gaugeRef.current.querySelector('.pointer').querySelector('text')) {
+        gaugeRef.current.querySelector('.pointer').querySelector('text').innerHTML = `${tmpLastDayPower}%`;
+      } else {
+        console.log('NNNN')
+        gaugeRef.current.querySelector('.pointer').insertAdjacentHTML("beforeend", pointerHtml);
       }
     }
+    // console.log('gaugeRef', gaugeRef)
   }, [devData])
 
 
@@ -256,11 +278,8 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                   sx={{ margin: 'auto', width: '100%', justifyContent: 'center', alignItems: "center", color: theme.palette.mode === "dark" ? 'yellow' : 'gray', fontSize: '16px !important', fontWeight: '600' }}
                   onClick={() => onDevCtr()}
                   control={<DevOnOffSwitch sx={{ m: 1 }} checked={devOn} />}
-                  label={!isMobile ? `${devCyle}` : ""}
                 />
-                <SolarPanel isMobile={isMobile} isPortrait={isPortrait} isOn={devOn} cycleVal={devCyle} />
-                {isMobile && <span className='devOn-Cycle' style={{ color: colors.greenAccent[400] }} >{devCyle}</span>}
-
+                <SolarPanel isMobile={isMobile} isPortrait={isPortrait} isOn={devOn} cycleVal={devCyle} color={colors.greenAccent[400]} />
               </Box>
             </Grid>
           </Grid>
@@ -295,19 +314,15 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                   <hr />
                   {devOn &&
                     <>
-                      <span className='solor-cirl'></span>
-                      <span className='solor-cirl cirl1'></span>
-                      <span className='solor-cirl cirl2'></span>
-                      <span className='solor-cirl cirl3'></span>
-                      <span className='solor-cirl cirl4'></span>
-                      <span className='solor-cirl cirl5'></span>
-                      <span className='solor-cirl cirl6'></span>
-                      <span className='solor-cirl cirl7'></span>
-                      <span className='solor-cirl cirl8'></span>
-                      <span className='solor-cirl cirl9'></span>
-                      <span className='solor-cirl cirl10'></span>
-                      <span className='solor-cirl cirl11'></span>
-                      <span className='solor-cirl cirl12'></span>
+                    {(() => {
+                      const arr = [];
+                      for (let i = 0; i < (Math.floor(parseFloat(devCyle) * 0.1) + 1); i++) {
+                        arr.push(
+                          <span className={`solor-cirl cirl${i}`}></span>
+                        );
+                      }
+                      return arr;
+                    })()}
                   </>
                   }
                 </div>
@@ -353,7 +368,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                         className: 'arc1',
                         limit: minPower,
                         color: '#0000ff',
-                        showTick: true,
+                        showTick: false,
                         tooltip: {
                           text: 'Too low temperature!'
                         },
@@ -364,7 +379,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                       {
                         limit: maxPower,
                         color: '#1af519',
-                        showTick: true,
+                        showTick: false,
                         tooltip: {
                           text: 'Low temperature!'
                         }
@@ -383,11 +398,60 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                     width: 15,
                     elastic: true,
                   }}
-
+                  // pointer={{ type: "blob", animationDelay: 0 }}
                   value={nowPower}
                   minValue={0}
                   maxValue={maxVal}
                 />
+                <div ref={gaugeRef} className='overide-gauge'>
+                  <GaugeComponent
+
+                    type='semicircle'
+                    arc={{
+                      width: 0.1,
+                      padding: 0.01,
+                      cornerRadius: 10,
+                      // gradient: true,
+                      subArcs: [
+                        {
+                          className: 'arc1',
+                          limit: minPower,
+                          color: '#0000ff',
+                          showTick: true,
+                          tooltip: {
+                            style: { zIndex: 99999 },
+                            text: 'Too low temperature!'
+                          },
+                          onClick: () => console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"),
+                          onMouseMove: () => console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"),
+                          onMouseLeave: () => console.log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"),
+                        },
+                        {
+                          limit: maxPower,
+                          color: '#1af519',
+                          showTick: true,
+                          tooltip: {
+                            style: { zIndex: 99999 },
+                            text: 'Low temperature!'
+                          }
+                        },
+                        {
+                          color: '#ef290b',
+                          showTick: true,
+                          tooltip: {
+                            style: { zIndex: 99999 },
+                            text: 'Too high temperature!'
+                          }
+                        }
+                      ]
+                    }}
+                    pointer={{ type: "blob", animationDelay: 0, elastic: true }}
+                    labels={{ valueLabel: { style: { position: 'absolute', display: 'none' } } }}
+                    value={lastDayPower}
+                  minValue={0}
+                  maxValue={maxVal}
+                />
+                </div>
 
                 <Grid position={'absolute'} container spacing={1} paddingX={7} justifyContent={'space-between'}
                   sx={{ top: isMobile ? '-10px' : 0, width: '100%', height: '100%' }}

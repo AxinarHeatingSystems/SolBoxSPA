@@ -28,6 +28,13 @@ import { parsingDeviceData } from '../../axios/ParseProvider';
 
 const EndPoint = process.env.REACT_APP_BASE_BACKEND_URL;
 // let socket;
+const mobileTabmenuStyle = {
+  position: 'fixed',
+  bottom: 0,
+  left: 0,
+  zIndex: 99
+}
+
 const tmpSocket = io(EndPoint);
 const Dashboard = () => {
   const { t } = useTranslation();
@@ -307,7 +314,7 @@ const Dashboard = () => {
                     <Header isMobile={isMobileDetect} title={devInfo.DeviceName} subtitle={devInfo.DeviceID} />
                   </Grid>}
                   <Grid item md={8} xs={12} sx={isMobileDetect ? { paddingTop: '0px !important' } : {}}>
-                    <Box marginTop={isMobileDetect ? '50px' : 0} >
+                    <Box sx={isMobileDetect ? mobileTabmenuStyle : {}}>
                       <Grid container spacing={isMobileDetect ? 0 : 2} marginBottom={isMobileDetect ? 0 : 2}>
                         <Grid item xs={3}>
                           <Box
@@ -422,10 +429,12 @@ const Dashboard = () => {
                   </Grid>
                 </Grid>
               </Box>
+              <Box marginTop={isMobileDetect ? '50px' : 0}>
               {submenuId === 1 && <StatusBoards isMobile={isMobileDetect} isPortrait={isPortrait} devData={devInfo} socketIo={socket} />}
               {submenuId === 2 && <SettingBoards devData={devInfo} socketIo={socket} isMobile={isMobileDetect} isPortrait={isPortrait} />}
               {submenuId === 3 && <ScheduleBoards devData={devInfo} socketIo={socket} isPortrait={isPortrait} isMobile={isMobileDetect} />}
               {submenuId === 4 && <ShareBoards isMobile={isMobileDetect} isPortrait={isPortrait} />}
+              </Box>
             </Box>}
 
           </Box>

@@ -16,7 +16,7 @@ import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import "react-pro-sidebar/dist/css/styles.css";
 
-import iotLogo from '../../assets/iotLogo.svg'
+import iotLogo from '../../assets/logo.png'
 import { ColorModeContext, tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 
@@ -517,7 +517,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
                   width={!isCollapsed ? "100px" : "50px"}
                   height={!isCollapsed ? "100px" : "50px"}
                   src={iotLogo}
-                  style={{ cursor: "pointer", border: '1px solid', borderRadius: '50%' }}
+                  style={{ cursor: "pointer" }}
                 />
               </Box>
               {!isCollapsed && <Box marginY={1}>
