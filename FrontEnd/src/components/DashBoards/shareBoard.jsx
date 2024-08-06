@@ -150,7 +150,7 @@ export const ShareBoards = ({ isMobile, isPortrait }) => {
         <Box sx={{ position: 'relative' }} paddingTop={2}>
           <Typography variant='h4' marginBottom={2}>{t('shared_users')}</Typography>
           <TableContainer component={Paper} sx={{ position: 'relative', backgroundColor: 'transparent' }}>
-            {!isPortrait && <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            {!(isMobile && isPortrait) && <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
                   <TableCell>{t('email')}</TableCell>
@@ -184,7 +184,7 @@ export const ShareBoards = ({ isMobile, isPortrait }) => {
 
               </TableBody>
             </Table>}
-            {isPortrait &&
+            {isMobile && isPortrait &&
               <Table>
                 <TableHead>
                   <TableRow>

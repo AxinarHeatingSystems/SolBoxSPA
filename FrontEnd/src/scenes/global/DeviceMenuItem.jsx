@@ -2,9 +2,6 @@ import { ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, Typog
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
-import { BsSunriseFill, BsSunsetFill } from "react-icons/bs";
-import { GiSunrise, GiSunset } from "react-icons/gi";
-import { CiTempHigh } from "react-icons/ci";
 import { Box, Stack } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -25,6 +22,7 @@ export const DeviceMenuItem = ({ isMobile, isCollapsed, deviceInfo, userId, sele
       dispatch(devMetaData_Store(deviceInfo));
     }
   }, selectedId)
+
   useEffect(() => {
     console.log('clickedJOIN');
     const devId = deviceInfo.name;
@@ -63,6 +61,7 @@ export const DeviceMenuItem = ({ isMobile, isCollapsed, deviceInfo, userId, sele
       socketIo.off(subScribTopic);
     }
   }, [socketIo, socketCounter])
+
   const saveDevInfoData = (message) => {
     const devInfoData = JSON.parse(message);
     setDevInfoItem(devInfoData);
@@ -70,8 +69,8 @@ export const DeviceMenuItem = ({ isMobile, isCollapsed, deviceInfo, userId, sele
       // console.log('Dev Info Changed', selectedId, devInfoItem)
       dispatch(devInfoData_Store(devInfoItem));
     }
-
   }
+
   return (
     <ListItem
       selected={selectedId === deviceInfo.id}
@@ -83,11 +82,6 @@ export const DeviceMenuItem = ({ isMobile, isCollapsed, deviceInfo, userId, sele
           <Box display={'flex'}>
             <Typography variant="h5" fontWeight={'bold'} textAlign={"start"}>{deviceInfo.DeviceName}</Typography>
           </Box>
-          <Stack direction={"row"} spacing={1} justifyContent={'flex-start'} alignItems={"center"}>
-            <GiSunrise color={colors.grey[100]} /> <span>xx:xx</span>
-            <GiSunset color={colors.grey[100]} /> <span>xx:xx</span>
-            <CiTempHigh color={colors.grey[100]} /> <span>xx:xx</span>
-          </Stack>
         </Box>
 
       </ListItemButton>

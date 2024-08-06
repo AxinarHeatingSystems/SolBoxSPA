@@ -3,8 +3,10 @@ import { ProSidebar } from "react-pro-sidebar";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Swal from "sweetalert2";
-
-import { Alert, Box, Button, Divider, Grid, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Modal, TextField, Typography, useTheme } from "@mui/material";
+import { BsSunriseFill, BsSunsetFill } from "react-icons/bs";
+import { GiSunrise, GiSunset } from "react-icons/gi";
+import { CiTempHigh } from "react-icons/ci";
+import { Alert, Box, Button, Divider, Grid, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Modal, Stack, TextField, Typography, useTheme } from "@mui/material";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
@@ -521,6 +523,22 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
               {!isCollapsed && <Box marginY={1}>
                 <Typography variant='h5' fontWeight={700} textAlign={'center'}>{userData.firstName} {userData.lastName}</Typography>
               </Box>}
+              <Box display={'block'} justifyContent={'center'}>
+                <Stack direction={"column"} spacing={1} justifyContent={'flex-start'} alignItems={"center"}>
+                  <Stack direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
+                    <GiSunrise color={colors.grey[100]} size={20} />
+                    <Typography variant='h4'>xx:xx</Typography>
+                  </Stack>
+                  <Stack direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
+                    <GiSunset color={colors.grey[100]} size={20} />
+                    <Typography variant='h4'>xx:xx</Typography>
+                  </Stack>
+                  <Stack direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
+                    <CiTempHigh color={colors.grey[100]} size={20} />
+                    <Typography variant='h4'>xx:xx</Typography>
+                  </Stack>
+                </Stack>
+              </Box>
               <Box display={'block'} justifyContent={isCollapsed ? 'center' : 'space-between'} alignItems={'center'} flexWrap={'wrap'}>
                 {/* <Button variant="outlined" color='success' sx={{ marginY: '10px' }} size={!isCollapsed ? "medium" : "small"}>
                   {!isCollapsed ? t("setting") : <ManageAccountsIcon />}
