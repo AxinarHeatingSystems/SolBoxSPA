@@ -33,6 +33,7 @@ export const SolarPanel = ({ isMobile, isPortrait, isOn, cycleVal, color }) => {
         </g>
         </svg>
         <span className='devOn-Cycle' style={{ color: color }}>{cycleVal}</span>
+
       </Card>
     </>
 

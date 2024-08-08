@@ -1,5 +1,6 @@
 
 import axios from 'axios';
+import { getSunrise, getSunset } from 'sunrise-sunset-js';
 
 export const BASE_BACKEND_URL = process.env.REACT_APP_BASE_BACKEND_URL
 export const GoogleClientID = process.env.REACT_APP_GOOGLE_CLIENT_ID
@@ -21,6 +22,65 @@ export const logoutApi = async () => {
   localStorage.removeItem("userData");
   window.location.href = '/login';
 
+}
+
+export const getIpAddressApi = async () => {
+  let resultState = {state: '', data: {}};
+  let apiUrl = 'https://api.ipify.org/?format=json';
+  await axios({
+    method: 'get',
+    url: apiUrl
+  }).then(function(response) {
+    resultState.state = 'success';
+    resultState.data = response.data;
+  }).catch(function(err) {
+    resultState.state = 'error';
+    resultState.data = err.message;
+  })
+  return resultState;
+}
+
+export const getGeoDataApi = async (ipaddress) => {
+  let resultState = {state: '', data: {}};
+  const apiUrl = `http://www.geoplugin.net/json.gp?ip=${ipaddress}`;
+
+  await axios({
+    method: 'get',
+    url: apiUrl
+  }).then(function(response) {
+    const sunset = getSunset(response.data.geoplugin_latitude, response.data.geoplugin_longitude);
+    const sunrise = getSunrise(response.data.geoplugin_latitude, response.data.geoplugin_longitude);
+    const tmpSunSet = new Date(sunset);
+    const tmpSunRise = new Date(sunrise);
+    resultState.state = 'success';
+    resultState.data = {
+      sunset: `${tmpSunSet.getHours()}:${tmpSunSet.getMinutes()}`,
+      sunrise: `${tmpSunRise.getHours()}:${tmpSunRise.getMinutes()}`,
+      lat: response.data.geoplugin_latitude,
+      lng: response.data.geoplugin_longitude
+    }
+  }).catch(function(err) {
+    resultState.state = 'error';
+    resultState.data = err.message;
+  })
+  return resultState;
+}
+
+export const getCtWeatherApi = async(lat, lng) => {
+  let resultState = {state: '', data: {}};
+  const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,weather_code,wind_speed_10m,wind_direction_10m`
+  await axios({
+    method: 'get',
+    url: apiUrl
+  }).then(function(response) {
+    resultState.state = 'success';
+    resultState.data = response.data
+  }).catch(function(err) {
+    resultState.state = 'error';
+    resultState.data = err.message;
+  })
+
+  return resultState;
 }
 
 export const getAllUsers = async () => {

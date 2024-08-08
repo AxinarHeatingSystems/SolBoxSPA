@@ -10,6 +10,8 @@ import { HeatDev } from '../DeviceComponents/heatDev';
 import { SolarPanel } from '../DeviceComponents/solarPanel';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { WaterTank } from '../DeviceComponents/waterTank';
+import { Stack } from '@mui/system';
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 64,
@@ -128,6 +130,9 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const [priceKWH, setPriceKWH] = useState(0);
   const [isUser, setIsUser] = useState(null);
   const [devCyle, setDevCycle] = useState('');
+  const [devPower, setDevPower] = useState(0);
+  const [isDevFault, setIsDevFault] = useState(false);
+  const [faultMsg, setFaultMsg] = useState('');
   // console.log(userData);
   useEffect(() => {
     if (userData.attributes) {
@@ -151,7 +156,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
 
 
     if (isUser) {
-
+      console.log(devData)
       setDeviceId(devData.DeviceID)
       setDeviceName(devData.DeviceName)
       setDevOn(devData.DeviceEnabled);
@@ -165,6 +170,17 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
       setPriceKWH(tmpPriceKWH)
       setSavePrice(parseFloat((devData.WattHours / 1000) * tmpPriceKWH).toFixed(2));
       // setMaxVal(parseFloat(devData.ATHwattHours));
+      setDevPower(devData.DutyCycle);
+      if (devData.LoadFaultFlag !== 0 || devData.WaterTempAlert === true) {
+        setIsDevFault(true);
+        setDevPower(0);
+        if (devData.LoadFaultFlag !== 0) {
+          setFaultMsg(t('load_fault'))
+        }
+        if (devData.WaterTempAlert === true) {
+          setFaultMsg(t('water_temp'))
+        }
+      }
       if (isUser === 'user') {
         setDevCycle(`${parseInt(devData.DutyCycle)} %`);
         setMaxPower(parseInt(devData.maxPowerPer));
@@ -243,43 +259,30 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
           backgroundColor={colors.primary[400]}
           zIndex={0}
         >
-          <Grid container paddingX={5} paddingTop={isMobile ? 2 : 5} paddingBottom={isMobile ? 0 : 5} justifyContent={'space-between'} alignItems={'center'}>
+          <Grid container paddingX={5} paddingTop={isMobile ? isPortrait ? 7 : 2 : 5} paddingBottom={isMobile ? 0 : 5} justifyContent={'space-between'} alignItems={'center'}>
             <Grid order={{ xs: 1, md: 1 }} backgroundColor={colors.primary[400]} zIndex={1} item>
               <Box textAlign={'center'}>
-                <FormControlLabel
+                {!(isMobile && isPortrait) && <FormControlLabel
                   sx={{ margin: 'auto' }}
                   onClick={() => onHeatCtr()}
                   control={<MaterialUISwitch sx={{ m: 1 }} checked={heatOn} />}
                   label=""
-                />
+                />}
                 <HeatDev isMobile={isMobile} isPortrait={isPortrait} isOn={heatOn} />
               </Box>
             </Grid>
 
             <Grid order={isMobile ? { xs: 3 } : { xs: 2, md: 2 }} margin={'auto'} zIndex={1} item>
-              <Box>
-                <div className="bowl mx-auto" style={{ marginTop: isPortrait ? '0' : '-20px', background: colors.primary[400], transform: isMobile ? isPortrait ? 'scale(0.8)' : 'scale(0.5)' : 'scale(1)' }}>
-                  <div className="inner">
-                    <div className="fill">
-                      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300" enableBackground="new 0 0 300 300" xmlSpace="preserve">
-                        <path className="waveShape" d="M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4
-	c-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9
-	c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z" />
-                      </svg>
-                    </div>
-                    <h1 className='inner-text' >{parseFloat(devData.WaterTemp).toFixed(1)} ºC</h1>
-                  </div>
-                </div>
-              </Box>
+              <WaterTank isMobile={isMobile} isPortrait={isPortrait} WaterTemp={parseFloat(devData.WaterTemp).toFixed(1)} bgColor={colors.primary[400]} />
             </Grid>
             <Grid order={isMobile ? { xs: 2 } : { xs: 3, md: 3 }} backgroundColor={colors.primary[400]} zIndex={1} item>
               <Box textAlign={'center'}>
-                <FormControlLabel
+                {!(isMobile && isPortrait) && <FormControlLabel
                   sx={{ margin: 'auto', width: '100%', justifyContent: 'center', alignItems: "center", color: theme.palette.mode === "dark" ? 'yellow' : 'gray', fontSize: '16px !important', fontWeight: '600' }}
                   onClick={() => onDevCtr()}
                   control={<DevOnOffSwitch sx={{ m: 1 }} checked={devOn} />}
-                />
-                <SolarPanel isMobile={isMobile} isPortrait={isPortrait} isOn={devOn} cycleVal={devCyle} color={colors.greenAccent[400]} />
+                />}
+                <SolarPanel isMobile={isMobile} isPortrait={isPortrait} isOn={devOn} cycleVal={isDevFault ? faultMsg : devCyle} color={isDevFault ? 'red' : colors.greenAccent[400]} />
               </Box>
             </Grid>
           </Grid>
@@ -316,7 +319,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                     <>
                     {(() => {
                       const arr = [];
-                      for (let i = 0; i < (Math.floor(parseFloat(devCyle) * 0.1) + 1); i++) {
+                      for (let i = 0; i < (Math.floor(parseFloat(devPower) * 0.1) + 1); i++) {
                         arr.push(
                           <span className={`solor-cirl cirl${i}`}></span>
                         );
@@ -348,7 +351,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                     {devOn && <>
                       {(() => {
                         const arr = [];
-                        for (let i = 0; i < (Math.floor(parseFloat(devCyle) * 0.1) + 1); i++) {
+                        for (let i = 0; i < (Math.floor(parseFloat(devPower) * 0.1) + 1); i++) {
                           arr.push(
                             <span className={`mobile-solar-cirl cirl${i}`}></span>
                           );
@@ -362,6 +365,23 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
             </>}
 
           </Grid>
+          {(isMobile && isPortrait) && <Stack position={'absolute'} zIndex={999} bottom={0} direction={'row'} spacing={1} justifyContent={'space-between'} width={'100%'}>
+            <Box width={'100%'} textAlign={'center'}>
+              <FormControlLabel
+                sx={{ margin: 'auto' }}
+                onClick={() => onHeatCtr()}
+                control={<MaterialUISwitch sx={{ m: 1 }} checked={heatOn} />}
+                label=""
+              />
+            </Box>
+            <Box width={'100%'} textAlign={'center'}>
+              <FormControlLabel
+                sx={{ margin: 'auto', width: '100%', justifyContent: 'center', alignItems: "center", color: theme.palette.mode === "dark" ? 'yellow' : 'gray', fontSize: '16px !important', fontWeight: '600' }}
+                onClick={() => onDevCtr()}
+                control={<DevOnOffSwitch sx={{ m: 1 }} checked={devOn} />}
+              />
+            </Box>
+          </Stack>}
           {isMobile && isPortrait && < Box className="dev-label">
             <Typography variant='h4' fontWeight={700}>{deviceName}</Typography>
             <Typography variant='body1'>{deviceId}</Typography>
@@ -495,7 +515,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
 
 
               {/* <GaugeChart id="gauge-chart1" /> */}
-              {isMobile && <Grid xs={12} container spacing={1} paddingX={1} paddingTop={0} paddingBottom={1} marginTop={-1}>
+              {(isMobile && !isPortrait) && <Grid xs={12} container spacing={1} paddingX={1} paddingTop={0} paddingBottom={1} marginTop={-1}>
                 <Grid item xs={12} paddingX={1}>
                   <Box display={'flex'} justifyContent={'space-between'} alignItems={'end'}
                     style={{ borderBottom: '3px solid', paddingBottom: '2px', flexWrap: 'wrap' }}>

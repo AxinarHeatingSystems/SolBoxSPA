@@ -1,7 +1,7 @@
 
 @keyframes fillAction {
     0% {
-        -webkit-transform: translate(0, 150px);
+        -webkit-transform: translate(0, 10px);
     }
 
     100% {
@@ -61,7 +61,8 @@
 
 .inner-text {
     position: absolute;
-    top: -18px;
+    color: white !important;
+        top: -18px;
         left: 0;
         height: 100%;
         font-size: 30px;
@@ -70,6 +71,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    
 }
 
 .bowl .inner {

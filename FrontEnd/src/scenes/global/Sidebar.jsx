@@ -1,18 +1,11 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { ProSidebar } from "react-pro-sidebar";
-import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Swal from "sweetalert2";
-import { BsSunriseFill, BsSunsetFill } from "react-icons/bs";
 import { GiSunrise, GiSunset } from "react-icons/gi";
 import { CiTempHigh } from "react-icons/ci";
 import { Alert, Box, Button, Divider, Grid, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Modal, Stack, TextField, Typography, useTheme } from "@mui/material";
-import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import LogoutIcon from '@mui/icons-material/Logout';
-import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import "react-pro-sidebar/dist/css/styles.css";
 
@@ -21,7 +14,7 @@ import { ColorModeContext, tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import { getUserDeviceListApi, getDevicesApi, logoutApi, getAllDevsApi, getRemoveDeviceApi } from '../../axios/ApiProvider';
+import { getUserDeviceListApi, getDevicesApi, logoutApi, getAllDevsApi, getRemoveDeviceApi, getIpAddressApi, getGeoDataApi, getCtWeatherApi } from '../../axios/ApiProvider';
 import { useDispatch, useSelector } from 'react-redux';
 import { SetLang } from '../../components/Language/SetLang';
 import { useTranslation } from 'react-i18next';
@@ -30,8 +23,9 @@ import axios from 'axios';
 import { parsingDeviceData } from '../../axios/ParseProvider';
 import { DeviceMenuItem } from './DeviceMenuItem';
 import { devInfoData_Store } from '../../store/actions/mainAction';
+import { getSunrise, getSunset } from 'sunrise-sunset-js';
 
-// const EndPoint = process.env.REACT_APP_BASE_BACKEND_URL;
+const weatherID = process.env.REACT_APP_WEATHERAPPID;
 const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, socketIo }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -45,6 +39,9 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
   const [isAddDev, setIsAddDev] = useState(false);
   const [pairingData, setPairingData] = useState();
   const [devList, setDevList] = useState([]);
+  const [sunSetTime, setSunSetTime] = useState('00:00');
+  const [sunRiseTime, setSunRiseTime] = useState('00:00');
+  const [currentTemp, setCurrentTime] = useState('00');
   // const open = Boolean(anchorEl);
   const [open, setOpen] = useState(false);
   const [ipAddress, setIpAddress] = useState('')
@@ -66,10 +63,37 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
   const [pairingCode, setPairingCode] = useState();
   const [pairingCodeError, setPairingCodeError] = useState(false);
   const getData = async () => {
-    const res = await axios.get("https://api.ipify.org/?format=json");
-    console.log("ipData", res.data);
-    setIpAddress(res.data.ip);
-    return res.data.ip
+    // console.log(window.navigator.geolocation.watchPosition())
+    // navigator.geolocation.getCurrentPosition(function (position) {
+    //   console.log('GETCUURNET', position.coords.latitude, position.coords.longitude);
+    // });
+    const ipAddressRes = await getIpAddressApi();
+    if (ipAddressRes.state !== 'success') return;
+    setIpAddress(ipAddressRes.data.ip)
+    const geoRes = await getGeoDataApi(ipAddressRes.data.ip);
+    console.log(geoRes);
+    if (geoRes.state !== 'success') return ipAddressRes.data.ip;
+    setSunSetTime(geoRes.data.sunset);
+    setSunRiseTime(geoRes.data.sunrise)
+    // const getGeoRes = await axios.get(`http://www.geoplugin.net/json.gp?ip=${ipAddressRes.data.ip}`);
+    // console.log('gettingTEO', getGeoRes);
+    // // const openWeatherMap = `https://api.openweathermap.org/data/2.5/weather?lat=${getGeoRes.data.geoplugin_latitude}&lon=${getGeoRes.data.geoplugin_longitude}&appid=${weatherID}`;
+    // const sunset = getSunset(getGeoRes.data.geoplugin_latitude, getGeoRes.data.geoplugin_longitude);
+    // const sunrise = getSunrise(getGeoRes.data.geoplugin_latitude, getGeoRes.data.geoplugin_longitude);
+    // const tmpSunSet = new Date(sunset);
+    // const tmpSunRise = new Date(sunrise);
+    // console.log('sunRISESET', new Date(sunset), new Date(sunrise))
+    // setSunSetTime(`${tmpSunSet.getHours()}:${tmpSunSet.getMinutes()}`);
+    // setSunRiseTime(`${tmpSunRise.getHours()}:${tmpSunRise.getMinutes()}`)
+    const weatherRes = await getCtWeatherApi(geoRes.data.lat, geoRes.data.lng);
+    // const openWeatherMap = `https://api.open-meteo.com/v1/forecast?latitude=${geoRes.data.let}&longitude=${geoRes.data.lng}&current=temperature_2m,weather_code,wind_speed_10m,wind_direction_10m`
+    // const weatherRes = await axios.get(openWeatherMap)
+    if (weatherRes.state === 'success') {
+      // return res.data.ip
+      setCurrentTime(`${weatherRes.data.current.temperature_2m} ${weatherRes.data.current_units.temperature_2m}`)
+    }
+    console.log('weatherRes', weatherRes)
+    return ipAddressRes.data.ip
   };
 
   const desktopStyle = {
@@ -207,13 +231,6 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
     let devArr = [];
     devList.map(devItem => {
       const tempDevData = parsingDeviceData(devItem)
-      // const attrKeys = Object.keys(devItem.attributes);
-      // if (attrKeys.find(keyItem => keyItem === 'DeviceName')) {
-      //   devItem.DeviceName = devItem.attributes['DeviceName'][0];
-      // } else {
-      //   devItem.DeviceName = devItem.name
-      // }
-      // attrKeys.map(keyItem => devItem.attributes[keyItem] = devItem.attributes[keyItem][0])
       devArr.push(tempDevData);
     })
     return devArr;
@@ -239,7 +256,6 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
   }
   const handleSearchDevOpen = async (tmpIpAddress) => {
     setFindingPairable(true);
-    // setIsAddDev(true);
     if (isMobile) {
       handleClose()
     }
@@ -254,8 +270,6 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
     let ableDevArr = [];
     resDevs.map(devItem => {
       const existDev = allSavedDevs.find(dev => dev.name === devItem.clientid);
-      // console.log('dddd', existDev, /^[0-9A-F]{12}$/i.test(devItem.clientid));
-      console.log('TTTT', tmpIpAddress);
       if (existDev === undefined && /^[0-9A-F]{12}$/i.test(devItem.clientid)) {
         if (devItem.ip_address === tmpIpAddress) {
           const hexVal = parseInt(devItem.clientid, 16);
@@ -335,8 +349,6 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
       cancelButtonText: t('cancel')
     }).then(async (result) => {
       if (result.isConfirmed) {
-        // Swal.fire("Removed!", "", "success");
-        console.log(devItem)
         Swal.fire({
           title: t('removing'),
           timerProgressBar: true,
@@ -352,12 +364,6 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
         }
         loadDevlist();
       }
-      /* Read more about isConfirmed, isDenied below */
-      // if (result.isConfirmed) {
-      //   Swal.fire("Saved!", "", "success");
-      // } else if (result.isDenied) {
-      //   Swal.fire("Changes are not saved", "", "info");
-      // }
     });
   }
 
@@ -379,6 +385,13 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
           sx={{ backgroundColor: theme.palette.background.default, zIndex: 999999, top: '0px' }}
         >
           <Typography variant="h3" display={'flex'} alignItems={'baseline'} color={colors.grey[100]}>
+            {isMobile && !isPortrait && <img
+              alt="profile-user"
+              width={"30px"}
+              height={"30px"}
+              src={iotLogo}
+              style={{ cursor: "pointer", marginRight: '0.3rem' }}
+            />}
             {t("title")} {isMobile && !isPortrait && <Typography variant='body1' marginX={1}>( <b>{deviceName}</b> - {selected?.name})</Typography>}
           </Typography>
           <IconButton onClick={handleClick}>
@@ -412,6 +425,20 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
           <Typography color={colors.grey[300]} sx={{ m: "15px 0 5px 10px" }} variant='h5' fontWeight={700} textAlign={'start'} display={'flex'} justifyContent={'start'} alignItems={'center'}>
             <AccountCircleIcon marginX={2} /> {userData.firstName} {userData.lastName}
           </Typography>
+          <Stack direction={"row"} spacing={3} justifyContent={'center'} alignItems={"center"}>
+            <Stack direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
+              <GiSunrise color={colors.grey[100]} size={20} />
+              <Typography variant='h4'>{sunRiseTime}</Typography>
+            </Stack>
+            <Stack direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
+              <GiSunset color={colors.grey[100]} size={20} />
+              <Typography variant='h4'>{sunSetTime}</Typography>
+            </Stack>
+            <Stack direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
+              <CiTempHigh color={colors.grey[100]} size={20} />
+              <Typography variant='h4'>{currentTemp}</Typography>
+            </Stack>
+          </Stack>
           {/* <MenuItem >
             <ListItemIcon>
               <ManageAccountsIcon fontSize="small" />
@@ -425,7 +452,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
             <ListItemText>{t("logout")}</ListItemText>
           </MenuItem>
           <Divider />
-          <Typography
+          {/* <Typography
             variant="h6"
             color={colors.grey[300]}
             sx={{ m: "15px 0 5px 20px" }}
@@ -440,7 +467,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
               {theme.palette.mode === "dark" ? t("light_mode") : t("dark_mode")}
             </ListItemText>
           </ListItem>
-          <Divider />
+          <Divider /> */}
           <ListItem sx={{ padding: '5px 0px' }}>
             <Box width={'100%'} display={'flex'} justifyContent={'space-between'} alignItems={'baseline'}>
               <Typography
@@ -467,23 +494,6 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
                 socketIo={socketIo}
                 onRemoveDevice={onRemoveDevice} />
             </MenuItem>
-
-            // <MenuItem key={key} selected={selected.id === devItem.id}
-            //   sx={{ width: '100%' }}>
-            //   <ListItemButton sx={{ padding: '0px' }} onClick={() => { onSelectDevId(devItem); handleClose() }}>
-            //     <ListItemIcon>
-            //       <HomeOutlinedIcon fontSize="small" />
-            //     </ListItemIcon>
-            //     <ListItemText>{devItem.DeviceName}</ListItemText>
-            //   </ListItemButton>
-            //   <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
-            //     {devItem.attributes?.devOwner === userData.id && <IconButton onClick={() => { onRemoveDevice(devItem); handleClose() }} sx={{ padding: 0 }}>
-            //       <DeleteForeverIcon color='error' />
-            //     </IconButton>}
-            //     <LightbulbIcon color={devItem.connected ? 'success' : 'primary'} />
-            //   </Box>
-
-            // </MenuItem>
           ))}
         </List>
       </>}
@@ -507,7 +517,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
             </Box>
           </ListItem>
           <Divider />
-          <ListItem>
+          <ListItem sx={{ paddingX: isCollapsed ? 0 : '16px' }}>
             <Box width={'100%'} marginY={1}>
               <Box display="flex" justifyContent="center" alignItems="center"
                 style={{ cursor: "pointer", width: '100%' }}
@@ -524,20 +534,26 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
                 <Typography variant='h5' fontWeight={700} textAlign={'center'}>{userData.firstName} {userData.lastName}</Typography>
               </Box>}
               <Box display={'block'} justifyContent={'center'}>
-                <Stack direction={"column"} spacing={1} justifyContent={'flex-start'} alignItems={"center"}>
-                  <Stack direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
+                <Grid container spacing={1}>
+                  <Grid item xs={4} textAlign={'end'}>
                     <GiSunrise color={colors.grey[100]} size={20} />
-                    <Typography variant='h4'>xx:xx</Typography>
-                  </Stack>
-                  <Stack direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
+                  </Grid>
+                  <Grid item xs={8} textAlign={'start'}>
+                    <Typography variant='h4'>{sunRiseTime}</Typography>
+                  </Grid>
+                  <Grid item xs={4} textAlign={'end'}>
                     <GiSunset color={colors.grey[100]} size={20} />
-                    <Typography variant='h4'>xx:xx</Typography>
-                  </Stack>
-                  <Stack direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
+                  </Grid>
+                  <Grid item xs={8} textAlign={'start'}>
+                    <Typography variant='h4'>{sunSetTime}</Typography>
+                  </Grid>
+                  <Grid item xs={4} textAlign={'end'}>
                     <CiTempHigh color={colors.grey[100]} size={20} />
-                    <Typography variant='h4'>xx:xx</Typography>
-                  </Stack>
-                </Stack>
+                  </Grid>
+                  <Grid item xs={8} textAlign={'start'}>
+                    <Typography variant='h4'>{currentTemp}</Typography>
+                  </Grid>
+                </Grid>
               </Box>
               <Box display={'block'} justifyContent={isCollapsed ? 'center' : 'space-between'} alignItems={'center'} flexWrap={'wrap'}>
                 {/* <Button variant="outlined" color='success' sx={{ marginY: '10px' }} size={!isCollapsed ? "medium" : "small"}>
@@ -561,7 +577,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
             <SetLang />
           </MenuItem>
           <Divider />
-          <Typography
+          {/* <Typography
             variant="h6"
             color={colors.grey[300]}
             sx={{ m: "15px 0 5px 20px" }}
@@ -583,7 +599,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
               </ListItemIcon>
             </ListItemButton>
           }
-          <Divider />
+          <Divider /> */}
           <ListItem sx={{ padding: '5px 0px' }}>
             <Box width={'100%'} display={isCollapsed ? 'block' : 'flex'} justifyContent={'space-between'} alignItems={'baseline'}>
               <Typography
@@ -600,26 +616,6 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
           </ListItem>
 
           {devList.map((devItem, key) => (
-            // <ListItem
-            //   key={key}
-            //   selected={selected.id === devItem.id}
-            //   sx={{ display: isCollapsed ? 'block' : 'flex' }}
-            // > 
-            //   <ListItemButton sx={{ padding: '0px' }} onClick={() => { onSelectDevId(devItem) }}>
-            //     {!isCollapsed && <ListItemIcon sx={{ justifyContent: 'center' }}>
-            //       <HomeOutlinedIcon />
-            //     </ListItemIcon>}
-            //     <ListItemText primary={devItem.DeviceName} />
-            //   </ListItemButton>
-            //   <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
-            //     {devItem.attributes?.devOwner === userData.id && < IconButton onClick={() => { onRemoveDevice(devItem) }} sx={{ padding: 0 }}>
-            //       <DeleteForeverIcon color='error' />
-            //     </IconButton>}
-            //     <LightbulbIcon color={devItem.connected ? 'success' : 'primary'} />
-            //   </Box>
-
-
-            // </ListItem>
             <DeviceMenuItem 
               key={key}
               isMobile={isMobile}
