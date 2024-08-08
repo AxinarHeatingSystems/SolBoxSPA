@@ -331,8 +331,32 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
             {isMobile && <>
               <Grid item xs={12} marginX={'auto'} marginTop={'-25%'}>
                 <Box className="dev-connect-border" sx={{}}>
-                  <Box className={heatOn ? "connect-content heat-connect-border" : "connect-content"}></Box>
-                  <Box className={devOn ? "connect-content solar-connect-border" : "connect-content"}></Box>
+                  <Box className={heatOn ? "connect-content heat-connect-border" : "connect-content"}>
+                    {heatOn && <>
+                      {(() => {
+                        const arr = [];
+                        for (let i = 0; i < 10; i++) {
+                          arr.push(
+                            <span className={`mobile-heat-cirl cirl${i}`}></span>
+                          );
+                        }
+                        return arr;
+                      })()}
+                    </>}
+                  </Box>
+                  <Box className={devOn ? "connect-content solar-connect-border" : "connect-content"}>
+                    {devOn && <>
+                      {(() => {
+                        const arr = [];
+                        for (let i = 0; i < (Math.floor(parseFloat(devCyle) * 0.1) + 1); i++) {
+                          arr.push(
+                            <span className={`mobile-solar-cirl cirl${i}`}></span>
+                          );
+                        }
+                        return arr;
+                      })()}
+                    </>}
+                  </Box>
                 </Box>
               </Grid>
             </>}
