@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useTheme, styled, Box, Typography, Switch, FormControlLabel, Grid } from "@mui/material";
+import { useTheme, styled, Box, Typography, Switch, FormControlLabel, Grid, Chip } from "@mui/material";
 import GaugeComponent from 'react-gauge-component'
 import { tokens } from "../../theme";
 import './statusBoard.css';
@@ -259,7 +259,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
           backgroundColor={colors.primary[400]}
           zIndex={0}
         >
-          <Grid container paddingX={5} paddingTop={isMobile ? isPortrait ? 7 : 2 : 5} paddingBottom={isMobile ? 0 : 5} justifyContent={'space-between'} alignItems={'center'}>
+          <Grid container paddingX={5} paddingTop={isMobile ? isPortrait ? 5 : 2 : 5} paddingBottom={isMobile ? 0 : 5} justifyContent={'space-between'} alignItems={'center'}>
             <Grid order={{ xs: 1, md: 1 }} backgroundColor={colors.primary[400]} zIndex={1} item>
               <Box textAlign={'center'}>
                 {!(isMobile && isPortrait) && <FormControlLabel
@@ -399,6 +399,11 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
               textAlign={'center'}
               position={'relative'}
             >
+              <Box width={'100%'} paddingTop={1}>
+                <Chip sx={{ background: '#0000ff', color: 'white' }} size='small' label="Too low temperature!"></Chip>
+                <Chip sx={{ background: '#1af519', color: 'white' }} size='small' label="Low temperature!"></Chip>
+                <Chip sx={{ background: '#ef290b', color: 'white' }} size='small' label="Too high temperature!"></Chip>
+              </Box>
               <Box position={'relative'} paddingBottom={isMobile ? 0 : 2}>
                 <GaugeComponent
                   type="semicircle"
@@ -463,7 +468,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                           color: '#0000ff',
                           showTick: true,
                           tooltip: {
-                            style: { zIndex: 99999 },
+                            style: { zIndex: 99999, position: 'fixed' },
                             text: 'Too low temperature!'
                           },
                           onClick: () => console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"),
@@ -475,7 +480,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                           color: '#1af519',
                           showTick: true,
                           tooltip: {
-                            style: { zIndex: 99999 },
+                            style: { zIndex: 99999, position: 'fixed' },
                             text: 'Low temperature!'
                           }
                         },
@@ -483,7 +488,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                           color: '#ef290b',
                           showTick: true,
                           tooltip: {
-                            style: { zIndex: 99999 },
+                            style: { zIndex: 99999, position: 'fixed' },
                             text: 'Too high temperature!'
                           }
                         }

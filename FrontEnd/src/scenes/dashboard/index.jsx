@@ -4,7 +4,7 @@ import { Box, Grid, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import './dashboard.css'
 import './loading.css'
-import iotLogo from '../../assets/logo.png'
+import iotGLogo from '../../assets/logo_green.png'
 import InsightsIcon from '@mui/icons-material/Insights';
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -436,7 +436,13 @@ const Dashboard = () => {
                       </Grid>
                     </Box>}
                     {isMobileDetect && <Box sx={mobileTabmenuStyle}>
-                      <Stack direction={'row'} spacing={0} width={'100vw'} alignItems={'flex-end'} justifyContent={'center'}>
+                      <Stack
+                        sx={{
+                          background: '#fcfcfc00',
+                          paddingTop: '2px',
+                          boxShadow: 'inset 0px -1px 3px -1px'
+                        }}
+                        direction={'row'} spacing={0} width={'100vw'} alignItems={'flex-end'} justifyContent={'center'}>
                         <Box
                           backgroundColor={colors.primary[400]}
                           width={'100%'}
@@ -473,7 +479,7 @@ const Dashboard = () => {
                             <img
                               width={'70px'}
                               height={'70px'}
-                              src={iotLogo}
+                              src={iotGLogo}
                               alt='IconImg'
                             />
                           </Box>
