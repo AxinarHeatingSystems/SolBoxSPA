@@ -49,7 +49,7 @@ export const WaterTank = ({ isMobile, isPortrait, WaterTemp, bgColor }) => {
       })()} */}
 
 
-      <div className="bowl mx-auto" style={{ marginTop: isPortrait ? '0' : '-20px', background: bgColor, transform: isMobile ? isPortrait ? 'scale(0.8)' : 'scale(0.5)' : 'scale(1)' }}>
+      <div className="bowl mx-auto" style={{ marginTop: isPortrait ? '0' : '-20px', background: bgColor, transform: isMobile ? isPortrait ? 'scale(0.8)' : 'scale(0.7)' : 'scale(1)' }}>
         <div className="inner">
           <div className="fill">
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300" enableBackground="new 0 0 300 300" xmlSpace="preserve">

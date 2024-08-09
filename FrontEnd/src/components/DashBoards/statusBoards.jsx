@@ -399,63 +399,15 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
               textAlign={'center'}
               position={'relative'}
             >
-              <Box width={'100%'} paddingTop={1}>
+              {isMobile && <Box width={'100%'} paddingTop={1}>
                 <Chip sx={{ background: '#0000ff', color: 'white' }} size='small' label="Too low temperature!"></Chip>
-                <Chip sx={{ background: '#1af519', color: 'white' }} size='small' label="Low temperature!"></Chip>
+                <Chip sx={{ background: '#30a130', color: 'white' }} size='small' label="Low temperature!"></Chip>
                 <Chip sx={{ background: '#ef290b', color: 'white' }} size='small' label="Too high temperature!"></Chip>
-              </Box>
+              </Box>}
               <Box position={'relative'} paddingBottom={isMobile ? 0 : 2}>
-                <GaugeComponent
-                  type="semicircle"
-                  arc={{
-                    width: 0.1,
-                    padding: 0.01,
-                    cornerRadius: 10,
-                    // gradient: true,
-                    subArcs: [
-                      {
-                        className: 'arc1',
-                        limit: minPower,
-                        color: '#0000ff',
-                        showTick: false,
-                        tooltip: {
-                          text: 'Too low temperature!'
-                        },
-                        onClick: () => console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"),
-                        onMouseMove: () => console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"),
-                        onMouseLeave: () => console.log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"),
-                      },
-                      {
-                        limit: maxPower,
-                        color: '#1af519',
-                        showTick: false,
-                        tooltip: {
-                          text: 'Low temperature!'
-                        }
-                      },
-                      {
-                        color: '#ef290b',
-                        tooltip: {
-                          text: 'Too high temperature!'
-                        }
-                      }
-                    ]
-                  }}
-                  pointer={{
-                    color: '#345243',
-                    length: 0.80,
-                    width: 15,
-                    elastic: true,
-                  }}
-                  // pointer={{ type: "blob", animationDelay: 0 }}
-                  value={nowPower}
-                  minValue={0}
-                  maxValue={maxVal}
-                />
-                <div ref={gaugeRef} className='overide-gauge'>
+                <Box position={'relative'}>
                   <GaugeComponent
-
-                    type='semicircle'
+                    type="semicircle"
                     arc={{
                       width: 0.1,
                       padding: 0.01,
@@ -466,9 +418,8 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                           className: 'arc1',
                           limit: minPower,
                           color: '#0000ff',
-                          showTick: true,
+                          showTick: false,
                           tooltip: {
-                            style: { zIndex: 99999, position: 'fixed' },
                             text: 'Too low temperature!'
                           },
                           onClick: () => console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"),
@@ -477,30 +428,86 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                         },
                         {
                           limit: maxPower,
-                          color: '#1af519',
-                          showTick: true,
+                          color: '#30a130',
+                          showTick: false,
                           tooltip: {
-                            style: { zIndex: 99999, position: 'fixed' },
                             text: 'Low temperature!'
                           }
                         },
                         {
                           color: '#ef290b',
-                          showTick: true,
                           tooltip: {
-                            style: { zIndex: 99999, position: 'fixed' },
                             text: 'Too high temperature!'
                           }
                         }
                       ]
                     }}
-                    pointer={{ type: "blob", animationDelay: 0, elastic: true }}
-                    labels={{ valueLabel: { style: { position: 'absolute', display: 'none' } } }}
-                    value={lastDayPower}
-                  minValue={0}
-                  maxValue={maxVal}
-                />
-                </div>
+                    pointer={{
+                      color: '#345243',
+                      length: 0.80,
+                      width: 15,
+                      elastic: true,
+                    }}
+                    // pointer={{ type: "blob", animationDelay: 0 }}
+                    value={nowPower}
+                    minValue={0}
+                    maxValue={maxVal}
+                  />
+                  <div ref={gaugeRef} className='overide-gauge'>
+                    <GaugeComponent
+
+                      type='semicircle'
+                      arc={{
+                        width: 0.1,
+                        padding: 0.01,
+                        cornerRadius: 10,
+                        // gradient: true,
+                        subArcs: [
+                          {
+                            className: 'arc1',
+                            limit: minPower,
+                            color: '#0000ff',
+                            showTick: true,
+                            tooltip: {
+                              style: { zIndex: 99999, position: 'fixed' },
+                              text: 'Too low temperature!'
+                            },
+                            onClick: () => console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"),
+                            onMouseMove: () => console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"),
+                            onMouseLeave: () => console.log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"),
+                          },
+                          {
+                            limit: maxPower,
+                            color: '#30a130',
+                            showTick: true,
+                            tooltip: {
+                              style: { zIndex: 99999, position: 'fixed' },
+                              text: 'Low temperature!'
+                            }
+                          },
+                          {
+                            color: '#ef290b',
+                            showTick: true,
+                            tooltip: {
+                              style: { zIndex: 99999, position: 'fixed' },
+                              text: 'Too high temperature!'
+                            }
+                          }
+                        ]
+                      }}
+                      pointer={{
+                        type: "blob", animationDelay: 0, elastic: true, tooltip: {
+                          text: 'show Yesterday'
+                        }
+                      }}
+                      labels={{ valueLabel: { style: { position: 'absolute', display: 'none' } } }}
+                      value={lastDayPower}
+                      minValue={0}
+                      maxValue={maxVal}
+                    />
+                  </div>
+                </Box>
+
 
                 <Grid position={'absolute'} container spacing={1} paddingX={7} justifyContent={'space-between'}
                   sx={{ top: isMobile ? '-10px' : 0, width: '100%', height: '100%' }}
