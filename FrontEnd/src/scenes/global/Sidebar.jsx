@@ -69,10 +69,13 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
     // });
     const ipAddressRes = await getIpAddressApi();
     if (ipAddressRes.state !== 'success') return;
-    setIpAddress(ipAddressRes.data.ip)
-    const geoRes = await getGeoDataApi(ipAddressRes.data.ip);
+    // setIpAddress(ipAddressRes.data.ip)
+    setIpAddress(ipAddressRes.data.query)
+    const tempIpAddress = ipAddressRes.data.query;
+    console.log('IPADDRESS DATA', ipAddressRes.data)
+    const geoRes = await getGeoDataApi(tempIpAddress);
     console.log(geoRes);
-    if (geoRes.state !== 'success') return ipAddressRes.data.ip;
+    if (geoRes.state !== 'success') return tempIpAddress;
     setSunSetTime(geoRes.data.sunset);
     setSunRiseTime(geoRes.data.sunrise)
     // const getGeoRes = await axios.get(`http://www.geoplugin.net/json.gp?ip=${ipAddressRes.data.ip}`);
@@ -93,7 +96,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
       setCurrentTime(`${weatherRes.data.current.temperature_2m} ${weatherRes.data.current_units.temperature_2m}`)
     }
     console.log('weatherRes', weatherRes)
-    return ipAddressRes.data.ip
+    return tempIpAddress
   };
 
   const desktopStyle = {

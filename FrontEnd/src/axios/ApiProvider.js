@@ -29,7 +29,8 @@ export const logoutApi = async () => {
 export const getIpAddressApi = async () => {
 
   let resultState = {state: '', data: {}};
-  let apiUrl = 'https://api.ipify.org/?format=json';
+  // let apiUrl = 'https://api.ipify.org/?format=json';
+  let apiUrl = 'http://ip-api.com/json';
   await axios({
     method: 'get',
     url: apiUrl
@@ -41,7 +42,7 @@ export const getIpAddressApi = async () => {
     resultState.data = err.message;
   })
   return resultState;
-  
+
 }
 
 export const getGeoDataApi = async (ipaddress) => {
