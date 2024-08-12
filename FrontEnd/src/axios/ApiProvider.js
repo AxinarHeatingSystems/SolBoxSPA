@@ -12,11 +12,13 @@ const getJWTToken = () => {
   console.log('using Data', userData);
   return `Bearer ${userData.tokens}`;
 }
+
 const getUserData = () => {
   const strUser = localStorage.getItem('userData');
   const userData = JSON.parse(strUser);
   return userData;
 }
+
 export const logoutApi = async () => {
   
   localStorage.removeItem("userData");
@@ -25,6 +27,7 @@ export const logoutApi = async () => {
 }
 
 export const getIpAddressApi = async () => {
+
   let resultState = {state: '', data: {}};
   let apiUrl = 'https://api.ipify.org/?format=json';
   await axios({
@@ -38,15 +41,24 @@ export const getIpAddressApi = async () => {
     resultState.data = err.message;
   })
   return resultState;
+  
 }
 
 export const getGeoDataApi = async (ipaddress) => {
   let resultState = {state: '', data: {}};
   const apiUrl = `http://www.geoplugin.net/json.gp?ip=${ipaddress}`;
 
+
+  window.navigator.geolocation.getCurrentPosition(function(position) {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+    console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+  });
+
   await axios({
     method: 'get',
-    url: apiUrl
+    url: apiUrl,
+    contextType: 'json'
   }).then(function(response) {
     const sunset = getSunset(response.data.geoplugin_latitude, response.data.geoplugin_longitude);
     const sunrise = getSunrise(response.data.geoplugin_latitude, response.data.geoplugin_longitude);
