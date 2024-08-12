@@ -1,14 +1,17 @@
-import { ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton } from "@mui/material"
+import { ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, Typography, useTheme } from "@mui/material"
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
-import { Box } from "@mui/system";
+import { Box, Stack } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { devInfoData_Store, devMetaData_Store } from "../../store/actions/mainAction";
+import { tokens } from "../../theme";
 
 export const DeviceMenuItem = ({ isMobile, isCollapsed, deviceInfo, userId, selectedId, onSelectDevId, onRemoveDevice, socketIo }) => {
   const dispatch = useDispatch();
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   const [isConnected, setIsConnected] = useState(false);
   const [socketCounter, setSocketCounter] = useState(0);
   const [prevCounter, setPrevCounter] = useState(0);
@@ -19,6 +22,7 @@ export const DeviceMenuItem = ({ isMobile, isCollapsed, deviceInfo, userId, sele
       dispatch(devMetaData_Store(deviceInfo));
     }
   }, selectedId)
+
   useEffect(() => {
     console.log('clickedJOIN');
     const devId = deviceInfo.name;
@@ -57,6 +61,7 @@ export const DeviceMenuItem = ({ isMobile, isCollapsed, deviceInfo, userId, sele
       socketIo.off(subScribTopic);
     }
   }, [socketIo, socketCounter])
+
   const saveDevInfoData = (message) => {
     const devInfoData = JSON.parse(message);
     setDevInfoItem(devInfoData);
@@ -64,18 +69,21 @@ export const DeviceMenuItem = ({ isMobile, isCollapsed, deviceInfo, userId, sele
       // console.log('Dev Info Changed', selectedId, devInfoItem)
       dispatch(devInfoData_Store(devInfoItem));
     }
-
   }
+
   return (
     <ListItem
       selected={selectedId === deviceInfo.id}
       sx={{ display: isMobile ? 'flex' : isCollapsed ? 'block' : 'flex' }}
     >
       <ListItemButton sx={{ padding: '0px' }} onClick={() => { onSelectDevId(deviceInfo) }}>
-        {!isCollapsed && <ListItemIcon sx={{ justifyContent: 'center' }}>
-          <HomeOutlinedIcon />
-        </ListItemIcon>}
-        <ListItemText primary={deviceInfo.DeviceName} />
+        {!isCollapsed && <HomeOutlinedIcon sx={{ marginX: 0.5 }} />}
+        <Box>
+          <Box display={'flex'}>
+            <Typography variant="h5" fontWeight={'bold'} textAlign={"start"}>{deviceInfo.DeviceName}</Typography>
+          </Box>
+        </Box>
+
       </ListItemButton>
       <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
         {deviceInfo.attributes?.devOwner === userId && < IconButton onClick={() => { onRemoveDevice(deviceInfo) }} sx={{ padding: 0 }}>

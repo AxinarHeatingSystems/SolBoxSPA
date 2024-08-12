@@ -22,7 +22,7 @@ const StatBox = ({ isMobile, isPortrait, title, subtitle, icon, progress, increa
         </Box>}
 
       </Box>
-      <Box>
+      {!(isMobile && isPortrait) && <Box>
         <Typography
           variant={isMobile ? "body1" : "h4"}
           fontWeight="bold"
@@ -30,7 +30,7 @@ const StatBox = ({ isMobile, isPortrait, title, subtitle, icon, progress, increa
         >
           {title}
         </Typography>
-      </Box>
+      </Box>}
     </Box>
   );
 };

@@ -12,7 +12,15 @@
         /* width: 100%; */
         left: 50%;
         transform-origin: center;
-        transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+.overide-gauge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
 }
 @keyframes huerotate {
     0% {
@@ -21,6 +29,33 @@
 
     100% {
         filter: hue-rotate(360deg);
+    }
+}
+@keyframes mobileHeatDotAnim {
+    0% {
+        transform: translate(-5px 0px);
+    }
+
+    60% {
+        transform: translate(-5px, 145px);
+    }
+
+    100% {
+        transform: translate(120px, 145px);
+    }
+}
+
+@keyframes mobileSolarDotAnim {
+    0% {
+        transform: translate(5px 0px);
+    }
+
+    60% {
+        transform: translate(5px, 145px);
+    }
+
+    100% {
+        transform: translate(-120px, 145px);
     }
 }
 .dev-connect-border {
@@ -33,21 +68,44 @@
     }
         .connect-content {
             width: 50%;
+            position: relative;
         }
     .heat-connect-border {
-        border-bottom: 10px dotted white;
-            border-left: 10px dotted white;
-        border-image: url('../../assets/dotHeatAnimatio.svg');
+        /* border-bottom: 10px dotted white;
+                                                                                                                                                                                            border-left: 10px dotted white; */
+            /* border-image: url('../../assets/dotHeatAnimatio.svg');
             border-image-slice: 32;
             border-image-repeat: round;
+                */
             
         }
-        
+.mobile-heat-cirl {
+    position: absolute;
+    left: 0px;
+    width: 10px;
+    height: 10px;
+    background-color: rgb(7, 245, 35);
+    border: 1px solid rgb(7, 245, 35);
+    border-radius: 50%;
+    animation: mobileHeatDotAnim 5s infinite linear;
+}
+
         .solar-connect-border {
-            border-bottom: 10px dotted white;
-            border-right: 10px dotted white;
-        border-image: url('../../assets/dotSolarAnimation.svg');
+            /* border-bottom: 10px dotted white;
+                                                                                                                                                                                                                                                            border-right: 10px dotted white; */
+                /* border-image: url('../../assets/dotSolarAnimation.svg');
             border-image-slice: 34;
             border-image-repeat: round;
+                */
         
+}
+.mobile-solar-cirl {
+    position: absolute;
+    right: 0px;
+    width: 10px;
+    height: 10px;
+    background-color: rgb(7, 245, 35);
+    border: 1px solid rgb(7, 245, 35);
+    border-radius: 50%;
+    animation: mobileSolarDotAnim 5s infinite linear;
 }

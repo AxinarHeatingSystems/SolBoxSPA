@@ -4,7 +4,7 @@ import { Box, Grid, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import './dashboard.css'
 import './loading.css'
-
+import iotGLogo from '../../assets/logo_green.png'
 import InsightsIcon from '@mui/icons-material/Insights';
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -25,9 +25,17 @@ import { useTranslation } from 'react-i18next';
 import { getDevInfoApi } from '../../axios/ApiProvider';
 import { devMetaData_Store } from '../../store/actions/mainAction';
 import { parsingDeviceData } from '../../axios/ParseProvider';
+import { Stack } from '@mui/system';
 
 const EndPoint = process.env.REACT_APP_BASE_BACKEND_URL;
 // let socket;
+const mobileTabmenuStyle = {
+  position: 'fixed',
+  bottom: 0,
+  left: 0,
+  zIndex: 99
+}
+
 const tmpSocket = io(EndPoint);
 const Dashboard = () => {
   const { t } = useTranslation();
@@ -40,6 +48,7 @@ const Dashboard = () => {
   const isMobileDetect = useSelector(store => store.isMobileDetect);
   const isPortrait = useSelector(store => store.isPortrait);
   const devInfo = useSelector(store => store.devInfoData);
+  const devMetaData = useSelector(store => store.devMetaData);
   const [isSidebar, setIsSidebar] = useState(false);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -49,6 +58,9 @@ const Dashboard = () => {
   const [devTopic, setDevTopic] = useState('');
   const [controlTopic, setControlTopic] = useState('');
   const [scheduleTopic, setScheduleTopic] = useState('');
+  const [todayKWH, setTodayKWH] = useState();
+  const [priceKWH, setPriceKWH] = useState();
+  const [savePrice, setSavePrice] = useState();
   // const [devInfo, setDevInfo] = useState(null);
   // const [devMetaData, setDevMetaData] = useState();
   const [socketEventCount, setSocketEventCount] = useState(0);
@@ -59,6 +71,10 @@ const Dashboard = () => {
     if(deviceId){
       if(devInfo){
         setDeviceName(devInfo.DeviceName)
+        setTodayKWH(parseFloat(devInfo.WattHours / 1000).toFixed(2));
+        const tmpPriceKWH = devMetaData.attributes.priceKWH;
+        setPriceKWH(tmpPriceKWH)
+        setSavePrice(parseFloat((devInfo.WattHours / 1000) * tmpPriceKWH).toFixed(2));
         setIsLoading(false)
       }else{
         setIsLoading(false)
@@ -307,7 +323,7 @@ const Dashboard = () => {
                     <Header isMobile={isMobileDetect} title={devInfo.DeviceName} subtitle={devInfo.DeviceID} />
                   </Grid>}
                   <Grid item md={8} xs={12} sx={isMobileDetect ? { paddingTop: '0px !important' } : {}}>
-                    <Box marginTop={isMobileDetect ? '50px' : 0} >
+                    {!isMobileDetect && <Box sx={isMobileDetect ? mobileTabmenuStyle : {}}>
                       <Grid container spacing={isMobileDetect ? 0 : 2} marginBottom={isMobileDetect ? 0 : 2}>
                         <Grid item xs={3}>
                           <Box
@@ -418,14 +434,93 @@ const Dashboard = () => {
                           </Box>
                         </Grid>
                       </Grid>
-                    </Box>
+                    </Box>}
+                    {isMobileDetect && <Box sx={mobileTabmenuStyle}>
+                      <Stack
+                        sx={{
+                          background: '#fcfcfc00',
+                          paddingTop: '2px',
+                          boxShadow: 'inset 0px -1px 3px -1px'
+                        }}
+                        direction={'row'} spacing={0} width={'100vw'} alignItems={'flex-end'} justifyContent={'center'}>
+                        <Box
+                          backgroundColor={colors.primary[400]}
+                          width={'100%'}
+                          height={'fit-content'}
+                          sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
+                        >
+                          <Box maxHeight={'70px'} minHeight={'70px'}>
+                            <Typography variant='body1' fontWeight={'bold'} textAlign={'center'} flexWrap={'nowrap'}>Total Saved</Typography>
+                            <Typography variant='body1' textAlign={'center'} flexWrap={'nowrap'}>{todayKWH} kwh</Typography>
+                            <Typography variant='body1' textAlign={'center'} flexWrap={'nowrap'}>{savePrice} €</Typography>
+                          </Box>
+                        </Box>
+                        <Box
+                          onClick={() => { subMenuClicked(2) }}
+                          backgroundColor={isMobileDetect && submenuId === 2 ? colors.primary[300] : colors.primary[400]}
+                          width={'100%'}
+                          height={'fit-content'}
+                          sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
+                        >
+                          <Box maxHeight={'70px'} minHeight={'70px'} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+                            <SettingsSuggestIcon
+                              sx={{ color: colors.greenAccent[600], fontSize: "50px" }}
+                            />
+                          </Box>
+                        </Box>
+                        <Box
+                          onClick={() => { subMenuClicked(1) }}
+                          backgroundColor={isMobileDetect && submenuId === 1 ? colors.primary[300] : colors.primary[400]}
+                          width={'100%'}
+                          height={'fit-content'}
+                          sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
+                        >
+                          <Box padding={1}>
+                            <img
+                              width={'70px'}
+                              height={'70px'}
+                              src={iotGLogo}
+                              alt='IconImg'
+                            />
+                          </Box>
+                        </Box>
+                        <Box
+                          onClick={() => { subMenuClicked(3) }}
+                          backgroundColor={isMobileDetect && submenuId === 3 ? colors.primary[300] : colors.primary[400]}
+                          width={'100%'}
+                          height={'fit-content'}
+                          sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
+                        >
+                          <Box maxHeight={'70px'} minHeight={'70px'} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+                            <CalendarMonthIcon
+                              sx={{ color: colors.greenAccent[600], fontSize: "50px" }}
+                            />
+                          </Box>
+                        </Box>
+                        <Box
+                          onClick={() => { subMenuClicked(4) }}
+                          backgroundColor={isMobileDetect && submenuId === 4 ? colors.primary[300] : colors.primary[400]}
+                          width={'100%'}
+                          height={'fit-content'}
+                          sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
+                        >
+                          <Box maxHeight={'70px'} minHeight={'70px'} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+                            <LanIcon
+                              sx={{ color: colors.greenAccent[600], fontSize: "50px" }}
+                            />
+                          </Box>
+                        </Box>
+                      </Stack>
+                    </Box>}
                   </Grid>
                 </Grid>
               </Box>
+              <Box marginTop={isMobileDetect ? '50px' : 0}>
               {submenuId === 1 && <StatusBoards isMobile={isMobileDetect} isPortrait={isPortrait} devData={devInfo} socketIo={socket} />}
               {submenuId === 2 && <SettingBoards devData={devInfo} socketIo={socket} isMobile={isMobileDetect} isPortrait={isPortrait} />}
               {submenuId === 3 && <ScheduleBoards devData={devInfo} socketIo={socket} isPortrait={isPortrait} isMobile={isMobileDetect} />}
               {submenuId === 4 && <ShareBoards isMobile={isMobileDetect} isPortrait={isPortrait} />}
+              </Box>
             </Box>}
 
           </Box>

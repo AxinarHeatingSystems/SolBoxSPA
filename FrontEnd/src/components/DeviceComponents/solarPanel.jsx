@@ -1,6 +1,6 @@
 import Card from '@mui/material/Card';
 
-export const SolarPanel = ({ isMobile, isPortrait, isOn, cycleVal }) => {
+export const SolarPanel = ({ isMobile, isPortrait, isOn, cycleVal, color }) => {
   return (
     <>
     <Card sx={{ position: 'relative', height: 'fit-content', width: 'fit-content', padding: isMobile ? 2 : 4, backgroundColor: 'transparent' }}>
@@ -32,6 +32,8 @@ export const SolarPanel = ({ isMobile, isPortrait, isOn, cycleVal }) => {
           <polygon className="st0" points="65.71,48.87 66.51,56.95 81.58,56.95 80.1,48.87 65.71,48.87 65.71,48.87" />
         </g>
         </svg>
+        <span className='devOn-Cycle' style={{ color: color }}>{cycleVal}</span>
+
       </Card>
     </>
 

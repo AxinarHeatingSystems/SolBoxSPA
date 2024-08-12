@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useTheme, styled, Box, Typography, Switch, FormControlLabel, Grid } from "@mui/material";
+import React, { useEffect, useRef, useState } from 'react';
+import { useTheme, styled, Box, Typography, Switch, FormControlLabel, Grid, Chip } from "@mui/material";
 import GaugeComponent from 'react-gauge-component'
 import { tokens } from "../../theme";
 import './statusBoard.css';
@@ -10,6 +10,8 @@ import { HeatDev } from '../DeviceComponents/heatDev';
 import { SolarPanel } from '../DeviceComponents/solarPanel';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { WaterTank } from '../DeviceComponents/waterTank';
+import { Stack } from '@mui/system';
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 64,
@@ -110,6 +112,7 @@ const DevOnOffSwitch = styled(Switch)(({ theme }) => ({
 export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const gaugeRef = useRef();
   const colors = tokens(theme.palette.mode);
   const userData = useSelector(store => store.userData);
   const devMetaData = useSelector(store => store.devMetaData);
@@ -121,11 +124,15 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const [maxPower, setMaxPower] = useState(10);
   const [minPower, setMinPower] = useState(0);
   const [nowPower, setNowPower] = useState(0);
+  const [lastDayPower, setLastDayPower] = useState(0);
   const [todayKWH, setTodayKWH] = useState(0);
   const [savePrice, setSavePrice] = useState(0);
   const [priceKWH, setPriceKWH] = useState(0);
   const [isUser, setIsUser] = useState(null);
   const [devCyle, setDevCycle] = useState('');
+  const [devPower, setDevPower] = useState(0);
+  const [isDevFault, setIsDevFault] = useState(false);
+  const [faultMsg, setFaultMsg] = useState('');
   // console.log(userData);
   useEffect(() => {
     if (userData.attributes) {
@@ -137,10 +144,19 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
         setIsUser('technician');
       }
     }
+    console.log('gaugeRef', gaugeRef.current.querySelector('.pointer'), gaugeRef.current.querySelector('.pointer').querySelector('text'))
+    // if (gaugeRef.current.querySelector('.pointer').querySelector('text')) {
+    // gaugeRef.current.querySelector('.pointer').insertAdjacentHTML("beforeend", pointerHtml);
+    // }
+
 
   }, [])
   useEffect(() => {
+    // console.log('gaugeRef', gaugeRef.current.querySelector('.pointer'), gaugeRef.current.querySelector('.pointer').querySelector('text'))
+
+
     if (isUser) {
+      console.log(devData)
       setDeviceId(devData.DeviceID)
       setDeviceName(devData.DeviceName)
       setDevOn(devData.DeviceEnabled);
@@ -154,6 +170,17 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
       setPriceKWH(tmpPriceKWH)
       setSavePrice(parseFloat((devData.WattHours / 1000) * tmpPriceKWH).toFixed(2));
       // setMaxVal(parseFloat(devData.ATHwattHours));
+      setDevPower(devData.DutyCycle);
+      if (devData.LoadFaultFlag !== 0 || devData.WaterTempAlert === true) {
+        setIsDevFault(true);
+        setDevPower(0);
+        if (devData.LoadFaultFlag !== 0) {
+          setFaultMsg(t('load_fault'))
+        }
+        if (devData.WaterTempAlert === true) {
+          setFaultMsg(t('water_temp'))
+        }
+      }
       if (isUser === 'user') {
         setDevCycle(`${parseInt(devData.DutyCycle)} %`);
         setMaxPower(parseInt(devData.maxPowerPer));
@@ -170,8 +197,19 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
         setMinPower(parseFloat(devData.leastPowerThirty));
         setNowPower(parseFloat(devData.WattHours));
         setMaxVal(devData.ATHwattHours);
+
+      }
+      const tmpLastDayPower = Math.ceil((devData.lastDayWattHours / devData.ATHwattHours) * 100);
+      setLastDayPower(tmpLastDayPower);
+      const pointerHtml = `<text transform="rotate(0)" style="font-size: 15.4132px;transform: translate(0px, -4px);fill: rgb(117 116 116);text-shadow: black 1px 0.5px 0px, black 0px 0px 0.03em, black 0px 0px 0.01em;text-anchor: middle;">${tmpLastDayPower}%</text>`;
+      if (!!gaugeRef.current.querySelector('.pointer').querySelector('text')) {
+        gaugeRef.current.querySelector('.pointer').querySelector('text').innerHTML = `${tmpLastDayPower}%`;
+      } else {
+        console.log('NNNN')
+        gaugeRef.current.querySelector('.pointer').insertAdjacentHTML("beforeend", pointerHtml);
       }
     }
+    // console.log('gaugeRef', gaugeRef)
   }, [devData])
 
 
@@ -221,46 +259,30 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
           backgroundColor={colors.primary[400]}
           zIndex={0}
         >
-          <Grid container paddingX={5} paddingTop={isMobile ? 2 : 5} paddingBottom={isMobile ? 0 : 5} justifyContent={'space-between'} alignItems={'center'}>
+          <Grid container paddingX={5} paddingTop={isMobile ? isPortrait ? 5 : 2 : 5} paddingBottom={isMobile ? 0 : 5} justifyContent={'space-between'} alignItems={'center'}>
             <Grid order={{ xs: 1, md: 1 }} backgroundColor={colors.primary[400]} zIndex={1} item>
               <Box textAlign={'center'}>
-                <FormControlLabel
+                {!(isMobile && isPortrait) && <FormControlLabel
                   sx={{ margin: 'auto' }}
                   onClick={() => onHeatCtr()}
                   control={<MaterialUISwitch sx={{ m: 1 }} checked={heatOn} />}
                   label=""
-                />
+                />}
                 <HeatDev isMobile={isMobile} isPortrait={isPortrait} isOn={heatOn} />
               </Box>
             </Grid>
 
             <Grid order={isMobile ? { xs: 3 } : { xs: 2, md: 2 }} margin={'auto'} zIndex={1} item>
-              <Box>
-                <div className="bowl mx-auto" style={{ marginTop: isPortrait ? '0' : '-20px', background: colors.primary[400], transform: isMobile ? isPortrait ? 'scale(0.8)' : 'scale(0.5)' : 'scale(1)' }}>
-                  <div className="inner">
-                    <div className="fill">
-                      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300" enableBackground="new 0 0 300 300" xmlSpace="preserve">
-                        <path className="waveShape" d="M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4
-	c-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9
-	c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z" />
-                      </svg>
-                    </div>
-                    <h1 className='inner-text' >{parseFloat(devData.WaterTemp).toFixed(1)} ºC</h1>
-                  </div>
-                </div>
-              </Box>
+              <WaterTank isMobile={isMobile} isPortrait={isPortrait} WaterTemp={parseFloat(devData.WaterTemp).toFixed(1)} bgColor={colors.primary[400]} />
             </Grid>
             <Grid order={isMobile ? { xs: 2 } : { xs: 3, md: 3 }} backgroundColor={colors.primary[400]} zIndex={1} item>
               <Box textAlign={'center'}>
-                <FormControlLabel
+                {!(isMobile && isPortrait) && <FormControlLabel
                   sx={{ margin: 'auto', width: '100%', justifyContent: 'center', alignItems: "center", color: theme.palette.mode === "dark" ? 'yellow' : 'gray', fontSize: '16px !important', fontWeight: '600' }}
                   onClick={() => onDevCtr()}
                   control={<DevOnOffSwitch sx={{ m: 1 }} checked={devOn} />}
-                  label={!isMobile ? `${devCyle}` : ""}
-                />
-                <SolarPanel isMobile={isMobile} isPortrait={isPortrait} isOn={devOn} cycleVal={devCyle} />
-                {isMobile && <span className='devOn-Cycle' style={{ color: colors.greenAccent[400] }} >{devCyle}</span>}
-
+                />}
+                <SolarPanel isMobile={isMobile} isPortrait={isPortrait} isOn={devOn} cycleVal={isDevFault ? faultMsg : devCyle} color={isDevFault ? 'red' : colors.greenAccent[400]} />
               </Box>
             </Grid>
           </Grid>
@@ -295,19 +317,15 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                   <hr />
                   {devOn &&
                     <>
-                      <span className='solor-cirl'></span>
-                      <span className='solor-cirl cirl1'></span>
-                      <span className='solor-cirl cirl2'></span>
-                      <span className='solor-cirl cirl3'></span>
-                      <span className='solor-cirl cirl4'></span>
-                      <span className='solor-cirl cirl5'></span>
-                      <span className='solor-cirl cirl6'></span>
-                      <span className='solor-cirl cirl7'></span>
-                      <span className='solor-cirl cirl8'></span>
-                      <span className='solor-cirl cirl9'></span>
-                      <span className='solor-cirl cirl10'></span>
-                      <span className='solor-cirl cirl11'></span>
-                      <span className='solor-cirl cirl12'></span>
+                    {(() => {
+                      const arr = [];
+                      for (let i = 0; i < (Math.floor(parseFloat(devPower) * 0.1) + 1); i++) {
+                        arr.push(
+                          <span className={`solor-cirl cirl${i}`}></span>
+                        );
+                      }
+                      return arr;
+                    })()}
                   </>
                   }
                 </div>
@@ -316,13 +334,54 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
             {isMobile && <>
               <Grid item xs={12} marginX={'auto'} marginTop={'-25%'}>
                 <Box className="dev-connect-border" sx={{}}>
-                  <Box className={heatOn ? "connect-content heat-connect-border" : "connect-content"}></Box>
-                  <Box className={devOn ? "connect-content solar-connect-border" : "connect-content"}></Box>
+                  <Box className={heatOn ? "connect-content heat-connect-border" : "connect-content"}>
+                    {heatOn && <>
+                      {(() => {
+                        const arr = [];
+                        for (let i = 0; i < 10; i++) {
+                          arr.push(
+                            <span className={`mobile-heat-cirl cirl${i}`}></span>
+                          );
+                        }
+                        return arr;
+                      })()}
+                    </>}
+                  </Box>
+                  <Box className={devOn ? "connect-content solar-connect-border" : "connect-content"}>
+                    {devOn && <>
+                      {(() => {
+                        const arr = [];
+                        for (let i = 0; i < (Math.floor(parseFloat(devPower) * 0.1) + 1); i++) {
+                          arr.push(
+                            <span className={`mobile-solar-cirl cirl${i}`}></span>
+                          );
+                        }
+                        return arr;
+                      })()}
+                    </>}
+                  </Box>
                 </Box>
               </Grid>
             </>}
 
           </Grid>
+          {(isMobile && isPortrait) && <Stack position={'absolute'} zIndex={999} bottom={0} direction={'row'} spacing={1} justifyContent={'space-between'} width={'100%'}>
+            <Box width={'100%'} textAlign={'center'}>
+              <FormControlLabel
+                sx={{ margin: 'auto' }}
+                onClick={() => onHeatCtr()}
+                control={<MaterialUISwitch sx={{ m: 1 }} checked={heatOn} />}
+                label=""
+              />
+            </Box>
+            <Box width={'100%'} textAlign={'center'}>
+              <FormControlLabel
+                sx={{ margin: 'auto', width: '100%', justifyContent: 'center', alignItems: "center", color: theme.palette.mode === "dark" ? 'yellow' : 'gray', fontSize: '16px !important', fontWeight: '600' }}
+                onClick={() => onDevCtr()}
+                control={<DevOnOffSwitch sx={{ m: 1 }} checked={devOn} />}
+              />
+            </Box>
+          </Stack>}
           {isMobile && isPortrait && < Box className="dev-label">
             <Typography variant='h4' fontWeight={700}>{deviceName}</Typography>
             <Typography variant='body1'>{deviceId}</Typography>
@@ -340,54 +399,115 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
               textAlign={'center'}
               position={'relative'}
             >
+              {isMobile && <Box width={'100%'} paddingTop={1}>
+                <Chip sx={{ background: '#0000ff', color: 'white' }} size='small' label="Too low temperature!"></Chip>
+                <Chip sx={{ background: '#30a130', color: 'white' }} size='small' label="Low temperature!"></Chip>
+                <Chip sx={{ background: '#ef290b', color: 'white' }} size='small' label="Too high temperature!"></Chip>
+              </Box>}
               <Box position={'relative'} paddingBottom={isMobile ? 0 : 2}>
-                <GaugeComponent
-                  type="semicircle"
-                  arc={{
-                    width: 0.1,
-                    padding: 0.01,
-                    cornerRadius: 10,
-                    // gradient: true,
-                    subArcs: [
-                      {
-                        className: 'arc1',
-                        limit: minPower,
-                        color: '#0000ff',
-                        showTick: true,
-                        tooltip: {
-                          text: 'Too low temperature!'
+                <Box position={'relative'}>
+                  <GaugeComponent
+                    type="semicircle"
+                    arc={{
+                      width: 0.1,
+                      padding: 0.01,
+                      cornerRadius: 10,
+                      // gradient: true,
+                      subArcs: [
+                        {
+                          className: 'arc1',
+                          limit: minPower,
+                          color: '#0000ff',
+                          showTick: false,
+                          tooltip: {
+                            text: 'Too low temperature!'
+                          },
+                          onClick: () => console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"),
+                          onMouseMove: () => console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"),
+                          onMouseLeave: () => console.log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"),
                         },
-                        onClick: () => console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"),
-                        onMouseMove: () => console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"),
-                        onMouseLeave: () => console.log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"),
-                      },
-                      {
-                        limit: maxPower,
-                        color: '#1af519',
-                        showTick: true,
-                        tooltip: {
-                          text: 'Low temperature!'
+                        {
+                          limit: maxPower,
+                          color: '#30a130',
+                          showTick: false,
+                          tooltip: {
+                            text: 'Low temperature!'
+                          }
+                        },
+                        {
+                          color: '#ef290b',
+                          tooltip: {
+                            text: 'Too high temperature!'
+                          }
                         }
-                      },
-                      {
-                        color: '#ef290b',
-                        tooltip: {
-                          text: 'Too high temperature!'
-                        }
-                      }
-                    ]
-                  }}
-                  pointer={{
-                    color: '#345243',
-                    length: 0.80,
-                    width: 15,
-                    elastic: true,
-                  }}
+                      ]
+                    }}
+                    pointer={{
+                      color: '#345243',
+                      length: 0.80,
+                      width: 15,
+                      elastic: true,
+                    }}
+                    // pointer={{ type: "blob", animationDelay: 0 }}
+                    value={nowPower}
+                    minValue={0}
+                    maxValue={maxVal}
+                  />
+                  <div ref={gaugeRef} className='overide-gauge'>
+                    <GaugeComponent
 
-                  value={nowPower}
-                  minValue={0}
-                  maxValue={maxVal}
-                />
+                      type='semicircle'
+                      arc={{
+                        width: 0.1,
+                        padding: 0.01,
+                        cornerRadius: 10,
+                        // gradient: true,
+                        subArcs: [
+                          {
+                            className: 'arc1',
+                            limit: minPower,
+                            color: '#0000ff',
+                            showTick: true,
+                            tooltip: {
+                              style: { zIndex: 99999, position: 'fixed' },
+                              text: 'Too low temperature!'
+                            },
+                            onClick: () => console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"),
+                            onMouseMove: () => console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"),
+                            onMouseLeave: () => console.log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"),
+                          },
+                          {
+                            limit: maxPower,
+                            color: '#30a130',
+                            showTick: true,
+                            tooltip: {
+                              style: { zIndex: 99999, position: 'fixed' },
+                              text: 'Low temperature!'
+                            }
+                          },
+                          {
+                            color: '#ef290b',
+                            showTick: true,
+                            tooltip: {
+                              style: { zIndex: 99999, position: 'fixed' },
+                              text: 'Too high temperature!'
+                            }
+                          }
+                        ]
+                      }}
+                      pointer={{
+                        type: "blob", animationDelay: 0, elastic: true, tooltip: {
+                          text: 'show Yesterday'
+                        }
+                      }}
+                      labels={{ valueLabel: { style: { position: 'absolute', display: 'none' } } }}
+                      value={lastDayPower}
+                      minValue={0}
+                      maxValue={maxVal}
+                    />
+                  </div>
+                </Box>
+
 
                 <Grid position={'absolute'} container spacing={1} paddingX={7} justifyContent={'space-between'}
                   sx={{ top: isMobile ? '-10px' : 0, width: '100%', height: '100%' }}
@@ -407,7 +527,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
 
 
               {/* <GaugeChart id="gauge-chart1" /> */}
-              {isMobile && <Grid xs={12} container spacing={1} paddingX={1} paddingTop={0} paddingBottom={1} marginTop={-1}>
+              {(isMobile && !isPortrait) && <Grid xs={12} container spacing={1} paddingX={1} paddingTop={0} paddingBottom={1} marginTop={-1}>
                 <Grid item xs={12} paddingX={1}>
                   <Box display={'flex'} justifyContent={'space-between'} alignItems={'end'}
                     style={{ borderBottom: '3px solid', paddingBottom: '2px', flexWrap: 'wrap' }}>

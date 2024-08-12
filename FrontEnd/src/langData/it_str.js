@@ -109,5 +109,7 @@ export const It_Str = {
     Saturday: "Sabato",
     device_data_not_loaded: "I dati di questo dispositivo non sono caricati. Prova a ricaricare dopo qualche minuto.",
     want_remove_device:"Vuoi rimuovere questo dispositivo?",
-    removing: "Rimozione"
+    removing: "Rimozione",
+    load_fault: "Errore di carico",
+    water_temp: "Temperatura dell'acqua",
 }

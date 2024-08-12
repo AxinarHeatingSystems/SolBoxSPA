@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 // import {
 //   getAllCountriesName,
 //   getRegionsByCountryCode,
@@ -8,9 +8,10 @@ import { useTheme, Box, Grid, TextField, Typography, Button, Autocomplete, MenuI
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { tokens } from '../../theme';
+import { ColorModeContext, tokens } from '../../theme';
 import { useTranslation } from 'react-i18next';
-import { Stack } from '@mui/system';
+import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
+import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import EastIcon from '@mui/icons-material/East';
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import { useDispatch, useSelector } from 'react-redux';
@@ -33,6 +34,8 @@ console.log('testing country', tCountry);
 export const SettingBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const colorMode = useContext(ColorModeContext);
+
   const [isOwner, setIsOwner] = useState(false);
   const userData = useSelector(store => store.userData);
   const devMetaData = useSelector(store => store.devMetaData);
@@ -284,10 +287,21 @@ export const SettingBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
           <Grid component={'form'} onSubmit={onSettingSubmit} container spacing={2}>
             <Grid item xs={12} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
               <SettingsSuggestIcon fontSize="large" color='success' />
-              {isOwner && <Button disabled={isSetting} type='submit' variant='contained' sx={{ paddingX: '30px', fontWeight: 'bold' }} color='success'>
-                {isSetting ? <CircularProgress size={20} /> : <>{t('save')}</>}
-              </Button>}
+              <Box display={'flex'}>
+                <Button variant='contained'
+                  color='warning'
+                  size='small'
+                  onClick={() => { colorMode.toggleColorMode() }}
+                  startIcon={theme.palette.mode === "dark" ? <LightModeOutlinedIcon fontSize="small" /> : <DarkModeOutlinedIcon fontSize="small" />}
+                >
+                  {theme.palette.mode === "dark" ? t("light_mode") : t("dark_mode")}
+                </Button>
+                {isOwner && <Button disabled={isSetting} type='submit' variant='contained' sx={{ paddingX: '30px', fontWeight: 'bold' }} color='success'>
+                  {isSetting ? <CircularProgress size={20} /> : <>{t('save')}</>}
+                </Button>}
+              </Box>
             </Grid>
+
             <Grid item xs={12}>
               <TextField fullWidth id="outlined-basic" label={t('device_name')}
                 variant="outlined" required size='small' disabled={!isOwner}
