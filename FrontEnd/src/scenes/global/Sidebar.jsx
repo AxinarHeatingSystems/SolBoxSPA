@@ -14,7 +14,7 @@ import { ColorModeContext, tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import { getUserDeviceListApi, getDevicesApi, logoutApi, getAllDevsApi, getRemoveDeviceApi, getIpAddressApi, getGeoDataApi, getCtWeatherApi } from '../../axios/ApiProvider';
+import { getUserDeviceListApi, getDevicesApi, logoutApi, getAllDevsApi, getRemoveDeviceApi, getIpAddressApi, getCtWeatherApi } from '../../axios/ApiProvider';
 import { useDispatch, useSelector } from 'react-redux';
 import { SetLang } from '../../components/Language/SetLang';
 import { useTranslation } from 'react-i18next';
@@ -63,21 +63,28 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
   const [pairingCode, setPairingCode] = useState();
   const [pairingCodeError, setPairingCodeError] = useState(false);
   const getData = async () => {
+
     // console.log(window.navigator.geolocation.watchPosition())
     // navigator.geolocation.getCurrentPosition(function (position) {
     //   console.log('GETCUURNET', position.coords.latitude, position.coords.longitude);
     // });
     const ipAddressRes = await getIpAddressApi();
     if (ipAddressRes.state !== 'success') return;
-    // setIpAddress(ipAddressRes.data.ip)
-    setIpAddress(ipAddressRes.data.query)
-    const tempIpAddress = ipAddressRes.data.query;
+    setIpAddress(ipAddressRes.data.ip)
+    // setIpAddress(ipAddressRes.data.query)
+    const tempIpAddress = ipAddressRes.data.ip;
     console.log('IPADDRESS DATA', ipAddressRes.data)
-    const geoRes = await getGeoDataApi(tempIpAddress);
-    console.log(geoRes);
-    if (geoRes.state !== 'success') return tempIpAddress;
-    setSunSetTime(geoRes.data.sunset);
-    setSunRiseTime(geoRes.data.sunrise)
+    const tempLat = ipAddressRes.data.latitude
+    const tempLng = ipAddressRes.data.longitude
+    // const geoRes = await getGeoDataApi(tempIpAddress);
+    // console.log(geoRes);
+    // if (geoRes.state !== 'success') return tempIpAddress;
+    const sunset = getSunset(tempLat, tempLng);
+    const sunrise = getSunrise(tempLat, tempLng);
+    const tmpSunSet = new Date(sunset);
+    const tmpSunRise = new Date(sunrise);
+    setSunSetTime(`${tmpSunSet.getHours()}:${tmpSunSet.getMinutes()}`);
+    setSunRiseTime(`${tmpSunRise.getHours()}:${tmpSunRise.getMinutes()}`)
     // const getGeoRes = await axios.get(`http://www.geoplugin.net/json.gp?ip=${ipAddressRes.data.ip}`);
     // console.log('gettingTEO', getGeoRes);
     // // const openWeatherMap = `https://api.openweathermap.org/data/2.5/weather?lat=${getGeoRes.data.geoplugin_latitude}&lon=${getGeoRes.data.geoplugin_longitude}&appid=${weatherID}`;
@@ -88,7 +95,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
     // console.log('sunRISESET', new Date(sunset), new Date(sunrise))
     // setSunSetTime(`${tmpSunSet.getHours()}:${tmpSunSet.getMinutes()}`);
     // setSunRiseTime(`${tmpSunRise.getHours()}:${tmpSunRise.getMinutes()}`)
-    const weatherRes = await getCtWeatherApi(geoRes.data.lat, geoRes.data.lng);
+    const weatherRes = await getCtWeatherApi(tempLat, tempLng);
     // const openWeatherMap = `https://api.open-meteo.com/v1/forecast?latitude=${geoRes.data.let}&longitude=${geoRes.data.lng}&current=temperature_2m,weather_code,wind_speed_10m,wind_direction_10m`
     // const weatherRes = await axios.get(openWeatherMap)
     if (weatherRes.state === 'success') {

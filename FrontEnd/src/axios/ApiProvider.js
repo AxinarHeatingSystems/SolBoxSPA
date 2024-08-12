@@ -30,7 +30,7 @@ export const getIpAddressApi = async () => {
 
   let resultState = {state: '', data: {}};
   // let apiUrl = 'https://api.ipify.org/?format=json';
-  let apiUrl = 'http://ip-api.com/json';
+  let apiUrl = 'https://ipapi.co/json/';
   await axios({
     method: 'get',
     url: apiUrl
@@ -45,39 +45,39 @@ export const getIpAddressApi = async () => {
 
 }
 
-export const getGeoDataApi = async (ipaddress) => {
-  let resultState = {state: '', data: {}};
-  const apiUrl = `http://www.geoplugin.net/json.gp?ip=${ipaddress}`;
+// export const getGeoDataApi = async (ipaddress) => {
+//   let resultState = {state: '', data: {}};
+//   const apiUrl = `http://www.geoplugin.net/json.gp?ip=${ipaddress}`;
 
 
-  window.navigator.geolocation.getCurrentPosition(function(position) {
-    const latitude = position.coords.latitude;
-    const longitude = position.coords.longitude;
-    console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-  });
+//   window.navigator.geolocation.getCurrentPosition(function(position) {
+//     const latitude = position.coords.latitude;
+//     const longitude = position.coords.longitude;
+//     console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+//   });
 
-  await axios({
-    method: 'get',
-    url: apiUrl,
-    contextType: 'json'
-  }).then(function(response) {
-    const sunset = getSunset(response.data.geoplugin_latitude, response.data.geoplugin_longitude);
-    const sunrise = getSunrise(response.data.geoplugin_latitude, response.data.geoplugin_longitude);
-    const tmpSunSet = new Date(sunset);
-    const tmpSunRise = new Date(sunrise);
-    resultState.state = 'success';
-    resultState.data = {
-      sunset: `${tmpSunSet.getHours()}:${tmpSunSet.getMinutes()}`,
-      sunrise: `${tmpSunRise.getHours()}:${tmpSunRise.getMinutes()}`,
-      lat: response.data.geoplugin_latitude,
-      lng: response.data.geoplugin_longitude
-    }
-  }).catch(function(err) {
-    resultState.state = 'error';
-    resultState.data = err.message;
-  })
-  return resultState;
-}
+//   await axios({
+//     method: 'get',
+//     url: apiUrl,
+//     contextType: 'json'
+//   }).then(function(response) {
+//     const sunset = getSunset(response.data.geoplugin_latitude, response.data.geoplugin_longitude);
+//     const sunrise = getSunrise(response.data.geoplugin_latitude, response.data.geoplugin_longitude);
+//     const tmpSunSet = new Date(sunset);
+//     const tmpSunRise = new Date(sunrise);
+//     resultState.state = 'success';
+//     resultState.data = {
+//       sunset: `${tmpSunSet.getHours()}:${tmpSunSet.getMinutes()}`,
+//       sunrise: `${tmpSunRise.getHours()}:${tmpSunRise.getMinutes()}`,
+//       lat: response.data.geoplugin_latitude,
+//       lng: response.data.geoplugin_longitude
+//     }
+//   }).catch(function(err) {
+//     resultState.state = 'error';
+//     resultState.data = err.message;
+//   })
+//   return resultState;
+// }
 
 export const getCtWeatherApi = async(lat, lng) => {
   let resultState = {state: '', data: {}};
