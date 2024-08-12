@@ -399,11 +399,6 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
               textAlign={'center'}
               position={'relative'}
             >
-              {isMobile && <Box width={'100%'} paddingTop={1}>
-                <Chip sx={{ background: '#0000ff', color: 'white' }} size='small' label="Too low temperature!"></Chip>
-                <Chip sx={{ background: '#30a130', color: 'white' }} size='small' label="Low temperature!"></Chip>
-                <Chip sx={{ background: '#ef290b', color: 'white' }} size='small' label="Too high temperature!"></Chip>
-              </Box>}
               <Box position={'relative'} paddingBottom={isMobile ? 0 : 2}>
                 <Box position={'relative'}>
                   <GaugeComponent
@@ -524,8 +519,6 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
 
                 </Grid>
               </Box>
-
-
               {/* <GaugeChart id="gauge-chart1" /> */}
               {(isMobile && !isPortrait) && <Grid xs={12} container spacing={1} paddingX={1} paddingTop={0} paddingBottom={1} marginTop={-1}>
                 <Grid item xs={12} paddingX={1}>
