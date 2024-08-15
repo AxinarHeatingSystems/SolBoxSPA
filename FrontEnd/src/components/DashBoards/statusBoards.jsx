@@ -11,7 +11,7 @@ import { SolarPanel } from '../DeviceComponents/solarPanel';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { WaterTank } from '../DeviceComponents/waterTank';
-import { Stack } from '@mui/system';
+import { display, Stack } from '@mui/system';
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 64,
@@ -259,7 +259,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
           backgroundColor={colors.primary[400]}
           zIndex={0}
         >
-          <Grid container paddingX={5} paddingTop={isMobile ? isPortrait ? 5 : 2 : 5} paddingBottom={isMobile ? 0 : 5} justifyContent={'space-between'} alignItems={'center'}>
+          <Grid container paddingX={5} paddingTop={isMobile ? isPortrait ? 7 : 2 : 5} paddingBottom={isMobile ? 0 : 5} justifyContent={'space-between'} alignItems={'center'}>
             <Grid order={{ xs: 1, md: 1 }} backgroundColor={colors.primary[400]} zIndex={1} item>
               <Box textAlign={'center'}>
                 {!(isMobile && isPortrait) && <FormControlLabel
@@ -407,41 +407,48 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                       width: 0.1,
                       padding: 0.01,
                       cornerRadius: 10,
+                      colorArray: ['#f0f0', '#ff00', '#0ff0'],
+
                       // gradient: true,
-                      subArcs: [
-                        {
-                          className: 'arc1',
-                          limit: minPower,
-                          color: '#0000ff',
-                          showTick: false,
-                          tooltip: {
-                            text: 'Too low temperature!'
-                          },
-                          onClick: () => console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"),
-                          onMouseMove: () => console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"),
-                          onMouseLeave: () => console.log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"),
-                        },
-                        {
-                          limit: maxPower,
-                          color: '#30a130',
-                          showTick: false,
-                          tooltip: {
-                            text: 'Low temperature!'
-                          }
-                        },
-                        {
-                          color: '#ef290b',
-                          tooltip: {
-                            text: 'Too high temperature!'
-                          }
-                        }
-                      ]
+                      // subArcs: [
+                      //   {
+                      //     className: 'arc1',
+                      //     limit: minPower,
+                      //     color: '#0000ff',
+                      //     showTick: false,
+                      //     tooltip: {
+                      //       text: 'Too low temperature!'
+                      //     },
+                      //     onClick: () => console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"),
+                      //     onMouseMove: () => console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"),
+                      //     onMouseLeave: () => console.log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"),
+                      //   },
+                      //   {
+                      //     limit: maxPower,
+                      //     color: '#30a130',
+                      //     showTick: false,
+                      //     tooltip: {
+                      //       text: 'Low temperature!'
+                      //     }
+                      //   },
+                      //   {
+                      //     color: '#ef290b',
+                      //     tooltip: {
+                      //       text: 'Too high temperature!'
+                      //     }
+                      //   }
+                      // ]
                     }}
                     pointer={{
                       color: '#345243',
                       length: 0.80,
                       width: 15,
                       elastic: true,
+                    }}
+                    labels={{
+                      tickLabels: {
+                        hideMinMax: true,
+                      }
                     }}
                     // pointer={{ type: "blob", animationDelay: 0 }}
                     value={nowPower}

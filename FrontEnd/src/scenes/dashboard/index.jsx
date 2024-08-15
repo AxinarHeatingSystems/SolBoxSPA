@@ -444,15 +444,16 @@ const Dashboard = () => {
                         }}
                         direction={'row'} spacing={0} width={'100vw'} alignItems={'flex-end'} justifyContent={'center'}>
                         <Box
-                          backgroundColor={colors.primary[400]}
+                          onClick={() => { subMenuClicked(1) }}
+                          backgroundColor={isMobileDetect && submenuId === 1 ? colors.primary[300] : colors.primary[400]}
                           width={'100%'}
                           height={'fit-content'}
                           sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
                         >
-                          <Box maxHeight={'70px'} minHeight={'70px'}>
-                            <Typography variant='body1' fontWeight={'bold'} textAlign={'center'} flexWrap={'nowrap'}>Total Saved</Typography>
-                            <Typography variant='body1' textAlign={'center'} flexWrap={'nowrap'}>{todayKWH} kwh</Typography>
-                            <Typography variant='body1' textAlign={'center'} flexWrap={'nowrap'}>{savePrice} €</Typography>
+                          <Box maxHeight={'70px'} minHeight={'70px'} sx={{ color: colors.greenAccent[600] }}>
+                            <Typography variant='subtitle1' fontWeight={'bold'} textAlign={'center'} whiteSpace={'nowrap'} flexWrap={'nowrap'}>Total Saved</Typography>
+                            <Typography variant='body1' fontWeight={'bold'} textAlign={'center'} whiteSpace={'nowrap'} flexWrap={'nowrap'}>{todayKWH} kwh</Typography>
+                            <Typography variant='body1' fontWeight={'bold'} textAlign={'center'} whiteSpace={'nowrap'} flexWrap={'nowrap'}>{savePrice} €</Typography>
                           </Box>
                         </Box>
                         <Box
@@ -469,8 +470,7 @@ const Dashboard = () => {
                           </Box>
                         </Box>
                         <Box
-                          onClick={() => { subMenuClicked(1) }}
-                          backgroundColor={isMobileDetect && submenuId === 1 ? colors.primary[300] : colors.primary[400]}
+                          backgroundColor={colors.primary[400]}
                           width={'100%'}
                           height={'fit-content'}
                           sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
