@@ -24,9 +24,10 @@ import { parsingDeviceData } from '../../axios/ParseProvider';
 import { DeviceMenuItem } from './DeviceMenuItem';
 import { devInfoData_Store } from '../../store/actions/mainAction';
 import { getSunrise, getSunset } from 'sunrise-sunset-js';
+import zIndex from '@mui/material/styles/zIndex';
 
 const weatherID = process.env.REACT_APP_WEATHERAPPID;
-const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, socketIo }) => {
+const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, socketIo, isMobileMenu }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -134,6 +135,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
     height: open ? '100vh' : 0,
     // zIndex: open ? 9999999 : 0,
     position: 'absolute',
+    zIndex: open ? 999 : 0,
     '& .pro-menu ul': {
       paddingInlineStart: '0px',
       listStyleType: 'none',
@@ -160,7 +162,8 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
   }
 
   const mobileMenustyle = {
-    top: '40px',
+    top: (isMobile && isPortrait) ? 'auto' : '40px',
+    bottom: (isMobile && isPortrait) ? '95px' : 'auto',
     maxHeight: 'calc(100% - 40px)',
     overflow: 'auto',
     position: 'fixed',
@@ -169,7 +172,16 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
     padding: 2, width: '100%', backgroundColor: theme.palette.background.default, color: colors.grey[100], display: open ? 'block' : 'none'
   }
 
-
+  // useEffect(() => {
+  //   if (isMobile && isPortrait) {
+  //     setMobileMenustyle
+  //   }
+  // }, [isMobile, isPortrait])
+  useEffect(() => {
+    if (isMobile && isPortrait) {
+      setOpen(isMobileMenu)
+    }
+  }, [isMobileMenu])
 
   const handleClick = (event) => {
     // setAnchorEl(event.currentTarget);
@@ -383,7 +395,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
       sx={isMobile ? mobileStyle : desktopStyle}
     >
       {isMobile && <>
-        <Box
+        {!isPortrait && < Box
           display="flex"
           justifyContent="space-between"
           alignItems="center"
@@ -408,7 +420,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
             {isCollapsed && <MenuOutlinedIcon />}
             {!isCollapsed && <MenuOutlinedIcon />}
           </IconButton>
-        </Box>
+        </Box>}
         <List
           id="basic-menu"
           onClose={handleClose}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Box, Grid, Typography, useTheme } from "@mui/material";
 
 import { tokens } from "../../theme";
@@ -44,12 +44,13 @@ const Dashboard = () => {
   const [socket, setSocket] = useState(tmpSocket)
   const [isLoading, setIsLoading] = useState(true);
   const [loadingCount, setLoadingCount] = useState(0);
-
+  const siderRef = useRef();
   const isMobileDetect = useSelector(store => store.isMobileDetect);
   const isPortrait = useSelector(store => store.isPortrait);
   const devInfo = useSelector(store => store.devInfoData);
   const devMetaData = useSelector(store => store.devMetaData);
   const [isSidebar, setIsSidebar] = useState(false);
+  const [isMobileMenu, setIsMobileMenu] = useState(false);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [submenuId, setSubmenuId] = useState(1);
@@ -191,7 +192,7 @@ const Dashboard = () => {
   // }
   return (
     <main className='content' style={{ display: isMobileDetect ? 'block' : 'flex' }}>
-      {isSidebar && <Sidebar isMobile={isMobileDetect} isPortrait={isPortrait} isSidebar={isSidebar} deviceName={deviceName} deviceId={deviceId} onChangeDevId={onChangeDevId} socketIo={socket} />}
+      {isSidebar && <Sidebar ref={siderRef} isMobile={isMobileDetect} isPortrait={isPortrait} isSidebar={isSidebar} deviceName={deviceName} deviceId={deviceId} onChangeDevId={onChangeDevId} socketIo={socket} isMobileMenu={isMobileMenu} />}
       <Box width={'100%'}>
         {!isPortrait &&
           <Box display={'flex'} flexGrow={1} >
@@ -470,6 +471,7 @@ const Dashboard = () => {
                           </Box>
                         </Box>
                         <Box
+                          onClick={() => { setIsMobileMenu(!isMobileMenu); console.log(isSidebar, siderRef) }}
                           backgroundColor={colors.primary[400]}
                           width={'100%'}
                           height={'fit-content'}
