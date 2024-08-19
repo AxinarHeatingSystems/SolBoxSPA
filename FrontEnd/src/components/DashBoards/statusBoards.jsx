@@ -133,6 +133,9 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const [devPower, setDevPower] = useState(0);
   const [isDevFault, setIsDevFault] = useState(false);
   const [faultMsg, setFaultMsg] = useState('');
+  const [isHeatAlert, setIsHeatAlert] = useState(false)
+  const [heatFault, setHeatFault] = useState('');
+
   // console.log(userData);
   useEffect(() => {
     if (userData.attributes) {
@@ -170,6 +173,13 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
       setPriceKWH(tmpPriceKWH)
       setSavePrice(parseFloat((devData.WattHours / 1000) * tmpPriceKWH).toFixed(2));
       // setMaxVal(parseFloat(devData.ATHwattHours));
+      if (devData.HeatsinkTempAlert === true) {
+        setIsHeatAlert(true);
+        setHeatFault(t('device_temp'))
+      } else {
+        setIsHeatAlert(false)
+        setHeatFault('')
+      }
       setDevPower(devData.DutyCycle);
       if (devData.LoadFaultFlag !== 0 || devData.WaterTempAlert === true) {
         setIsDevFault(true);
@@ -268,7 +278,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                   control={<MaterialUISwitch sx={{ m: 1 }} checked={heatOn} />}
                   label=""
                 />}
-                <HeatDev isMobile={isMobile} isPortrait={isPortrait} isOn={heatOn} />
+                <HeatDev isMobile={isMobile} isPortrait={isPortrait} isOn={heatOn} isHeatAlert={isHeatAlert} heatFault={heatFault} />
               </Box>
             </Grid>
 

@@ -112,4 +112,5 @@ export const Gr_Str = {
     removing: "Αφαίρεση",
     load_fault: "Σφάλμα φόρτωσης",
     water_temp: "Θερμοκρασία νερού",
+    device_temp: 'Θερμοκρασία συσκευής',
 }

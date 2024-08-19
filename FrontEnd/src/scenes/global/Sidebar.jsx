@@ -135,7 +135,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
     height: open ? '100vh' : 0,
     // zIndex: open ? 9999999 : 0,
     position: 'absolute',
-    zIndex: open ? 999 : 0,
+    zIndex: open ? 1010 : 0,
     '& .pro-menu ul': {
       paddingInlineStart: '0px',
       listStyleType: 'none',

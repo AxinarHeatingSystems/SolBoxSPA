@@ -112,4 +112,5 @@ export const Es_Str = {
     removing: "Quitando",
     load_fault: "Falla de carga",
     water_temp: "Temperatura del agua",
+    device_temp: 'Temperatura del dispositivo',
 }

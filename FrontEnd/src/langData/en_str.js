@@ -112,4 +112,5 @@ export const En_Str = {
     removing: "Removing",
     load_fault: "Load Fault",
     water_temp: "Water Temp",
+    device_temp: 'Device Temp',
 }

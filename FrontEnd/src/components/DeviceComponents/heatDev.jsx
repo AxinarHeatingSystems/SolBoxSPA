@@ -2,7 +2,7 @@ import React from "react";
 import Card from '@mui/material/Card';
 import './dev.css'
 
-export const HeatDev = ({ isMobile, isPortrait, isOn }) => {
+export const HeatDev = ({ isMobile, isPortrait, isOn, isHeatAlert, heatFault }) => {
   return (
 	  <Card sx={{ height: 'fit-content', width: 'fit-content', paddingY: isMobile ? 2 : 5, paddingX: isMobile ? 2 : 4, backgroundColor: 'transparent' }}>
 		  <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -41,6 +41,7 @@ export const HeatDev = ({ isMobile, isPortrait, isOn }) => {
 		h176.727V261.081z"/>
 			  </g>
 		  </svg>
+		  {isHeatAlert && <span className='devOn-Cycle' style={{ color: 'red', fontSize: isMobile ? '11px' : '16px' }}>{heatFault}</span>}
     </Card>
   )
 }

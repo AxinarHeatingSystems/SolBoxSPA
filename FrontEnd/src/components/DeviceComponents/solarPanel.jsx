@@ -32,7 +32,7 @@ export const SolarPanel = ({ isMobile, isPortrait, isOn, cycleVal, color }) => {
           <polygon className="st0" points="65.71,48.87 66.51,56.95 81.58,56.95 80.1,48.87 65.71,48.87 65.71,48.87" />
         </g>
         </svg>
-        <span className='devOn-Cycle' style={{ color: color }}>{cycleVal}</span>
+        <span className='devOn-Cycle' style={{ color: color, fontSize: isMobile ? '11px' : '16px' }}>{cycleVal}</span>
 
       </Card>
     </>
