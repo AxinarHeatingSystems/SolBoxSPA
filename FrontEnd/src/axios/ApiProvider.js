@@ -4,6 +4,7 @@ import { getSunrise, getSunset } from 'sunrise-sunset-js';
 
 export const BASE_BACKEND_URL = process.env.REACT_APP_BASE_BACKEND_URL
 export const GoogleClientID = process.env.REACT_APP_GOOGLE_CLIENT_ID
+const enableWeatherApi = process.env.REACT_APP_ENABLE_WEATHERAPI;
 
 console.log(process.env);
 const getJWTToken = () => {
@@ -30,7 +31,7 @@ export const getIpAddressApi = async () => {
 
   let resultState = {state: '', data: {}};
   // let apiUrl = 'https://api.ipify.org/?format=json';
-  let apiUrl = 'https://ipapi.co/json/';
+  let apiUrl = (enableWeatherApi == true)? 'https://ipapi.co/json/' : 'https://api.ipify.org/?format=json';
   await axios({
     method: 'get',
     url: apiUrl

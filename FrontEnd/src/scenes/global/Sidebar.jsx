@@ -27,6 +27,8 @@ import { getSunrise, getSunset } from 'sunrise-sunset-js';
 import zIndex from '@mui/material/styles/zIndex';
 
 const weatherID = process.env.REACT_APP_WEATHERAPPID;
+const enableWeatherApi = process.env.REACT_APP_ENABLE_WEATHERAPI;
+console.log('weather Checking', enableWeatherApi);
 const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, socketIo, isMobileMenu }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -65,45 +67,29 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
   const [pairingCodeError, setPairingCodeError] = useState(false);
   const getData = async () => {
 
-    // console.log(window.navigator.geolocation.watchPosition())
-    // navigator.geolocation.getCurrentPosition(function (position) {
-    //   console.log('GETCUURNET', position.coords.latitude, position.coords.longitude);
-    // });
     const ipAddressRes = await getIpAddressApi();
     if (ipAddressRes.state !== 'success') return;
     setIpAddress(ipAddressRes.data.ip)
-    // setIpAddress(ipAddressRes.data.query)
+
     const tempIpAddress = ipAddressRes.data.ip;
     console.log('IPADDRESS DATA', ipAddressRes.data)
-    const tempLat = ipAddressRes.data.latitude
-    const tempLng = ipAddressRes.data.longitude
-    // const geoRes = await getGeoDataApi(tempIpAddress);
-    // console.log(geoRes);
-    // if (geoRes.state !== 'success') return tempIpAddress;
-    const sunset = getSunset(tempLat, tempLng);
-    const sunrise = getSunrise(tempLat, tempLng);
-    const tmpSunSet = new Date(sunset);
-    const tmpSunRise = new Date(sunrise);
-    setSunSetTime(`${tmpSunSet.getHours()}:${tmpSunSet.getMinutes()}`);
-    setSunRiseTime(`${tmpSunRise.getHours()}:${tmpSunRise.getMinutes()}`)
-    // const getGeoRes = await axios.get(`http://www.geoplugin.net/json.gp?ip=${ipAddressRes.data.ip}`);
-    // console.log('gettingTEO', getGeoRes);
-    // // const openWeatherMap = `https://api.openweathermap.org/data/2.5/weather?lat=${getGeoRes.data.geoplugin_latitude}&lon=${getGeoRes.data.geoplugin_longitude}&appid=${weatherID}`;
-    // const sunset = getSunset(getGeoRes.data.geoplugin_latitude, getGeoRes.data.geoplugin_longitude);
-    // const sunrise = getSunrise(getGeoRes.data.geoplugin_latitude, getGeoRes.data.geoplugin_longitude);
-    // const tmpSunSet = new Date(sunset);
-    // const tmpSunRise = new Date(sunrise);
-    // console.log('sunRISESET', new Date(sunset), new Date(sunrise))
-    // setSunSetTime(`${tmpSunSet.getHours()}:${tmpSunSet.getMinutes()}`);
-    // setSunRiseTime(`${tmpSunRise.getHours()}:${tmpSunRise.getMinutes()}`)
-    const weatherRes = await getCtWeatherApi(tempLat, tempLng);
-    // const openWeatherMap = `https://api.open-meteo.com/v1/forecast?latitude=${geoRes.data.let}&longitude=${geoRes.data.lng}&current=temperature_2m,weather_code,wind_speed_10m,wind_direction_10m`
-    // const weatherRes = await axios.get(openWeatherMap)
-    if (weatherRes.state === 'success') {
-      // return res.data.ip
-      setCurrentTime(`${weatherRes.data.current.temperature_2m} ${weatherRes.data.current_units.temperature_2m}`)
+    if (enableWeatherApi == true) {
+      const tempLat = ipAddressRes.data.latitude
+      const tempLng = ipAddressRes.data.longitude
+
+      const sunset = getSunset(tempLat, tempLng);
+      const sunrise = getSunrise(tempLat, tempLng);
+      const tmpSunSet = new Date(sunset);
+      const tmpSunRise = new Date(sunrise);
+      setSunSetTime(`${tmpSunSet.getHours()}:${tmpSunSet.getMinutes()}`);
+      setSunRiseTime(`${tmpSunRise.getHours()}:${tmpSunRise.getMinutes()}`)
+
+      const weatherRes = await getCtWeatherApi(tempLat, tempLng);
+      if (weatherRes.state === 'success') {
+        setCurrentTime(`${weatherRes.data.current.temperature_2m} ${weatherRes.data.current_units.temperature_2m}`)
+      }
+      console.log('weatherRes', weatherRes)
     }
-    console.log('weatherRes', weatherRes)
     return tempIpAddress
   };
 
@@ -447,20 +433,21 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
           <Typography color={colors.grey[300]} sx={{ m: "15px 0 5px 10px" }} variant='h5' fontWeight={700} textAlign={'start'} display={'flex'} justifyContent={'start'} alignItems={'center'}>
             <AccountCircleIcon marginX={2} /> {userData.firstName} {userData.lastName}
           </Typography>
-          <Stack direction={"row"} spacing={3} justifyContent={'center'} alignItems={"center"}>
-            <Stack direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
-              <GiSunrise color={colors.grey[100]} size={20} />
-              <Typography variant='h4'>{sunRiseTime}</Typography>
-            </Stack>
-            <Stack direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
-              <GiSunset color={colors.grey[100]} size={20} />
-              <Typography variant='h4'>{sunSetTime}</Typography>
-            </Stack>
-            <Stack direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
-              <CiTempHigh color={colors.grey[100]} size={20} />
-              <Typography variant='h4'>{currentTemp}</Typography>
-            </Stack>
-          </Stack>
+          {enableWeatherApi == true &&
+            (<Stack direction={"row"} spacing={3} justifyContent={'center'} alignItems={"center"}>
+              <Stack direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
+                <GiSunrise color={colors.grey[100]} size={20} />
+                <Typography variant='h4'>{sunRiseTime}</Typography>
+              </Stack>
+              <Stack direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
+                <GiSunset color={colors.grey[100]} size={20} />
+                <Typography variant='h4'>{sunSetTime}</Typography>
+              </Stack>
+              <Stack direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
+                <CiTempHigh color={colors.grey[100]} size={20} />
+                <Typography variant='h4'>{currentTemp}</Typography>
+              </Stack>
+            </Stack>)}
           {/* <MenuItem >
             <ListItemIcon>
               <ManageAccountsIcon fontSize="small" />
@@ -555,28 +542,29 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
               {!isCollapsed && <Box marginY={1}>
                 <Typography variant='h5' fontWeight={700} textAlign={'center'}>{userData.firstName} {userData.lastName}</Typography>
               </Box>}
-              <Box display={'block'} justifyContent={'center'}>
-                <Grid container spacing={1}>
-                  <Grid item xs={4} textAlign={'end'}>
-                    <GiSunrise color={colors.grey[100]} size={20} />
+              {enableWeatherApi == true &&
+                (<Box display={'block'} justifyContent={'center'}>
+                  <Grid container spacing={1}>
+                    <Grid item xs={4} textAlign={'end'}>
+                      <GiSunrise color={colors.grey[100]} size={20} />
+                    </Grid>
+                    <Grid item xs={8} textAlign={'start'}>
+                      <Typography variant='h4'>{sunRiseTime}</Typography>
+                    </Grid>
+                    <Grid item xs={4} textAlign={'end'}>
+                      <GiSunset color={colors.grey[100]} size={20} />
+                    </Grid>
+                    <Grid item xs={8} textAlign={'start'}>
+                      <Typography variant='h4'>{sunSetTime}</Typography>
+                    </Grid>
+                    <Grid item xs={4} textAlign={'end'}>
+                      <CiTempHigh color={colors.grey[100]} size={20} />
+                    </Grid>
+                    <Grid item xs={8} textAlign={'start'}>
+                      <Typography variant='h4'>{currentTemp}</Typography>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={8} textAlign={'start'}>
-                    <Typography variant='h4'>{sunRiseTime}</Typography>
-                  </Grid>
-                  <Grid item xs={4} textAlign={'end'}>
-                    <GiSunset color={colors.grey[100]} size={20} />
-                  </Grid>
-                  <Grid item xs={8} textAlign={'start'}>
-                    <Typography variant='h4'>{sunSetTime}</Typography>
-                  </Grid>
-                  <Grid item xs={4} textAlign={'end'}>
-                    <CiTempHigh color={colors.grey[100]} size={20} />
-                  </Grid>
-                  <Grid item xs={8} textAlign={'start'}>
-                    <Typography variant='h4'>{currentTemp}</Typography>
-                  </Grid>
-                </Grid>
-              </Box>
+                </Box>)}
               <Box display={'block'} justifyContent={isCollapsed ? 'center' : 'space-between'} alignItems={'center'} flexWrap={'wrap'}>
                 {/* <Button variant="outlined" color='success' sx={{ marginY: '10px' }} size={!isCollapsed ? "medium" : "small"}>
                   {!isCollapsed ? t("setting") : <ManageAccountsIcon />}
@@ -696,7 +684,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
               <Divider />
             </Grid>
             <Grid item xs={12} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
-              <Button variant='contained' type='button' onClick={() => { handleSearchDevClose() }} color="error">{t('cancel')}</Button>
+              {devList.length > 0 && (<Button variant='contained' type='button' onClick={() => { handleSearchDevClose() }} color="error">{t('cancel')}</Button>)}
               <Button variant='contained' type='submit' color='success'>{t('pairing')}</Button>
             </Grid>
           </Grid>
