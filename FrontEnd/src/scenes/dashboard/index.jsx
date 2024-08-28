@@ -316,15 +316,17 @@ const Dashboard = () => {
         }
         {isPortrait &&
           <Box flexGrow={1}>
-            {(devInfo && !isLoading) && <Box m="20px">
+            <Box m="20px">
               {/* HEADER */}
               <Box className="header-bar">
                 <Grid container spacing={2} marginBottom={isMobileDetect ? 0 : 2} alignItems={'baseline'}>
                   {!isMobileDetect && <Grid item md={4} xs={12}>
-                    <Header isMobile={isMobileDetect} title={devInfo.DeviceName} subtitle={devInfo.DeviceID} />
+                    {(devInfo && !isLoading) && <Header isMobile={isMobileDetect} title={devInfo.DeviceName} subtitle={devInfo.DeviceID} />}
                   </Grid>}
                   <Grid item md={8} xs={12} sx={isMobileDetect ? { paddingTop: '0px !important' } : {}}>
-                    {!isMobileDetect && <Box sx={isMobileDetect ? mobileTabmenuStyle : {}}>
+
+                    {(devInfo && !isLoading) && <>
+                      {!isMobileDetect && <Box sx={isMobileDetect ? mobileTabmenuStyle : {}}>
                       <Grid container spacing={isMobileDetect ? 0 : 2} marginBottom={isMobileDetect ? 0 : 2}>
                         <Grid item xs={3}>
                           <Box
@@ -435,7 +437,9 @@ const Dashboard = () => {
                           </Box>
                         </Grid>
                       </Grid>
-                    </Box>}
+                      </Box>}
+                    </>}
+
                     {isMobileDetect && <Box sx={mobileTabmenuStyle}>
                       <Stack
                         sx={{
@@ -452,9 +456,11 @@ const Dashboard = () => {
                           sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
                         >
                           <Box maxHeight={'70px'} minHeight={'70px'} sx={{ color: colors.greenAccent[600] }}>
-                            <Typography variant='subtitle1' fontWeight={'bold'} textAlign={'center'} whiteSpace={'nowrap'} flexWrap={'nowrap'}>Total Saved</Typography>
-                            <Typography variant='body1' fontWeight={'bold'} textAlign={'center'} whiteSpace={'nowrap'} flexWrap={'nowrap'}>{todayKWH} kwh</Typography>
-                            <Typography variant='body1' fontWeight={'bold'} textAlign={'center'} whiteSpace={'nowrap'} flexWrap={'nowrap'}>{savePrice} €</Typography>
+                            {(devInfo && !isLoading) && <>
+                              <Typography variant='subtitle1' fontWeight={'bold'} textAlign={'center'} whiteSpace={'nowrap'} flexWrap={'nowrap'}>Total Saved</Typography>
+                              <Typography variant='body1' fontWeight={'bold'} textAlign={'center'} whiteSpace={'nowrap'} flexWrap={'nowrap'}>{todayKWH} kwh</Typography>
+                              <Typography variant='body1' fontWeight={'bold'} textAlign={'center'} whiteSpace={'nowrap'} flexWrap={'nowrap'}>{savePrice} €</Typography>
+                            </>}
                           </Box>
                         </Box>
                         <Box
@@ -465,9 +471,9 @@ const Dashboard = () => {
                           sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
                         >
                           <Box maxHeight={'70px'} minHeight={'70px'} display={'flex'} justifyContent={'center'} alignItems={'center'}>
-                            <SettingsSuggestIcon
+                            {(devInfo && !isLoading) && <SettingsSuggestIcon
                               sx={{ color: colors.greenAccent[600], fontSize: "50px" }}
-                            />
+                            />}
                           </Box>
                         </Box>
                         <Box
@@ -494,9 +500,9 @@ const Dashboard = () => {
                           sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
                         >
                           <Box maxHeight={'70px'} minHeight={'70px'} display={'flex'} justifyContent={'center'} alignItems={'center'}>
-                            <CalendarMonthIcon
+                            {(devInfo && !isLoading) && <CalendarMonthIcon
                               sx={{ color: colors.greenAccent[600], fontSize: "50px" }}
-                            />
+                            />}
                           </Box>
                         </Box>
                         <Box
@@ -507,9 +513,9 @@ const Dashboard = () => {
                           sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
                         >
                           <Box maxHeight={'70px'} minHeight={'70px'} display={'flex'} justifyContent={'center'} alignItems={'center'}>
-                            <LanIcon
+                            {(devInfo && !isLoading) && <LanIcon
                               sx={{ color: colors.greenAccent[600], fontSize: "50px" }}
-                            />
+                            />}
                           </Box>
                         </Box>
                       </Stack>
@@ -517,13 +523,17 @@ const Dashboard = () => {
                   </Grid>
                 </Grid>
               </Box>
-              <Box marginTop={isMobileDetect ? '50px' : 0}>
-              {submenuId === 1 && <StatusBoards isMobile={isMobileDetect} isPortrait={isPortrait} devData={devInfo} socketIo={socket} />}
-              {submenuId === 2 && <SettingBoards devData={devInfo} socketIo={socket} isMobile={isMobileDetect} isPortrait={isPortrait} />}
-              {submenuId === 3 && <ScheduleBoards devData={devInfo} socketIo={socket} isPortrait={isPortrait} isMobile={isMobileDetect} />}
-              {submenuId === 4 && <ShareBoards isMobile={isMobileDetect} isPortrait={isPortrait} />}
-              </Box>
-            </Box>}
+
+              {(devInfo && !isLoading) && 
+                <Box marginTop={isMobileDetect ? '50px' : 0}>
+                  {submenuId === 1 && <StatusBoards isMobile={isMobileDetect} isPortrait={isPortrait} devData={devInfo} socketIo={socket} />}
+                  {submenuId === 2 && <SettingBoards devData={devInfo} socketIo={socket} isMobile={isMobileDetect} isPortrait={isPortrait} />}
+                  {submenuId === 3 && <ScheduleBoards devData={devInfo} socketIo={socket} isPortrait={isPortrait} isMobile={isMobileDetect} />}
+                  {submenuId === 4 && <ShareBoards isMobile={isMobileDetect} isPortrait={isPortrait} />}
+                </Box>
+              }
+
+            </Box>
 
           </Box>
         }

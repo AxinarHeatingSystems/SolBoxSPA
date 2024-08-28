@@ -684,7 +684,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
               <Divider />
             </Grid>
             <Grid item xs={12} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
-              {devList.length > 0 && (<Button variant='contained' type='button' onClick={() => { handleSearchDevClose() }} color="error">{t('cancel')}</Button>)}
+              <Button variant='contained' type='button' onClick={() => { handleSearchDevClose() }} color="error">{t('cancel')}</Button>
               <Button variant='contained' type='submit' color='success'>{t('pairing')}</Button>
             </Grid>
           </Grid>

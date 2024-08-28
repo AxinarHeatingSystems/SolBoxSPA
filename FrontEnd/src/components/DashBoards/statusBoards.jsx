@@ -131,6 +131,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const [isUser, setIsUser] = useState(null);
   const [devCyle, setDevCycle] = useState('');
   const [devPower, setDevPower] = useState(0);
+  const [animPower, setAnimPower] = useState(0);
   const [isDevFault, setIsDevFault] = useState(false);
   const [faultMsg, setFaultMsg] = useState('');
   const [isHeatAlert, setIsHeatAlert] = useState(false)
@@ -181,6 +182,9 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
         setHeatFault('')
       }
       setDevPower(devData.DutyCycle);
+      if (Math.floor(parseFloat(devData.DutyCycle) / 10) !== animPower) {
+        setAnimPower(Math.floor(parseFloat(devData.DutyCycle) / 10));
+      }
       if (devData.LoadFaultFlag !== 0 || devData.WaterTempAlert === true) {
         setIsDevFault(true);
         setDevPower(0);
@@ -242,7 +246,8 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
 
   const renderSolorAnimation = (powerVal, index) => {
 
-    const timeVal = 6 - ((6 / 100) * powerVal);
+    // const timeVal = 6 - ((6 / 100) * powerVal);
+    const timeVal = 18 - (18 * (parseFloat(powerVal) / 10))
     const countDelay = ((timeVal / 12) * (index));
     console.log('timeCounter', countDelay)
     return {
@@ -260,7 +265,8 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   }
 
   const renderMobileSolorAnimaiton = (powerVal, index) => {
-    const timeVal = 6 - ((6 / 100) * powerVal);
+
+    const timeVal = 18 - (18 * (parseFloat(powerVal) / 10))
     const countDelay = ((timeVal / 12) * (index));
     console.log('timeCounter', countDelay)
     return {
@@ -362,18 +368,18 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                   <hr />
                   {devOn &&
                     <>
-                    <span style={renderSolorAnimation(devPower, 1)} ></span>
-                    <span style={renderSolorAnimation(devPower, 2)} ></span>
-                    <span style={renderSolorAnimation(devPower, 3)} ></span>
-                    <span style={renderSolorAnimation(devPower, 4)} ></span>
-                    <span style={renderSolorAnimation(devPower, 5)} ></span>
-                    <span style={renderSolorAnimation(devPower, 6)} ></span>
-                    <span style={renderSolorAnimation(devPower, 7)} ></span>
-                    <span style={renderSolorAnimation(devPower, 8)} ></span>
-                    <span style={renderSolorAnimation(devPower, 9)} ></span>
-                    <span style={renderSolorAnimation(devPower, 10)} ></span>
-                    <span style={renderSolorAnimation(devPower, 11)} ></span>
-                    <span style={renderSolorAnimation(devPower, 12)} ></span>
+                    <span style={renderSolorAnimation(animPower, 1)} ></span>
+                    <span style={renderSolorAnimation(animPower, 2)} ></span>
+                    <span style={renderSolorAnimation(animPower, 3)} ></span>
+                    <span style={renderSolorAnimation(animPower, 4)} ></span>
+                    <span style={renderSolorAnimation(animPower, 5)} ></span>
+                    <span style={renderSolorAnimation(animPower, 6)} ></span>
+                    <span style={renderSolorAnimation(animPower, 7)} ></span>
+                    <span style={renderSolorAnimation(animPower, 8)} ></span>
+                    <span style={renderSolorAnimation(animPower, 9)} ></span>
+                    <span style={renderSolorAnimation(animPower, 10)} ></span>
+                    <span style={renderSolorAnimation(animPower, 11)} ></span>
+                    <span style={renderSolorAnimation(animPower, 12)} ></span>
                     {/* {(() => {
                       const arr = [];
                       // for (let i = 0; i < (Math.floor(parseFloat(devPower) * 0.1) + 1); i++) {
@@ -407,18 +413,18 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                   </Box>
                   <Box className={devOn ? "connect-content solar-connect-border" : "connect-content"}>
                     {devOn && <>
-                      <span style={renderMobileSolorAnimaiton(devPower, 1)} ></span>
-                      <span style={renderMobileSolorAnimaiton(devPower, 2)} ></span>
-                      <span style={renderMobileSolorAnimaiton(devPower, 3)} ></span>
-                      <span style={renderMobileSolorAnimaiton(devPower, 4)} ></span>
-                      <span style={renderMobileSolorAnimaiton(devPower, 5)} ></span>
-                      <span style={renderMobileSolorAnimaiton(devPower, 6)} ></span>
-                      <span style={renderMobileSolorAnimaiton(devPower, 7)} ></span>
-                      <span style={renderMobileSolorAnimaiton(devPower, 8)} ></span>
-                      <span style={renderMobileSolorAnimaiton(devPower, 9)} ></span>
-                      <span style={renderMobileSolorAnimaiton(devPower, 10)} ></span>
-                      <span style={renderMobileSolorAnimaiton(devPower, 11)} ></span>
-                      <span style={renderMobileSolorAnimaiton(devPower, 12)} ></span>
+                      <span style={renderMobileSolorAnimaiton(animPower, 1)} ></span>
+                      <span style={renderMobileSolorAnimaiton(animPower, 2)} ></span>
+                      <span style={renderMobileSolorAnimaiton(animPower, 3)} ></span>
+                      <span style={renderMobileSolorAnimaiton(animPower, 4)} ></span>
+                      <span style={renderMobileSolorAnimaiton(animPower, 5)} ></span>
+                      <span style={renderMobileSolorAnimaiton(animPower, 6)} ></span>
+                      <span style={renderMobileSolorAnimaiton(animPower, 7)} ></span>
+                      <span style={renderMobileSolorAnimaiton(animPower, 8)} ></span>
+                      <span style={renderMobileSolorAnimaiton(animPower, 9)} ></span>
+                      <span style={renderMobileSolorAnimaiton(animPower, 10)} ></span>
+                      <span style={renderMobileSolorAnimaiton(animPower, 11)} ></span>
+                      <span style={renderMobileSolorAnimaiton(animPower, 12)} ></span>
                       {/* {(() => {
                         const arr = [];
                         for (let i = 0; i < (Math.floor(parseFloat(devPower) * 0.1) + 1); i++) {
