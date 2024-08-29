@@ -136,6 +136,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const [faultMsg, setFaultMsg] = useState('');
   const [isHeatAlert, setIsHeatAlert] = useState(false)
   const [heatFault, setHeatFault] = useState('');
+  const [timeoffset, setTimeoffset] = useState(0);
 
   // console.log(userData);
   useEffect(() => {
@@ -161,6 +162,14 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
 
     if (isUser) {
       console.log(devData)
+      const nowTime = new Date();
+      const devTimeStr = devData.Info[0];
+      const devTime = new Date();
+      devTime.setHours(devTimeStr.split(':')[0]);
+      devTime.setMinutes(devTimeStr.split(':')[1]);
+      devTime.setSeconds(devTimeStr.split(':')[2]);
+      console.log(devTimeStr, devTime.toLocaleTimeString(), nowTime.toLocaleTimeString(), (nowTime.getTime() - devTime.getTime()));
+      setTimeoffset((nowTime.getTime() - devTime.getTime()));
       setDeviceId(devData.DeviceID)
       setDeviceName(devData.DeviceName)
       setDevOn(devData.DeviceEnabled);
@@ -249,7 +258,6 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
     // const timeVal = 6 - ((6 / 100) * powerVal);
     const timeVal = 18 - (18 * (parseFloat(powerVal) / 10))
     const countDelay = ((timeVal / 12) * (index));
-    console.log('timeCounter', countDelay)
     return {
       position: 'absolute',
       opacity: 0,
@@ -268,7 +276,6 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
 
     const timeVal = 18 - (18 * (parseFloat(powerVal) / 10))
     const countDelay = ((timeVal / 12) * (index));
-    console.log('timeCounter', countDelay)
     return {
       position: 'absolute',
       right: '0px',
