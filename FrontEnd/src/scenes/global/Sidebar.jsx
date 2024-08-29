@@ -29,7 +29,7 @@ import zIndex from '@mui/material/styles/zIndex';
 const weatherID = process.env.REACT_APP_WEATHERAPPID;
 const enableWeatherApi = process.env.REACT_APP_ENABLE_WEATHERAPI;
 console.log('weather Checking', enableWeatherApi);
-const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, socketIo, isMobileMenu }) => {
+const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, socketIo, isMobileMenu, setIsMobileMenu }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -120,7 +120,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
     backgroundColor: theme.palette.background.alpha,
     height: open ? '100vh' : 0,
     // zIndex: open ? 9999999 : 0,
-    position: 'absolute',
+    position: open ? 'fixed' : 'absolute',
     zIndex: open ? 1010 : 0,
     '& .pro-menu ul': {
       paddingInlineStart: '0px',
@@ -172,6 +172,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
   const handleClick = (event) => {
     // setAnchorEl(event.currentTarget);
     setOpen(!open)
+
     // if (!isMobile) {
     setIsCollapsed(!isCollapsed);
     // }
@@ -180,6 +181,7 @@ const Sidebar = ({ isMobile, isPortrait, deviceName, deviceId, onChangeDevId, so
   const handleClose = () => {
     // setAnchorEl(null);
     setOpen(false)
+    setIsMobileMenu(false);
     // if (!isMobile) {
     setIsCollapsed(!isCollapsed);
     // }

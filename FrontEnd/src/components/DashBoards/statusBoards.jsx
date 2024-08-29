@@ -137,6 +137,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const [isHeatAlert, setIsHeatAlert] = useState(false)
   const [heatFault, setHeatFault] = useState('');
   const [timeoffset, setTimeoffset] = useState(0);
+  const [timePassed, setTimePassed] = useState(false);
 
   // console.log(userData);
   useEffect(() => {
@@ -161,15 +162,21 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
 
 
     if (isUser) {
-      console.log(devData)
+
       const nowTime = new Date();
       const devTimeStr = devData.Info[0];
       const devTime = new Date();
       devTime.setHours(devTimeStr.split(':')[0]);
       devTime.setMinutes(devTimeStr.split(':')[1]);
       devTime.setSeconds(devTimeStr.split(':')[2]);
-      console.log(devTimeStr, devTime.toLocaleTimeString(), nowTime.toLocaleTimeString(), (nowTime.getTime() - devTime.getTime()));
-      setTimeoffset((nowTime.getTime() - devTime.getTime()));
+
+      if (timePassed == false) {
+        console.log(devData)
+        console.log(devTimeStr, devTime.toLocaleTimeString(), nowTime.toLocaleTimeString(), (nowTime.getTime() - devTime.getTime()));
+        setTimeoffset((nowTime.getTime() - devTime.getTime())); 
+        setTimePassed(true)
+      }
+
       setDeviceId(devData.DeviceID)
       setDeviceName(devData.DeviceName)
       setDevOn(devData.DeviceEnabled);
@@ -256,7 +263,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const renderSolorAnimation = (powerVal, index) => {
 
     // const timeVal = 6 - ((6 / 100) * powerVal);
-    const timeVal = 18 - (18 * (parseFloat(powerVal) / 10))
+    const timeVal = 19 - (18 * (parseFloat(powerVal) / 10))
     const countDelay = ((timeVal / 12) * (index));
     return {
       position: 'absolute',
@@ -274,7 +281,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
 
   const renderMobileSolorAnimaiton = (powerVal, index) => {
 
-    const timeVal = 18 - (18 * (parseFloat(powerVal) / 10))
+    const timeVal = 19 - (18 * (parseFloat(powerVal) / 10))
     const countDelay = ((timeVal / 12) * (index));
     return {
       position: 'absolute',

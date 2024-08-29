@@ -192,7 +192,7 @@ const Dashboard = () => {
   // }
   return (
     <main className='content' style={{ display: isMobileDetect ? 'block' : 'flex' }}>
-      {isSidebar && <Sidebar ref={siderRef} isMobile={isMobileDetect} isPortrait={isPortrait} isSidebar={isSidebar} deviceName={deviceName} deviceId={deviceId} onChangeDevId={onChangeDevId} socketIo={socket} isMobileMenu={isMobileMenu} />}
+      {isSidebar && <Sidebar ref={siderRef} isMobile={isMobileDetect} isPortrait={isPortrait} isSidebar={isSidebar} deviceName={deviceName} deviceId={deviceId} onChangeDevId={onChangeDevId} socketIo={socket} isMobileMenu={isMobileMenu} setIsMobileMenu={setIsMobileMenu} />}
       <Box width={'100%'}>
         {!isPortrait &&
           <Box display={'flex'} flexGrow={1} >
@@ -450,7 +450,7 @@ const Dashboard = () => {
                         direction={'row'} spacing={0} width={'100vw'} alignItems={'flex-end'} justifyContent={'center'}>
                         <Box
                           onClick={() => { subMenuClicked(1) }}
-                          backgroundColor={isMobileDetect && submenuId === 1 ? colors.primary[300] : colors.primary[400]}
+                          backgroundColor={isMobileDetect && submenuId === 1 && !isMobileMenu ? colors.primary[300] : colors.primary[400]}
                           width={'100%'}
                           height={'fit-content'}
                           sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
@@ -465,7 +465,7 @@ const Dashboard = () => {
                         </Box>
                         <Box
                           onClick={() => { subMenuClicked(2) }}
-                          backgroundColor={isMobileDetect && submenuId === 2 ? colors.primary[300] : colors.primary[400]}
+                          backgroundColor={isMobileDetect && submenuId === 2 && !isMobileMenu ? colors.primary[300] : colors.primary[400]}
                           width={'100%'}
                           height={'fit-content'}
                           sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
@@ -478,7 +478,7 @@ const Dashboard = () => {
                         </Box>
                         <Box
                           onClick={() => { setIsMobileMenu(!isMobileMenu); console.log(isSidebar, siderRef) }}
-                          backgroundColor={colors.primary[400]}
+                          backgroundColor={isMobileMenu ? colors.primary[300] : colors.primary[400]}
                           width={'100%'}
                           height={'fit-content'}
                           sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
@@ -494,7 +494,7 @@ const Dashboard = () => {
                         </Box>
                         <Box
                           onClick={() => { subMenuClicked(3) }}
-                          backgroundColor={isMobileDetect && submenuId === 3 ? colors.primary[300] : colors.primary[400]}
+                          backgroundColor={isMobileDetect && submenuId === 3 && !isMobileMenu ? colors.primary[300] : colors.primary[400]}
                           width={'100%'}
                           height={'fit-content'}
                           sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
@@ -507,7 +507,7 @@ const Dashboard = () => {
                         </Box>
                         <Box
                           onClick={() => { subMenuClicked(4) }}
-                          backgroundColor={isMobileDetect && submenuId === 4 ? colors.primary[300] : colors.primary[400]}
+                          backgroundColor={isMobileDetect && submenuId === 4 && !isMobileMenu ? colors.primary[300] : colors.primary[400]}
                           width={'100%'}
                           height={'fit-content'}
                           sx={{ boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px' }}
