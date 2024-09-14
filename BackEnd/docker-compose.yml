@@ -7,7 +7,8 @@ services:
       context: .
     ports:
       - "4000:4000"
-    # no ports forward for cloud  
+    # no ports forward for cloud 
+    restart: always
     networks:
       - cloudflarare-tunnel_default # for VM
     # - cloudflare1_default         # for cloud  
