@@ -11,10 +11,10 @@ services:
     environment:
       NODE_ENV: production
     networks:
-     - cloudflarare-tunnel_default   # for VM
-    # - cloudflare1_default          # for cloud  
+      - cloudflare1_default             # for solbox.axinars.uk
+      - cloudflared_axinar_com_default  # for iq.axinar.com
 networks:
-  cloudflarare-tunnel_default:       # for VM
-    # cloudflare1_default:          # for cloud
+  cloudflare1_default:                  # for solbox.axinars.uk
+  cloudflared_axinar_com_default:       # for iq.axinar.com
     external: true  
     
