@@ -27,7 +27,7 @@ services:
      - KC_PROXY_ADDRESS_FORWARDING=false   
      - KC_HOSTNAME_STRICT=false
      - KC_PROXY=edge
-     - KC_HOSTNAME=solbox-keycloak.axinars.uk
+     - KC_HOSTNAME=solbox-auth.axinar.com
      - KC_HTTP_ENABLED=true  
      - KC_KOSTNAME_STRICT_HTTPS=false
       
@@ -40,4 +40,4 @@ services:
       
      - KEYCLOAK_ADMIN=admin
      - KEYCLOAK_ADMIN_PASSWORD=1234  # admin here did not work as initial password
-     - KC_HOSTNAME_ADMIN_URL=https://solbox-keycloak.axinars.uk/
+     - KC_HOSTNAME_ADMIN_URL=https://solbox-auth.axinar.com/
