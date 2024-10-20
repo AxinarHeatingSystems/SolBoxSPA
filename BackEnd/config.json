@@ -5,7 +5,7 @@
     "host": "EMQX",
     "username": "solboxbyaxinar",  
     "password": "$axinaR$6623",
-    "emqxhost": "https://extemqx.axinars.uk/",
+    "emqxhost": "http://emqx:18083/",
     "emqxuser": "3e01f116db8b306f",
     "emqxpassword": "bJHfO0OIHuUPKKBPY20W9Auu2PpsEMHuIG4wGH52fZAE",
     "solbox-frontend": "https://iq.axinar.com",
