@@ -10,9 +10,9 @@ services:
     # no ports forward for cloud 
     restart: always
     networks:
-      - cloudflare1_default             # for solbox.axinars.uk
-      - cloudflared_axinar_com_default  # for iq.axinar.com
+     # - cloudflare1_default             # for solbox.axinars.uk
+      - axinarcloud1_default  # for iq.axinar.com
 networks:
-  cloudflare1_default:                  # for solbox.axinars.uk
-  cloudflared_axinar_com_default:       # for iq.axinar.com
-    external: true 
+  #cloudflare1_default:                  # for solbox.axinars.uk
+  axinarcloud1_default:       # for iq.axinar.com
+    external: true  
