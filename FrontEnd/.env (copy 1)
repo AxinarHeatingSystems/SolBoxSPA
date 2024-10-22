@@ -1,0 +1,13 @@
+# REACT_APP_BASE_BACKEND_URL = "http://localhost:4000/"
+REACT_APP_BASE_BACKEND_URL="https://solbox-backend.axinar.com/"
+REACT_APP_GOOGLE_CLIENT_ID="1065905463776-qo8cv20fd5cpo0bpsrfi396ndvh9nnm0.apps.googleusercontent.com"
+REACT_APP_ENABLE_WEATHERAPI=true
+#true: enable weather api calling, false: disable weather api calling
+#Asinars Google console
+# REACT_APP_GOOGLE_CLIENT_ID="1095375617733-7epn0ikmfmvisfir90k57s4ih975mrh5.apps.googleusercontent.com"
+#Stelian Google console
+
+# Google console at 
+# https://console.cloud.google.com/apis/credentials/oauthclient/1065905463776-qo8cv20fd5cpo0bpsrfi396ndvh9nnm0.apps.googleusercontent.com?authuser=1&project=solbox-cloud
+# with Google account: solbox.auth@gmail.com        product: solbox-cloud       OAuth 2.0 Client ID: Web client 1
+# client ID: 1065905463776-qo8cv20fd5cpo0bpsrfi396ndvh9nnm0.apps.googleusercontent.com   
