@@ -238,7 +238,10 @@ export const Register = () => {
           justifyContent={'center'}
           alignItems={'center'}
           padding={6}
-          sx={{ backgroundColor: theme.palette.background.paper }}
+          sx={{ 
+                //backgroundColor: theme.palette.background.paper 
+                backgroundColor: '#18161700'
+              }}
         >
           <Box padding={3}>
             <Typography variant="h2" marginBottom={4}>{t("register")} - {t("title")}</Typography>
