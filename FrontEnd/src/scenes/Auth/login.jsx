@@ -142,7 +142,10 @@ export const Login = () => {
           display={'flex'}
           justifyContent={'center'}
           alignItems={'center'}
-          sx={{ backgroundColor: theme.palette.background.paper }}
+          sx={{ 
+                //backgroundColor: theme.palette.background.paper 
+                backgroundColor: '#18161700'
+              }}
         >
           <Box padding={3}>
             <Typography variant="h2" marginBottom={4}>{t("login")} - {t("title")}</Typography>
