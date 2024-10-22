@@ -129,7 +129,8 @@ export const Login = () => {
       <Box width={'100%'} height={'100vh'} display={'flex'}
         sx={{
           backgroundImage: `url(${iotBg})`,
-          backgroundColor: '#010822',
+          // backgroundColor: '#010822',
+          backgroundColor: '#181617',
           backgroundOrigin: 'center',
           backgroundSize: 'auto 100%',
           backgroundRepeat: 'no-repeat'
