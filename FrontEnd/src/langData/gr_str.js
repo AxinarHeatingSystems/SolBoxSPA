@@ -1,5 +1,5 @@
 export const Gr_Str = {
-    title: "Πίνακας Ελέγχου SolBox",
+    title: "Πίνακας Ελέγχου Axinar",
     login: "Login",
     email: "Email",
     Password: "Κωδικός πρόσβασης",
