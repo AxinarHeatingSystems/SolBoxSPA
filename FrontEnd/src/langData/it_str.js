@@ -1,5 +1,5 @@
 export const It_Str = {
-    title: "Pannello di controllo SolBox",
+    title: "Pannello di controllo Axinar",
     login: "Login",
     email: "E-mail",
     Password: "Parola d'ordine",
