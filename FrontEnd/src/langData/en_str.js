@@ -1,5 +1,5 @@
 export const En_Str = {
-    title: "SolBox Control Panel",
+    title: "Axinar Control Panel",
     login: "Login",
     email: "Email",
     Password: "Password",
