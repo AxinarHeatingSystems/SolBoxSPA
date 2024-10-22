@@ -144,7 +144,7 @@ export const Login = () => {
           alignItems={'center'}
           sx={{ 
                 //backgroundColor: theme.palette.background.paper 
-                backgroundColor: '#18161700'
+                backgroundColor: isMobileDetect ? theme.palette.background.paper  : '#18161700'
               }}
         >
           <Box padding={3}>

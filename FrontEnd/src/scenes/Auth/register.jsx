@@ -241,7 +241,7 @@ export const Register = () => {
           padding={6}
           sx={{ 
                 //backgroundColor: theme.palette.background.paper 
-                backgroundColor: '#18161700'
+                backgroundColor: isMobileDetect ? theme.palette.background.paper  : '#18161700'
               }}
         >
           <Box padding={3}>
