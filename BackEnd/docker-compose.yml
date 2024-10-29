@@ -9,9 +9,9 @@ services:
       - "4000:4000"
     # no ports forward for cloud  
     networks:
-      - cloudflare1_default             # for solbox.axinars.uk
-      - cloudflared_axinar_com_default  # for iq.axinar.com
+      - cloudflarare-tunnel_default            # for solbox.axinars.uk
+      # - cloudflared_axinar_com_default  # for iq.axinar.com
 networks:
-  cloudflare1_default:                  # for solbox.axinars.uk
-  cloudflared_axinar_com_default:       # for iq.axinar.com
-    external: true 
+  cloudflarare-tunnel_default:                  # for solbox.axinars.uk
+  # cloudflared_axinar_com_default:       # for iq.axinar.com
+  #   external: true 
