@@ -2,7 +2,7 @@
     "secret": "SET SECRET KEY",
     "protocol": "mqtt",
     "port": 1883,
-    "host": "EMQX",
+    "host": "emqx",
     "username": "solboxbyaxinar",  
     "password": "$axinaR$6623",
     "emqxhost": "https://extemqx.axinars.uk/",
