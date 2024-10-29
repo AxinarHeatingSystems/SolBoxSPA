@@ -11,7 +11,7 @@ import { SolarPanel } from '../DeviceComponents/solarPanel';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { WaterTank } from '../DeviceComponents/waterTank';
-import { display, Stack } from '@mui/system';
+import { display, fontSize, height, Stack, width } from '@mui/system';
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 64,
@@ -108,7 +108,16 @@ const DevOnOffSwitch = styled(Switch)(({ theme }) => ({
   },
 }))
 
-
+const gaugeValStyle = {
+  position: 'absolute',
+  width: '100%',
+  height: '100%',
+  left: 0,
+  top: 0,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'flex-end'
+}
 export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -215,7 +224,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
         setDevCycle(`${parseInt(devData.DutyCycle)} %`);
         setMaxPower(parseInt(devData.maxPowerPer));
         setMinPower(parseInt(devData.minPowerPer));
-        setNowPower(parseInt(devData.powerNeedlePer));
+        setNowPower(parseFloat(devData.powerNeedlePer).toFixed(2));
         setMaxVal(100);
       } else {
         setDevCycle(`${parseInt(devData.PowerIn)} W`);
@@ -225,7 +234,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
           setMaxPower(parseFloat(devData.maxPowerThirty));
         }
         setMinPower(parseFloat(devData.leastPowerThirty));
-        setNowPower(parseFloat(devData.WattHours));
+        setNowPower(parseFloat(devData.WattHours).toFixed(2));
         setMaxVal(devData.ATHwattHours);
 
       }
@@ -312,6 +321,19 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
         alert(error);
       }
     })
+  }
+
+  const convertGaugeVal = (value) => {
+    const valueStr = value.toString();
+    const decialArr = valueStr.split('.');
+    return (
+      <span style={{ paddingBottom: isMobile ? '1rem' : '2.5rem' }}>
+        <span style={{ fontSize: isMobile ? '60px' : '130px' }}>
+          {decialArr[0]}.
+        </span>
+        <span style={{ fontSize: isMobile ? '40px' : '100px' }}>{decialArr[1]}%</span>
+      </span>
+    )
   }
 
   return (
@@ -536,6 +558,11 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                       elastic: true,
                     }}
                     labels={{
+                      valueLabel: {
+                        style: { fontSize: 40 },
+                        maxDecimalDigits: 2,
+                        // hide: true
+                      },
                       tickLabels: {
                         hideMinMax: true,
                       }
@@ -545,6 +572,9 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                     minValue={0}
                     maxValue={maxVal}
                   />
+                  <div className='OPOPOP' style={gaugeValStyle}>
+                    {convertGaugeVal(nowPower)}
+                  </div>
                   <div ref={gaugeRef} className='overide-gauge'>
                     <GaugeComponent
 
@@ -562,7 +592,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                             showTick: true,
                             tooltip: {
                               style: { zIndex: 99999, position: 'fixed' },
-                              text: 'Too low temperature!'
+                              text: t('too_low_temp')
                             },
                             onClick: () => console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"),
                             onMouseMove: () => console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"),
@@ -574,7 +604,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                             showTick: true,
                             tooltip: {
                               style: { zIndex: 99999, position: 'fixed' },
-                              text: 'Low temperature!'
+                              text: t('low_temp')
                             }
                           },
                           {
@@ -582,7 +612,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                             showTick: true,
                             tooltip: {
                               style: { zIndex: 99999, position: 'fixed' },
-                              text: 'Too high temperature!'
+                              text: t('too_high_temp')
                             }
                           }
                         ]
@@ -596,7 +626,9 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                       value={lastDayPower}
                       minValue={0}
                       maxValue={maxVal}
-                    />
+                    >
+
+                    </GaugeComponent>
                   </div>
                 </Box>
 

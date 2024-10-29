@@ -113,4 +113,7 @@ export const Gr_Str = {
     load_fault: "Σφάλμα φόρτωσης",
     water_temp: "Θερμοκρασία νερού",
     device_temp: 'Θερμοκρασία συσκευής',
+    low_temp: 'Χαμηλή θερμοκρασία!',
+    too_low_temp: 'Πολύ χαμηλή θερμοκρασία!',
+    too_high_temp: 'Πολύ υψηλή θερμοκρασία!',
 }

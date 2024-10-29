@@ -113,4 +113,7 @@ export const Es_Str = {
     load_fault: "Falla de carga",
     water_temp: "Temperatura del agua",
     device_temp: 'Temperatura del dispositivo',
+    low_temp: '¡Baja temperatura!',
+    too_low_temp: '¡Temperatura demasiado baja!',
+    too_high_temp: '¡Temperatura demasiado alta!',
 }
