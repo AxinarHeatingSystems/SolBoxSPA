@@ -12,6 +12,6 @@ services:
       - backend_cloudflarare-tunnel_default            # for solbox.axinars.uk
       # - cloudflared_axinar_com_default  # for iq.axinar.com
 networks:
-  backend_cloudflarare-tunnel_default:                  # for solbox.axinars.uk
+  backend_cloudflarare-tunnel_default: true                 # for solbox.axinars.uk
   # cloudflared_axinar_com_default:       # for iq.axinar.com
   #   external: true 
