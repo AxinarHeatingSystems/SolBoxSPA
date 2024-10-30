@@ -338,7 +338,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
     const valueStr = value.toString();
     const decialArr = valueStr.split('.');
     return (
-      <span style={{ paddingBottom: isMobile ? '0rem' : '2.5rem', paddingTop: isMobile ? '2rem' : '0rem' }}>
+      <span style={{ paddingTop: isMobile ? '2rem' : '4rem' }}>
         <span style={{ fontSize: isMobile ? '40px' : '100px' }}>
           {decialArr[0]}.
         </span>
@@ -583,10 +583,10 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                     minValue={0}
                     maxValue={maxVal}
                   />
-                  <div className='OPOPOP' style={isMobile ? gaugeMobileValStyle : gaugeValStyle}>
+                  <div className='OPOPOP' style={gaugeMobileValStyle}>
                     {convertGaugeVal(nowPower)}
                   </div>
-                  <div className="gauge-label" style={{ position: 'absolute', width: '100%', bottom: 0, left: 0, fontSize: isMobile ? "15px" : "20px" }}>
+                  <div className="gauge-label" style={{ position: 'absolute', width: '100%', bottom: 0, left: 0, fontSize: isMobile ? "15px" : "30px" }}>
                     {t('sun_harvesting')}
                   </div>
                   <div ref={gaugeRef} className='overide-gauge'>
