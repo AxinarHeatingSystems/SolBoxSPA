@@ -11,7 +11,7 @@ import { SolarPanel } from '../DeviceComponents/solarPanel';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { WaterTank } from '../DeviceComponents/waterTank';
-import { display, Stack } from '@mui/system';
+import { display, fontSize, height, Stack, width } from '@mui/system';
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 64,
@@ -108,7 +108,27 @@ const DevOnOffSwitch = styled(Switch)(({ theme }) => ({
   },
 }))
 
+const gaugeValStyle = {
+  position: 'absolute',
+  width: '100%',
+  height: '100%',
+  left: 0,
+  top: 0,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'flex-end'
+}
 
+const gaugeMobileValStyle = {
+  position: 'absolute',
+  width: '100%',
+  height: '100%',
+  left: 0,
+  top: 0,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center'
+}
 export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -173,7 +193,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
       if (timePassed == false) {
         console.log(devData)
         console.log(devTimeStr, devTime.toLocaleTimeString(), nowTime.toLocaleTimeString(), (nowTime.getTime() - devTime.getTime()));
-        setTimeoffset((nowTime.getTime() - devTime.getTime())); 
+        setTimeoffset((nowTime.getTime() - devTime.getTime()));
         setTimePassed(true)
       }
 
@@ -215,7 +235,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
         setDevCycle(`${parseInt(devData.DutyCycle)} %`);
         setMaxPower(parseInt(devData.maxPowerPer));
         setMinPower(parseInt(devData.minPowerPer));
-        setNowPower(parseInt(devData.powerNeedlePer));
+        setNowPower(parseFloat(devData.powerNeedlePer).toFixed(2));
         setMaxVal(100);
       } else {
         setDevCycle(`${parseInt(devData.PowerIn)} W`);
@@ -225,7 +245,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
           setMaxPower(parseFloat(devData.maxPowerThirty));
         }
         setMinPower(parseFloat(devData.leastPowerThirty));
-        setNowPower(parseFloat(devData.WattHours));
+        setNowPower(parseFloat(devData.WattHours).toFixed(2));
         setMaxVal(devData.ATHwattHours);
 
       }
@@ -314,6 +334,19 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
     })
   }
 
+  const convertGaugeVal = (value) => {
+    const valueStr = value.toString();
+    const decialArr = valueStr.split('.');
+    return (
+      <span style={{ paddingBottom: isMobile ? '0rem' : '2.5rem', paddingTop: isMobile ? '2rem' : '0rem' }}>
+        <span style={{ fontSize: isMobile ? '40px' : '100px' }}>
+          {decialArr[0]}.
+        </span>
+        <span style={{ fontSize: isMobile ? '20px' : '50px' }}>{decialArr[1]}%</span>
+      </span>
+    )
+  }
+
   return (
     <Box display={isPortrait ? 'block' : 'flex'} gap="20px" sx={isPortrait ? {} : { transform: 'scaleY(0.9) translateY(-15px)', paddingX: '20px', height: '100%', position: 'relative', justifyContent: 'center', alignItems: 'center' }}>
       <Box gridColumn="span 8" gap="20px" marginY={isPortrait ? '0.5rem' : 0} sx={isPortrait ? {} : { height: '100%' }}>
@@ -372,7 +405,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                       <span className='heat-cirl cirl10'></span>
                       <span className='heat-cirl cirl11'></span>
                       <span className='heat-cirl cirl12'></span>
-                  </>
+                    </>
                   }
 
                 </div>
@@ -382,19 +415,19 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                   <hr />
                   {devOn &&
                     <>
-                    <span style={renderSolorAnimation(animPower, 1)} ></span>
-                    <span style={renderSolorAnimation(animPower, 2)} ></span>
-                    <span style={renderSolorAnimation(animPower, 3)} ></span>
-                    <span style={renderSolorAnimation(animPower, 4)} ></span>
-                    <span style={renderSolorAnimation(animPower, 5)} ></span>
-                    <span style={renderSolorAnimation(animPower, 6)} ></span>
-                    <span style={renderSolorAnimation(animPower, 7)} ></span>
-                    <span style={renderSolorAnimation(animPower, 8)} ></span>
-                    <span style={renderSolorAnimation(animPower, 9)} ></span>
-                    <span style={renderSolorAnimation(animPower, 10)} ></span>
-                    <span style={renderSolorAnimation(animPower, 11)} ></span>
-                    <span style={renderSolorAnimation(animPower, 12)} ></span>
-                    {/* {(() => {
+                      <span style={renderSolorAnimation(animPower, 1)} ></span>
+                      <span style={renderSolorAnimation(animPower, 2)} ></span>
+                      <span style={renderSolorAnimation(animPower, 3)} ></span>
+                      <span style={renderSolorAnimation(animPower, 4)} ></span>
+                      <span style={renderSolorAnimation(animPower, 5)} ></span>
+                      <span style={renderSolorAnimation(animPower, 6)} ></span>
+                      <span style={renderSolorAnimation(animPower, 7)} ></span>
+                      <span style={renderSolorAnimation(animPower, 8)} ></span>
+                      <span style={renderSolorAnimation(animPower, 9)} ></span>
+                      <span style={renderSolorAnimation(animPower, 10)} ></span>
+                      <span style={renderSolorAnimation(animPower, 11)} ></span>
+                      <span style={renderSolorAnimation(animPower, 12)} ></span>
+                      {/* {(() => {
                       const arr = [];
                       // for (let i = 0; i < (Math.floor(parseFloat(devPower) * 0.1) + 1); i++) {
                       for (let i = 0; i < (12); i++) {
@@ -404,7 +437,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                       }
                       return arr;
                     })()} */}
-                  </>
+                    </>
                   }
                 </div>
               </Grid>
@@ -536,6 +569,11 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                       elastic: true,
                     }}
                     labels={{
+                      valueLabel: {
+                        style: { fontSize: 40 },
+                        maxDecimalDigits: 2,
+                        hide: true
+                      },
                       tickLabels: {
                         hideMinMax: true,
                       }
@@ -545,9 +583,14 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                     minValue={0}
                     maxValue={maxVal}
                   />
+                  <div className='OPOPOP' style={isMobile ? gaugeMobileValStyle : gaugeValStyle}>
+                    {convertGaugeVal(nowPower)}
+                  </div>
+                  <div className="gauge-label" style={{ position: 'absolute', width: '100%', bottom: 0, left: 0, fontSize: isMobile ? "15px" : "20px" }}>
+                    {t('sun_harvesting')}
+                  </div>
                   <div ref={gaugeRef} className='overide-gauge'>
                     <GaugeComponent
-
                       type='semicircle'
                       arc={{
                         width: 0.1,
@@ -562,7 +605,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                             showTick: true,
                             tooltip: {
                               style: { zIndex: 99999, position: 'fixed' },
-                              text: 'Too low temperature!'
+                              text: t('too_low_temp')
                             },
                             onClick: () => console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"),
                             onMouseMove: () => console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"),
@@ -574,7 +617,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                             showTick: true,
                             tooltip: {
                               style: { zIndex: 99999, position: 'fixed' },
-                              text: 'Low temperature!'
+                              text: t('low_temp')
                             }
                           },
                           {
@@ -582,7 +625,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                             showTick: true,
                             tooltip: {
                               style: { zIndex: 99999, position: 'fixed' },
-                              text: 'Too high temperature!'
+                              text: t('too_high_temp')
                             }
                           }
                         ]
@@ -596,7 +639,9 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                       value={lastDayPower}
                       minValue={0}
                       maxValue={maxVal}
-                    />
+                    >
+
+                    </GaugeComponent>
                   </div>
                 </Box>
 
@@ -645,7 +690,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                       fontWeight="500"
                       sx={{ color: colors.grey[100], display: 'flex', justifyContent: 'start', alignItems: 'baseline' }}
                     >
-                      {t("saved")} 
+                      {t("saved")}
                       <Typography variant='body1' fontWeight={'bold'} sx={{ marginX: '0.3rem', color: colors.grey[100] }}>
                         ({priceKWH} € / kwh)
                       </Typography>
@@ -694,7 +739,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                   fontWeight="bold"
                   sx={{ color: colors.grey[100], display: 'flex', justifyContent: 'start', alignItems: 'baseline', flexWrap: 'nowrap', textWrap: 'nowrap' }}
                 >
-                  {t("saved")} 
+                  {t("saved")}
                   <Typography variant='body1' fontWeight={'bold'} sx={{ marginX: '0.3rem', color: colors.grey[100] }}>
                     ({priceKWH} € / kwh)
                   </Typography>
