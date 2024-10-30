@@ -561,7 +561,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                       valueLabel: {
                         style: { fontSize: 40 },
                         maxDecimalDigits: 2,
-                        // hide: true
+                        hide: true
                       },
                       tickLabels: {
                         hideMinMax: true,
