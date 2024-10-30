@@ -118,6 +118,17 @@ const gaugeValStyle = {
   justifyContent: 'center',
   alignItems: 'flex-end'
 }
+
+const gaugeMobileValStyle = {
+  position: 'absolute',
+  width: '100%',
+  height: '100%',
+  left: 0,
+  top: 0,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center'
+}
 export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -327,7 +338,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
     const valueStr = value.toString();
     const decialArr = valueStr.split('.');
     return (
-      <span style={{ paddingBottom: isMobile ? '1rem' : '2.5rem' }}>
+      <span style={{ paddingBottom: isMobile ? '0rem' : '2.5rem', paddingTop: isMobile ? '2rem' : '0rem' }}>
         <span style={{ fontSize: isMobile ? '40px' : '100px' }}>
           {decialArr[0]}.
         </span>
@@ -572,7 +583,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                     minValue={0}
                     maxValue={maxVal}
                   />
-                  <div className='OPOPOP' style={gaugeValStyle}>
+                  <div className='OPOPOP' style={isMobile ? gaugeMobileValStyle : gaugeValStyle}>
                     {convertGaugeVal(nowPower)}
                   </div>
                   <div className="gauge-label" style={{ position: 'absolute', width: '100%', bottom: 0, left: 0, fontSize: isMobile ? "15px" : "20px" }}>
@@ -580,7 +591,6 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                   </div>
                   <div ref={gaugeRef} className='overide-gauge'>
                     <GaugeComponent
-
                       type='semicircle'
                       arc={{
                         width: 0.1,
