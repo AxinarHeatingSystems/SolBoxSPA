@@ -116,4 +116,5 @@ export const Es_Str = {
     low_temp: '¡Baja temperatura!',
     too_low_temp: '¡Temperatura demasiado baja!',
     too_high_temp: '¡Temperatura demasiado alta!',
+    sun_harvesting: 'Cosecha de sol',
 }

@@ -182,7 +182,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
       if (timePassed == false) {
         console.log(devData)
         console.log(devTimeStr, devTime.toLocaleTimeString(), nowTime.toLocaleTimeString(), (nowTime.getTime() - devTime.getTime()));
-        setTimeoffset((nowTime.getTime() - devTime.getTime())); 
+        setTimeoffset((nowTime.getTime() - devTime.getTime()));
         setTimePassed(true)
       }
 
@@ -328,10 +328,10 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
     const decialArr = valueStr.split('.');
     return (
       <span style={{ paddingBottom: isMobile ? '1rem' : '2.5rem' }}>
-        <span style={{ fontSize: isMobile ? '60px' : '130px' }}>
+        <span style={{ fontSize: isMobile ? '40px' : '100px' }}>
           {decialArr[0]}.
         </span>
-        <span style={{ fontSize: isMobile ? '40px' : '100px' }}>{decialArr[1]}%</span>
+        <span style={{ fontSize: isMobile ? '20px' : '50px' }}>{decialArr[1]}%</span>
       </span>
     )
   }
@@ -394,7 +394,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                       <span className='heat-cirl cirl10'></span>
                       <span className='heat-cirl cirl11'></span>
                       <span className='heat-cirl cirl12'></span>
-                  </>
+                    </>
                   }
 
                 </div>
@@ -404,19 +404,19 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                   <hr />
                   {devOn &&
                     <>
-                    <span style={renderSolorAnimation(animPower, 1)} ></span>
-                    <span style={renderSolorAnimation(animPower, 2)} ></span>
-                    <span style={renderSolorAnimation(animPower, 3)} ></span>
-                    <span style={renderSolorAnimation(animPower, 4)} ></span>
-                    <span style={renderSolorAnimation(animPower, 5)} ></span>
-                    <span style={renderSolorAnimation(animPower, 6)} ></span>
-                    <span style={renderSolorAnimation(animPower, 7)} ></span>
-                    <span style={renderSolorAnimation(animPower, 8)} ></span>
-                    <span style={renderSolorAnimation(animPower, 9)} ></span>
-                    <span style={renderSolorAnimation(animPower, 10)} ></span>
-                    <span style={renderSolorAnimation(animPower, 11)} ></span>
-                    <span style={renderSolorAnimation(animPower, 12)} ></span>
-                    {/* {(() => {
+                      <span style={renderSolorAnimation(animPower, 1)} ></span>
+                      <span style={renderSolorAnimation(animPower, 2)} ></span>
+                      <span style={renderSolorAnimation(animPower, 3)} ></span>
+                      <span style={renderSolorAnimation(animPower, 4)} ></span>
+                      <span style={renderSolorAnimation(animPower, 5)} ></span>
+                      <span style={renderSolorAnimation(animPower, 6)} ></span>
+                      <span style={renderSolorAnimation(animPower, 7)} ></span>
+                      <span style={renderSolorAnimation(animPower, 8)} ></span>
+                      <span style={renderSolorAnimation(animPower, 9)} ></span>
+                      <span style={renderSolorAnimation(animPower, 10)} ></span>
+                      <span style={renderSolorAnimation(animPower, 11)} ></span>
+                      <span style={renderSolorAnimation(animPower, 12)} ></span>
+                      {/* {(() => {
                       const arr = [];
                       // for (let i = 0; i < (Math.floor(parseFloat(devPower) * 0.1) + 1); i++) {
                       for (let i = 0; i < (12); i++) {
@@ -426,7 +426,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                       }
                       return arr;
                     })()} */}
-                  </>
+                    </>
                   }
                 </div>
               </Grid>
@@ -575,6 +575,9 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                   <div className='OPOPOP' style={gaugeValStyle}>
                     {convertGaugeVal(nowPower)}
                   </div>
+                  <div className="gauge-label" style={{ position: 'absolute', width: '100%', bottom: 0, left: 0, fontSize: isMobile ? "15px" : "20px" }}>
+                    {t('sun_harvesting')}
+                  </div>
                   <div ref={gaugeRef} className='overide-gauge'>
                     <GaugeComponent
 
@@ -677,7 +680,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                       fontWeight="500"
                       sx={{ color: colors.grey[100], display: 'flex', justifyContent: 'start', alignItems: 'baseline' }}
                     >
-                      {t("saved")} 
+                      {t("saved")}
                       <Typography variant='body1' fontWeight={'bold'} sx={{ marginX: '0.3rem', color: colors.grey[100] }}>
                         ({priceKWH} € / kwh)
                       </Typography>
@@ -726,7 +729,7 @@ export const StatusBoards = ({ isMobile, isPortrait, devData, socketIo }) => {
                   fontWeight="bold"
                   sx={{ color: colors.grey[100], display: 'flex', justifyContent: 'start', alignItems: 'baseline', flexWrap: 'nowrap', textWrap: 'nowrap' }}
                 >
-                  {t("saved")} 
+                  {t("saved")}
                   <Typography variant='body1' fontWeight={'bold'} sx={{ marginX: '0.3rem', color: colors.grey[100] }}>
                     ({priceKWH} € / kwh)
                   </Typography>
