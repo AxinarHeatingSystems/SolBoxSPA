@@ -1,5 +1,5 @@
 export const En_Str = {
-    title: "AxinarControl Panel",
+    title: "SolBox Control Panel",
     login: "Login",
     email: "Email",
     Password: "Password",
@@ -113,4 +113,8 @@ export const En_Str = {
     load_fault: "Load Fault",
     water_temp: "Water Temp",
     device_temp: 'Device Temp',
+    low_temp: 'Low temperature!',
+    too_low_temp: 'Too low temperature!',
+    too_high_temp: 'Too high temperature!',
+    sun_harvesting: 'Sun harvesting',
 }

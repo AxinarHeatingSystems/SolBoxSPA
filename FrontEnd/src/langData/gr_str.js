@@ -1,5 +1,5 @@
 export const Gr_Str = {
-    title: "Πίνακας Ελέγχου Axinar",
+    title: "Πίνακας Ελέγχου SolBox",
     login: "Login",
     email: "Email",
     Password: "Κωδικός πρόσβασης",
@@ -113,4 +113,8 @@ export const Gr_Str = {
     load_fault: "Σφάλμα φόρτωσης",
     water_temp: "Θερμοκρασία νερού",
     device_temp: 'Θερμοκρασία συσκευής',
+    low_temp: 'Χαμηλή θερμοκρασία!',
+    too_low_temp: 'Πολύ χαμηλή θερμοκρασία!',
+    too_high_temp: 'Πολύ υψηλή θερμοκρασία!',
+    sun_harvesting: 'Ηλιακή Συγκομιδή',
 }
